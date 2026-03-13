@@ -6,11 +6,11 @@
         <artifactId>TRAG_POM</artifactId>
         <version>1.0</version>
     </parent>
-    <artifactId>Negocio_TRAG</artifactId>
+    <artifactId>AdministradorCotizaciones_TRAG</artifactId>
     <packaging>jar</packaging>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <exec.mainClass>com.mycompany.negocio_trag.Negocio_TRAG</exec.mainClass>
+        <exec.mainClass>com.mycompany.administradorcotizaciones_trag.AdministradorCotizaciones_TRAG</exec.mainClass>
     </properties>
 </project>

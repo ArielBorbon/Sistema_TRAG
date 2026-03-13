@@ -8,7 +8,11 @@
     <modules>
         <module>Dominio_TRAG</module>
         <module>Persistencia_TRAG</module>
-        <module>Negocio_TRAG</module>
+        <module>AdministradorClientes_TRAG</module>
+        <module>AdministradorAutomoviles_TRAG</module>
+        <module>AdministradorServicios_TRAG</module>
+        <module>AdministradorInsumos_TRAG</module>
+        <module>AdministradorCotizaciones_TRAG</module>
         <module>Presentacion_TRAG</module>
     </modules>
     <properties>
