@@ -6,7 +6,6 @@
     <version>1.0</version>
     <packaging>pom</packaging>
     <modules>
-        <module>DTO_TRAG</module>
         <module>Dominio_TRAG</module>
         <module>Persistencia_TRAG</module>
         <module>Negocio_TRAG</module>
