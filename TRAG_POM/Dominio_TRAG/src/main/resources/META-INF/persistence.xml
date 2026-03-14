@@ -3,6 +3,22 @@
   <persistence-unit name="ConexionTRAG" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>entidades.prueba</class>
+    <class>entidades.Usuario</class>
+    <class>entidades.Cliente</class>
+    <class>entidades.Proveedor</class>
+    <class>entidades.Servicio</class>
+    <class>entidades.Cotizacion</class>
+    <class>entidades.Insumo</class>
+    <class>entidades.Automovil</class>
+    <class>entidades.InsumoServicio</class>
+    <class>entidades.Cita</class>
+    <class>entidades.InsumoCotizacion</class>
+    <class>entidades.OrdenTrabajo</class>
+    <class>entidades.DetallePago</class>
+    <class>entidades.Trabajo</class>
+    <class>entidades.Imprevisto</class>
+    <class>entidades.InsumoTrabajoAdquirido</class>
+    <class>entidades.InsumoImprevisto</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/trag_db?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
