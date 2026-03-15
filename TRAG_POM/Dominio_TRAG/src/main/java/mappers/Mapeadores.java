@@ -1,4 +1,3 @@
-
 package mappers;
 
 import DTO.AutomovilDTO;
@@ -33,6 +32,8 @@ import entidades.Proveedor;
 import entidades.Servicio;
 import entidades.Trabajo;
 import entidades.Usuario;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -55,6 +56,15 @@ public class Mapeadores {
         return dto;
     }
 
+    public static List<UsuarioDTO> toDTOUsuarios(List<Usuario> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public static ClienteDTO toDTO(Cliente entidad) {
         if (entidad == null) {
             return null;
@@ -69,6 +79,15 @@ public class Mapeadores {
         return dto;
     }
 
+    public static List<ClienteDTO> toDTOClientes(List<Cliente> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public static ProveedorDTO toDTO(Proveedor entidad) {
         if (entidad == null) {
             return null;
@@ -81,6 +100,15 @@ public class Mapeadores {
         return dto;
     }
 
+    public static List<ProveedorDTO> toDTOProveedores(List<Proveedor> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public static ServicioDTO toDTO(Servicio entidad) {
         if (entidad == null) {
             return null;
@@ -91,6 +119,15 @@ public class Mapeadores {
         dto.setDescripcion(entidad.getDescripcion());
         dto.setPrecioManoObraSugerido(entidad.getPrecioManoObraSugerido());
         return dto;
+    }
+
+    public static List<ServicioDTO> toDTOServicios(List<Servicio> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
     }
 
     public static CotizacionDTO toDTO(Cotizacion entidad) {
@@ -106,6 +143,15 @@ public class Mapeadores {
         return dto;
     }
 
+    public static List<CotizacionDTO> toDTOCotizaciones(List<Cotizacion> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public static InsumoDTO toDTO(Insumo entidad) {
         if (entidad == null) {
             return null;
@@ -114,8 +160,17 @@ public class Mapeadores {
         dto.setId(entidad.getId());
         dto.setNombre(entidad.getNombre());
         dto.setPrecioSugerido(entidad.getPrecioSugerido());
-        dto.setProveedor(toDTO(entidad.getProveedor())); 
+        dto.setProveedor(toDTO(entidad.getProveedor()));
         return dto;
+    }
+
+    public static List<InsumoDTO> toDTOInsumos(List<Insumo> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
     }
 
     public static AutomovilDTO toDTO(Automovil entidad) {
@@ -129,8 +184,17 @@ public class Mapeadores {
         dto.setVin(entidad.getVin());
         dto.setModelo(entidad.getModelo());
         dto.setMarca(entidad.getMarca());
-        dto.setCliente(toDTO(entidad.getCliente())); 
+        dto.setCliente(toDTO(entidad.getCliente()));
         return dto;
+    }
+
+    public static List<AutomovilDTO> toDTOAutomoviles(List<Automovil> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
     }
 
     public static InsumoServicioDTO toDTO(InsumoServicio entidad) {
@@ -155,6 +219,15 @@ public class Mapeadores {
         dto.setEstadoCita(entidad.getEstadoCita());
         dto.setAutomovil(toDTO(entidad.getAutomovil()));
         return dto;
+    }
+
+    public static List<CitaDTO> toDTOCitas(List<Cita> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
     }
 
     public static InsumoCotizacionDTO toDTO(InsumoCotizacion entidad) {
@@ -182,6 +255,15 @@ public class Mapeadores {
         return dto;
     }
 
+    public static List<OrdenTrabajoDTO> toDTOOrdenesTrabajo(List<OrdenTrabajo> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public static DetallePagoDTO toDTO(DetallePago entidad) {
         if (entidad == null) {
             return null;
@@ -206,6 +288,15 @@ public class Mapeadores {
         dto.setFechaTermino(entidad.getFechaTermino());
         dto.setOrdenTrabajo(toDTO(entidad.getOrdenTrabajo()));
         return dto;
+    }
+
+    public static List<TrabajoDTO> toDTOTrabajos(List<Trabajo> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTO)
+                .collect(Collectors.toList());
     }
 
     public static ImprevistoDTO toDTO(Imprevisto entidad) {
