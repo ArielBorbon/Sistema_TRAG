@@ -30,6 +30,8 @@ public class Trabajo implements Serializable {
     private LocalDateTime fechaInicio;
 
     private LocalDateTime fechaEstimadaTermino;
+    
+    private LocalDateTime fechaTermino;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_trabajo_id", nullable = false, unique = true)
@@ -66,6 +68,17 @@ public class Trabajo implements Serializable {
     public void setOrdenTrabajo(OrdenTrabajo ordenTrabajo) {
         this.ordenTrabajo = ordenTrabajo;
     }
+
+    public LocalDateTime getFechaTermino() {
+        return fechaTermino;
+    }
+
+    public void setFechaTermino(LocalDateTime fechaTermino) {
+        this.fechaTermino = fechaTermino;
+    }
+    
+    
+    
     
     
 }
