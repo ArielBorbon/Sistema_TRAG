@@ -16,17 +16,19 @@ public class ClienteDTO {
     private String apellidoMaterno;
     private String telefono;
     private String correo;
+    private boolean activo;
 
     public ClienteDTO() {
     }
 
-    public ClienteDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo) {
+    public ClienteDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, boolean activo) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
         this.correo = correo;
+        this.activo = activo;
     }
     
     
@@ -79,6 +81,16 @@ public class ClienteDTO {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+    
+    
     
     
     

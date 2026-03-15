@@ -22,6 +22,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Cliente")
 public class Cliente implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,9 +41,22 @@ public class Cliente implements Serializable {
 
     @Column(length = 150)
     private String correo;
-    
+
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Automovil> automoviles;
+
+    @Column(nullable = false)
+    private boolean activo = true;
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+    
+    
 
     public Long getId() {
         return id;
@@ -99,6 +113,5 @@ public class Cliente implements Serializable {
     public void setAutomoviles(List<Automovil> automoviles) {
         this.automoviles = automoviles;
     }
-    
-    
+
 }
