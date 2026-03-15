@@ -102,6 +102,7 @@ public class DTOMapeadores {
         entidad.setPrecioManoObra(dto.getPrecioManoObra());
         entidad.setEstadoAutomovil(dto.getEstadoAutomovil());
         entidad.setDiagnosticoGeneral(dto.getDiagnosticoGeneral());
+        entidad.setFechaCreacion(dto.getFechaCreacion());
         return entidad;
     }
 

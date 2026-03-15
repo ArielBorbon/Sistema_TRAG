@@ -102,6 +102,7 @@ public class Mapeadores {
         dto.setPrecioManoObra(entidad.getPrecioManoObra());
         dto.setEstadoAutomovil(entidad.getEstadoAutomovil());
         dto.setDiagnosticoGeneral(entidad.getDiagnosticoGeneral());
+        dto.setFechaCreacion(entidad.getFechaCreacion());
         return dto;
     }
 

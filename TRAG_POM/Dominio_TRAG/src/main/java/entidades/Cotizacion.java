@@ -6,6 +6,7 @@ package entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,9 @@ public class Cotizacion implements Serializable {
 
     @Column(columnDefinition = "TEXT")
     private String diagnosticoGeneral;
+    
+    
+    private LocalDateTime fechaCreacion;
 
     public Long getId() {
         return id;
@@ -65,6 +69,17 @@ public class Cotizacion implements Serializable {
     public void setDiagnosticoGeneral(String diagnosticoGeneral) {
         this.diagnosticoGeneral = diagnosticoGeneral;
     }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    
+    
+    
     
     
 }

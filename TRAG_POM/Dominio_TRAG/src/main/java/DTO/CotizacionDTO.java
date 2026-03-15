@@ -5,6 +5,7 @@
 package DTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -16,16 +17,21 @@ public class CotizacionDTO {
     private BigDecimal precioManoObra;
     private String estadoAutomovil;
     private String diagnosticoGeneral;
+    private LocalDateTime fechaCreacion;
 
     public CotizacionDTO() {
     }
 
-    public CotizacionDTO(Long id, BigDecimal precioManoObra, String estadoAutomovil, String diagnosticoGeneral) {
+    public CotizacionDTO(Long id, BigDecimal precioManoObra, String estadoAutomovil, String diagnosticoGeneral, LocalDateTime fechaCreacion) {
         this.id = id;
         this.precioManoObra = precioManoObra;
         this.estadoAutomovil = estadoAutomovil;
         this.diagnosticoGeneral = diagnosticoGeneral;
+        this.fechaCreacion = fechaCreacion;
     }
+    
+    
+    
 
     public Long getId() {
         return id;
@@ -57,6 +63,14 @@ public class CotizacionDTO {
 
     public void setDiagnosticoGeneral(String diagnosticoGeneral) {
         this.diagnosticoGeneral = diagnosticoGeneral;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
     
     
