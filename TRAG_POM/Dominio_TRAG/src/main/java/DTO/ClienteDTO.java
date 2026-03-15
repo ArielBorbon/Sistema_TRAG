@@ -4,6 +4,8 @@
  */
 package DTO;
 
+import enums.EstadoCliente;
+
 /**
  *
  * @author PC Gamer
@@ -16,19 +18,19 @@ public class ClienteDTO {
     private String apellidoMaterno;
     private String telefono;
     private String correo;
-    private boolean activo;
+    private EstadoCliente estado;
 
     public ClienteDTO() {
     }
 
-    public ClienteDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, boolean activo) {
+    public ClienteDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, EstadoCliente estado) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
         this.correo = correo;
-        this.activo = activo;
+        this.estado = estado;
     }
     
     
@@ -82,13 +84,15 @@ public class ClienteDTO {
         this.correo = correo;
     }
 
-    public boolean isActivo() {
-        return activo;
+    public EstadoCliente getEstado() {
+        return estado;
     }
 
-    public void setActivo(boolean activo) {
-        this.activo = activo;
+    public void setEstado(EstadoCliente estado) {
+        this.estado = estado;
     }
+
+    
     
     
     

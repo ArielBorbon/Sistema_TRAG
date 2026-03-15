@@ -4,10 +4,17 @@
  */
 package com.mycompany.administradorclientes_trag;
 
+import DTO.ClienteDTO;
+import entidades.Cliente;
+
 /**
  *
  * @author sonic
  */
 public class AdministradorClientes {
     
+    private static final int MAX_NOMBRE = 100;
+    private static final int MAX_TELEFONO = 20;
+
 }
+ 
