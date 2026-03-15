@@ -40,7 +40,7 @@ import entidades.Usuario;
  */
 public class DTOMapeadores {
 
-    public Usuario toEntity(UsuarioDTO dto) {
+    public static Usuario toEntity(UsuarioDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -55,7 +55,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public Cliente toEntity(ClienteDTO dto) {
+    public static Cliente toEntity(ClienteDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -69,7 +69,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public Proveedor toEntity(ProveedorDTO dto) {
+    public static Proveedor toEntity(ProveedorDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -81,7 +81,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public Servicio toEntity(ServicioDTO dto) {
+    public static Servicio toEntity(ServicioDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -93,7 +93,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public Cotizacion toEntity(CotizacionDTO dto) {
+    public static Cotizacion toEntity(CotizacionDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -105,7 +105,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public Insumo toEntity(InsumoDTO dto) {
+    public static Insumo toEntity(InsumoDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -117,7 +117,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public Automovil toEntity(AutomovilDTO dto) {
+    public static Automovil toEntity(AutomovilDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -132,7 +132,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public InsumoServicio toEntity(InsumoServicioDTO dto) {
+    public static InsumoServicio toEntity(InsumoServicioDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -144,7 +144,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public Cita toEntity(CitaDTO dto) {
+    public static Cita toEntity(CitaDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -156,7 +156,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public InsumoCotizacion toEntity(InsumoCotizacionDTO dto) {
+    public static InsumoCotizacion toEntity(InsumoCotizacionDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -169,7 +169,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public OrdenTrabajo toEntity(OrdenTrabajoDTO dto) {
+    public static OrdenTrabajo toEntity(OrdenTrabajoDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -181,7 +181,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public DetallePago toEntity(DetallePagoDTO dto) {
+    public static DetallePago toEntity(DetallePagoDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -194,7 +194,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public Trabajo toEntity(TrabajoDTO dto) {
+    public static Trabajo toEntity(TrabajoDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -206,7 +206,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public Imprevisto toEntity(ImprevistoDTO dto) {
+    public static Imprevisto toEntity(ImprevistoDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -218,7 +218,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public InsumoTrabajoAdquirido toEntity(InsumoTrabajoAdquiridoDTO dto) {
+    public static InsumoTrabajoAdquirido toEntity(InsumoTrabajoAdquiridoDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -231,7 +231,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public InsumoImprevisto toEntity(InsumoImprevistoDTO dto) {
+    public static InsumoImprevisto toEntity(InsumoImprevistoDTO dto) {
         if (dto == null) {
             return null;
         }

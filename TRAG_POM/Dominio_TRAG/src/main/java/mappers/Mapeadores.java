@@ -40,7 +40,7 @@ import entidades.Usuario;
  */
 public class Mapeadores {
 
-    public UsuarioDTO toDTO(Usuario entidad) {
+    public static UsuarioDTO toDTO(Usuario entidad) {
         if (entidad == null) {
             return null;
         }
@@ -55,7 +55,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public ClienteDTO toDTO(Cliente entidad) {
+    public static ClienteDTO toDTO(Cliente entidad) {
         if (entidad == null) {
             return null;
         }
@@ -69,7 +69,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public ProveedorDTO toDTO(Proveedor entidad) {
+    public static ProveedorDTO toDTO(Proveedor entidad) {
         if (entidad == null) {
             return null;
         }
@@ -81,7 +81,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public ServicioDTO toDTO(Servicio entidad) {
+    public static ServicioDTO toDTO(Servicio entidad) {
         if (entidad == null) {
             return null;
         }
@@ -93,7 +93,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public CotizacionDTO toDTO(Cotizacion entidad) {
+    public static CotizacionDTO toDTO(Cotizacion entidad) {
         if (entidad == null) {
             return null;
         }
@@ -105,7 +105,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public InsumoDTO toDTO(Insumo entidad) {
+    public static InsumoDTO toDTO(Insumo entidad) {
         if (entidad == null) {
             return null;
         }
@@ -117,7 +117,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public AutomovilDTO toDTO(Automovil entidad) {
+    public static AutomovilDTO toDTO(Automovil entidad) {
         if (entidad == null) {
             return null;
         }
@@ -132,7 +132,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public InsumoServicioDTO toDTO(InsumoServicio entidad) {
+    public static InsumoServicioDTO toDTO(InsumoServicio entidad) {
         if (entidad == null) {
             return null;
         }
@@ -144,7 +144,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public CitaDTO toDTO(Cita entidad) {
+    public static CitaDTO toDTO(Cita entidad) {
         if (entidad == null) {
             return null;
         }
@@ -156,7 +156,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public InsumoCotizacionDTO toDTO(InsumoCotizacion entidad) {
+    public static InsumoCotizacionDTO toDTO(InsumoCotizacion entidad) {
         if (entidad == null) {
             return null;
         }
@@ -169,7 +169,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public OrdenTrabajoDTO toDTO(OrdenTrabajo entidad) {
+    public static OrdenTrabajoDTO toDTO(OrdenTrabajo entidad) {
         if (entidad == null) {
             return null;
         }
@@ -181,7 +181,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public DetallePagoDTO toDTO(DetallePago entidad) {
+    public static DetallePagoDTO toDTO(DetallePago entidad) {
         if (entidad == null) {
             return null;
         }
@@ -194,7 +194,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public TrabajoDTO toDTO(Trabajo entidad) {
+    public static TrabajoDTO toDTO(Trabajo entidad) {
         if (entidad == null) {
             return null;
         }
@@ -206,7 +206,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public ImprevistoDTO toDTO(Imprevisto entidad) {
+    public static ImprevistoDTO toDTO(Imprevisto entidad) {
         if (entidad == null) {
             return null;
         }
@@ -218,7 +218,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public InsumoTrabajoAdquiridoDTO toDTO(InsumoTrabajoAdquirido entidad) {
+    public static InsumoTrabajoAdquiridoDTO toDTO(InsumoTrabajoAdquirido entidad) {
         if (entidad == null) {
             return null;
         }
@@ -231,7 +231,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public InsumoImprevistoDTO toDTO(InsumoImprevisto entidad) {
+    public static InsumoImprevistoDTO toDTO(InsumoImprevisto entidad) {
         if (entidad == null) {
             return null;
         }
