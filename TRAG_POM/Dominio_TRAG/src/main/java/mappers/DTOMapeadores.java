@@ -285,6 +285,7 @@ public class DTOMapeadores {
         entidad.setId(dto.getId());
         entidad.setFechaInicio(dto.getFechaInicio());
         entidad.setFechaEstimadaTermino(dto.getFechaEstimadaTermino());
+        entidad.setFechaTermino(dto.getFechaTermino());
         entidad.setOrdenTrabajo(toEntity(dto.getOrdenTrabajo()));
         return entidad;
     }

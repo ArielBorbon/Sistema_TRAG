@@ -15,22 +15,25 @@ public class TrabajoDTO {
     private Long id;
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaEstimadaTermino;
+    private LocalDateTime fechaTermino;
     private OrdenTrabajoDTO ordenTrabajo;
 
     public TrabajoDTO() {
     }
 
-    public TrabajoDTO(Long id, LocalDateTime fechaInicio, LocalDateTime fechaEstimadaTermino, OrdenTrabajoDTO ordenTrabajo) {
+    public TrabajoDTO(Long id, LocalDateTime fechaInicio, LocalDateTime fechaEstimadaTermino, LocalDateTime fechaTermino) {
         this.id = id;
         this.fechaInicio = fechaInicio;
         this.fechaEstimadaTermino = fechaEstimadaTermino;
-        this.ordenTrabajo = ordenTrabajo;
+        this.fechaTermino = fechaTermino;
     }
 
-    public TrabajoDTO(Long id, LocalDateTime fechaInicio, LocalDateTime fechaEstimadaTermino) {
+    public TrabajoDTO(Long id, LocalDateTime fechaInicio, LocalDateTime fechaEstimadaTermino, LocalDateTime fechaTermino, OrdenTrabajoDTO ordenTrabajo) {
         this.id = id;
         this.fechaInicio = fechaInicio;
         this.fechaEstimadaTermino = fechaEstimadaTermino;
+        this.fechaTermino = fechaTermino;
+        this.ordenTrabajo = ordenTrabajo;
     }
 
     public Long getId() {
@@ -64,9 +67,13 @@ public class TrabajoDTO {
     public void setOrdenTrabajo(OrdenTrabajoDTO ordenTrabajo) {
         this.ordenTrabajo = ordenTrabajo;
     }
-    
-    
-    
-    
-    
+
+    public LocalDateTime getFechaTermino() {
+        return fechaTermino;
+    }
+
+    public void setFechaTermino(LocalDateTime fechaTermino) {
+        this.fechaTermino = fechaTermino;
+    }
+
 }

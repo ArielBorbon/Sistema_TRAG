@@ -203,6 +203,7 @@ public class Mapeadores {
         dto.setId(entidad.getId());
         dto.setFechaInicio(entidad.getFechaInicio());
         dto.setFechaEstimadaTermino(entidad.getFechaEstimadaTermino());
+        dto.setFechaTermino(entidad.getFechaTermino());
         dto.setOrdenTrabajo(toDTO(entidad.getOrdenTrabajo()));
         return dto;
     }
