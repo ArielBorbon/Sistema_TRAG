@@ -41,4 +41,46 @@ public class InsumoImprevisto implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insumo_id", nullable = false)
     private Insumo insumo;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getCantidadRequerida() {
+        return cantidadRequerida;
+    }
+
+    public void setCantidadRequerida(Integer cantidadRequerida) {
+        this.cantidadRequerida = cantidadRequerida;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
+
+    public Imprevisto getImprevisto() {
+        return imprevisto;
+    }
+
+    public void setImprevisto(Imprevisto imprevisto) {
+        this.imprevisto = imprevisto;
+    }
+
+    public Insumo getInsumo() {
+        return insumo;
+    }
+
+    public void setInsumo(Insumo insumo) {
+        this.insumo = insumo;
+    }
+    
+    
 }

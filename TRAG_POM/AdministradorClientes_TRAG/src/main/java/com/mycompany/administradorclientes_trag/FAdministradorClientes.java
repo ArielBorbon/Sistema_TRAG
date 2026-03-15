@@ -1,16 +1,13 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package com.mycompany.administradorclientes_trag;
 
 /**
  *
- * @author PC Gamer
+ * @author sonic
  */
-public class AdministradorClientes_TRAG {
-
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
-    }
+public class FAdministradorClientes {
+    
 }

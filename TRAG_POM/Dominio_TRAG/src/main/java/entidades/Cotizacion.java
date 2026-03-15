@@ -33,4 +33,38 @@ public class Cotizacion implements Serializable {
 
     @Column(columnDefinition = "TEXT")
     private String diagnosticoGeneral;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public BigDecimal getPrecioManoObra() {
+        return precioManoObra;
+    }
+
+    public void setPrecioManoObra(BigDecimal precioManoObra) {
+        this.precioManoObra = precioManoObra;
+    }
+
+    public String getEstadoAutomovil() {
+        return estadoAutomovil;
+    }
+
+    public void setEstadoAutomovil(String estadoAutomovil) {
+        this.estadoAutomovil = estadoAutomovil;
+    }
+
+    public String getDiagnosticoGeneral() {
+        return diagnosticoGeneral;
+    }
+
+    public void setDiagnosticoGeneral(String diagnosticoGeneral) {
+        this.diagnosticoGeneral = diagnosticoGeneral;
+    }
+    
+    
 }

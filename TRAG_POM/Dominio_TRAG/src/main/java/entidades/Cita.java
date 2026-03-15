@@ -41,4 +41,38 @@ public class Cita implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "automovil_id", nullable = false)
     private Automovil automovil;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getFechaProgramada() {
+        return fechaProgramada;
+    }
+
+    public void setFechaProgramada(LocalDateTime fechaProgramada) {
+        this.fechaProgramada = fechaProgramada;
+    }
+
+    public EstadoCita getEstadoCita() {
+        return estadoCita;
+    }
+
+    public void setEstadoCita(EstadoCita estadoCita) {
+        this.estadoCita = estadoCita;
+    }
+
+    public Automovil getAutomovil() {
+        return automovil;
+    }
+
+    public void setAutomovil(Automovil automovil) {
+        this.automovil = automovil;
+    }
+    
+    
 }

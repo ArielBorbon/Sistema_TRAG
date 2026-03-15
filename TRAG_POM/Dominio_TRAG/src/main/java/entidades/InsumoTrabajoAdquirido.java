@@ -41,4 +41,46 @@ public class InsumoTrabajoAdquirido implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insumo_id", nullable = false)
     private Insumo insumo;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public BigDecimal getCostoReal() {
+        return costoReal;
+    }
+
+    public void setCostoReal(BigDecimal costoReal) {
+        this.costoReal = costoReal;
+    }
+
+    public Trabajo getTrabajo() {
+        return trabajo;
+    }
+
+    public void setTrabajo(Trabajo trabajo) {
+        this.trabajo = trabajo;
+    }
+
+    public Insumo getInsumo() {
+        return insumo;
+    }
+
+    public void setInsumo(Insumo insumo) {
+        this.insumo = insumo;
+    }
+    
+    
 }

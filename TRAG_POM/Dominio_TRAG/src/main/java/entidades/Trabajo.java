@@ -34,4 +34,39 @@ public class Trabajo implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_trabajo_id", nullable = false, unique = true)
     private OrdenTrabajo ordenTrabajo;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDateTime fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDateTime getFechaEstimadaTermino() {
+        return fechaEstimadaTermino;
+    }
+
+    public void setFechaEstimadaTermino(LocalDateTime fechaEstimadaTermino) {
+        this.fechaEstimadaTermino = fechaEstimadaTermino;
+    }
+
+    public OrdenTrabajo getOrdenTrabajo() {
+        return ordenTrabajo;
+    }
+
+    public void setOrdenTrabajo(OrdenTrabajo ordenTrabajo) {
+        this.ordenTrabajo = ordenTrabajo;
+    }
+    
+    
 }
+

@@ -40,4 +40,38 @@ public class Imprevisto implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_trabajo_id", nullable = false)
     private OrdenTrabajo ordenTrabajo;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getNuevaFechaEntrega() {
+        return nuevaFechaEntrega;
+    }
+
+    public void setNuevaFechaEntrega(LocalDateTime nuevaFechaEntrega) {
+        this.nuevaFechaEntrega = nuevaFechaEntrega;
+    }
+
+    public EstadoImprevisto getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoImprevisto estado) {
+        this.estado = estado;
+    }
+
+    public OrdenTrabajo getOrdenTrabajo() {
+        return ordenTrabajo;
+    }
+
+    public void setOrdenTrabajo(OrdenTrabajo ordenTrabajo) {
+        this.ordenTrabajo = ordenTrabajo;
+    }
+    
+    
 }
