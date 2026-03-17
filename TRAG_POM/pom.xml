@@ -6,14 +6,19 @@
     <version>1.0</version>
     <packaging>pom</packaging>
     <modules>
-        <module>Dominio_TRAG</module>
-        <module>Persistencia_TRAG</module>
         <module>AdministradorClientes_TRAG</module>
         <module>AdministradorAutomoviles_TRAG</module>
         <module>AdministradorServicios_TRAG</module>
         <module>AdministradorInsumos_TRAG</module>
         <module>AdministradorCotizaciones_TRAG</module>
         <module>Presentacion_TRAG</module>
+        <module>DTONegocios</module>
+        <module>Persistencia_TRAG</module>
+        <module>Mapeadores</module>
+        <module>ExcepcionesNegocio_TRAG</module>
+        <module>Pruebas_TRAG</module>
+        <module>Negocios_TRAG</module>
+        <module>AdministradorOrdenesTrabajo</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

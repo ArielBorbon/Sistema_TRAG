@@ -1,0 +1,135 @@
+
+package entidades;
+
+import enums.EstadoCotizacion;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+/**
+ *
+ * @author PC Gamer
+ */
+@Entity
+@Table(name = "Cotizacion")
+public class Cotizacion implements Serializable {
+
+    public Cotizacion() {
+    }
+
+    public Cotizacion(Long id) {
+        this.id = id;
+    }
+
+    public Cotizacion(BigDecimal precioManoObra, String estadoAutomovil, String diagnosticoGeneral, List<InsumoCotizacion> insumosCotizacion) {
+        this.precioManoObra = precioManoObra;
+        this.estadoAutomovil = estadoAutomovil;
+        this.diagnosticoGeneral = diagnosticoGeneral;
+        this.insumosCotizacion = insumosCotizacion;
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioManoObra;
+
+    @Column(length = 255)
+    private String estadoAutomovil;
+
+    @Column(columnDefinition = "TEXT")
+    private String diagnosticoGeneral;
+
+    private LocalDateTime fechaCreacion;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoCotizacion estadoCotizacion;
+
+    @OneToMany (mappedBy = "cotizacion_id", fetch = FetchType.LAZY)
+    private List<InsumoCotizacion> insumosCotizacion;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orden_trabajo_id", nullable = false, unique = true)
+    private OrdenTrabajo ordenTrabajo;
+    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public BigDecimal getPrecioManoObra() {
+        return precioManoObra;
+    }
+
+    public void setPrecioManoObra(BigDecimal precioManoObra) {
+        this.precioManoObra = precioManoObra;
+    }
+
+    public String getEstadoAutomovil() {
+        return estadoAutomovil;
+    }
+
+    public void setEstadoAutomovil(String estadoAutomovil) {
+        this.estadoAutomovil = estadoAutomovil;
+    }
+
+    public String getDiagnosticoGeneral() {
+        return diagnosticoGeneral;
+    }
+
+    public void setDiagnosticoGeneral(String diagnosticoGeneral) {
+        this.diagnosticoGeneral = diagnosticoGeneral;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public EstadoCotizacion getEstadoCotizacion() {
+        return estadoCotizacion;
+    }
+
+    public void setEstadoCotizacion(EstadoCotizacion estadoCotizacion) {
+        this.estadoCotizacion = estadoCotizacion;
+    }
+
+    public List<InsumoCotizacion> getInsumosCotizacion() {
+        return insumosCotizacion;
+    }
+
+    public void setInsumosCotizacion(List<InsumoCotizacion> insumosCotizacion) {
+        this.insumosCotizacion = insumosCotizacion;
+    }
+
+    public OrdenTrabajo getOrdenTrabajo() {
+        return ordenTrabajo;
+    }
+
+    public void setOrdenTrabajo(OrdenTrabajo ordenTrabajo) {
+        this.ordenTrabajo = ordenTrabajo;
+    }
+    
+
+}

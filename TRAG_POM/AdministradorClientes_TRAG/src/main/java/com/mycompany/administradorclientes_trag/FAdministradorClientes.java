@@ -1,22 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.mycompany.administradorclientes_trag;
 
-import DTO.ClienteDTO;
+import dtos.cliente.ClienteActualizarDTO;
+import dtos.cliente.ClienteAgregarDTO;
+import dtos.cliente.ClienteDetalleDTO;
+import dtos.cliente.ClienteResumenDTO;
+import excepciones.NegocioException;
 import java.util.List;
 
 /**
  *
  * @author sonic
  */
-public class FAdministradorClientes {
+public class FAdministradorClientes implements IAdministradorClientes{
 
-    private final AdministradorClientes administrador;
+    private final AdministradorClientes administradorClientes;
 
-    public FAdministradorClientes() {
-        this.administrador = new AdministradorClientes();
+    public FAdministradorClientes(AdministradorClientes administradorClientes) {
+        this.administradorClientes = administradorClientes;
     }
 
     /**
@@ -25,19 +26,19 @@ public class FAdministradorClientes {
      * @param dto Datos del cliente a registrar.
      * @return ClienteDTO con los datos registrados y validados.
      */
-    public ClienteDTO fCrearCliente(ClienteDTO dto) {
-        return administrador.crearCliente(dto);
+    @Override
+    public ClienteDetalleDTO crearCliente(ClienteAgregarDTO dto) throws NegocioException {
+        return administradorClientes.crearCliente(dto);
     }
 
     /**
      * Fachada para actualizar la información de un cliente existente.
      *
-     * @param id Identificador único del cliente.
      * @param dto Datos actualizados del cliente.
      * @return ClienteDTO con la información actualizada.
      */
-    public ClienteDTO fEditarCliente(Long id, ClienteDTO dto) {
-        return administrador.editarCliente(id, dto);
+    public ClienteDetalleDTO actualizarCliente(ClienteActualizarDTO dto) {
+        return administradorClientes.actualizarCliente(dto);
     }
 
     /**
@@ -46,7 +47,7 @@ public class FAdministradorClientes {
      * @param id Identificador único del cliente.
      */
     public void fDeshabilitarCliente(Long id) {
-        administrador.deshabilitarCliente(id);
+        administradorClientes.deshabilitarCliente(id);
     }
 
     /**
@@ -55,34 +56,41 @@ public class FAdministradorClientes {
      * @param id Identificador único del cliente.
      */
     public void fHabilitarCliente(Long id) {
-        administrador.habilitarCliente(id);
+        administradorClientes.habilitarCliente(id);
     }
 
+    
+    @Override
+    public ClienteDetalleDTO obtenerCliente(Long idCliente) throws NegocioException{
+        return administradorClientes.obtenerCliente(idCliente);
+    }
+    
     /**
      * Fachada para obtener el listado completo de clientes, sin importar su
      * estado.
      *
      * @return Lista de ClienteDTO.
      */
-    public List<ClienteDTO> fObtenerTodosLosClientes() {
-        return administrador.obtenerTodosLosClientes();
+    @Override
+    public List<ClienteResumenDTO> obtenerTodosClientes() throws NegocioException {
+        return administradorClientes.obtenerTodosClientes();
     }
 
-    /**
-     * Fachada para obtener el listado de clientes cuyo estado es HABILITADO.
-     *
-     * @return Lista de ClienteDTO.
-     */
-    public List<ClienteDTO> fObtenerClientesActivos() {
-        return administrador.obtenerClientesActivos();
-    }
+//    /**
+//     * Fachada para obtener el listado de clientes cuyo estado es HABILITADO.
+//     *
+//     * @return Lista de ClienteDTO.
+//     */
+//    public List<ClienteDTO> fObtenerClientesActivos() {
+//        return administradorClientes.obtenerClientesActivos();
+//    }
 
-    /**
-     * Fachada para obtener el listado de clientes cuyo estado es DESHABILITADO.
-     *
-     * @return Lista de ClienteDTO.
-     */
-    public List<ClienteDTO> fObtenerClientesInactivos() {
-        return administrador.obtenerClientesInactivos();
-    }
+//    /**
+//     * Fachada para obtener el listado de clientes cuyo estado es DESHABILITADO.
+//     *
+//     * @return Lista de ClienteDTO.
+//     */
+//    public List<ClienteDTO> fObtenerClientesInactivos() {
+//        return administradorClientes.obtenerClientesInactivos();
+//    }
 }

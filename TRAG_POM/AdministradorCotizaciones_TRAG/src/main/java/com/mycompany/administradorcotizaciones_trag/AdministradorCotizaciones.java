@@ -1,12 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.mycompany.administradorcotizaciones_trag;
 
-import DTO.CotizacionDTO;
+
+import dtos.cotizacion.CotizacionActualizarDTO;
+import dtos.cotizacion.CotizacionDetalleDTO;
+import dtos.cotizacion.CotizacionResumenDTO;
+import dtos.cotizacion.CotizacionAgregarDTO;
 import entidades.Cotizacion;
+import excepciones.NegocioException;
+import excepciones.PersistenciaException;
+import interfaces.ICotizacionesDAO;
 import java.math.BigDecimal;
+import java.util.List;
 import mappers.DTOMapeadores;
 import mappers.Mapeadores;
 
@@ -16,31 +21,91 @@ import mappers.Mapeadores;
  */
 public class AdministradorCotizaciones {
     
+    private ICotizacionesDAO cotizacionesDAO;
+    
     private static final int MAX_LONGITUD_ESTADO = 255;
     private static final BigDecimal PRECIO_MAXIMO = new BigDecimal("99999999.99");
+    
+    private static final String MENSAJE_ID_COTIZACION_AUSENTE_OBTENER = "El ID es necesario para obtener una cotización";
+    private static final String MENSAJE_ID_COTIZACION_AUSENTE_ACTUALIZAR = "El ID es necesario para actualizar una cotización";
+    private static final String MENSAJE_ID_COTIZACION_AUSENTE_ELIMINAR = "El ID es necesario para eliminar una cotización";
+    
+    private static final String MENSAJE_ERROR_CREAR_COTIZACION = "Error al crear la cotización";
+    private static final String MENSAJE_ERROR_OBTENER_COTIZACION = "Error al obtener la cotización";
+    private static final String MENSAJE_ERROR_OBTENER_TODAS_COTIZACIONES = "Error al obtener las cotizaciones";
+    private static final String MENSAJE_ERROR_ACTUALIZAR_COTIZACION = "Error al actualizar la cotización";
+    private static final String MENSAJE_ERROR_ELIMINAR_COTIZACION = "Error al eliminar la cotización";
 
-    public CotizacionDTO crearCotizacion(CotizacionDTO dto) {
+    public AdministradorCotizaciones(ICotizacionesDAO cotizacionesDAO) {
+        this.cotizacionesDAO = cotizacionesDAO;
+    }
+
+    public CotizacionDetalleDTO crearCotizacion(CotizacionAgregarDTO dto) throws NegocioException{
         
-        validarCotizacion(dto);
-
+        //validarCotizacion(dto);
+        
         //aqui se mapea a entidad y se llama al metodo de la DAO para crear la cotizacion
         Cotizacion cotizacionRegistrada = DTOMapeadores.toEntity(dto);
-
-        return Mapeadores.toDTO(cotizacionRegistrada);
+        
+        try {
+            return Mapeadores.toDTODetalle(cotizacionesDAO.agregarCotizacion(cotizacionRegistrada));
+        } catch (PersistenciaException e) {
+            throw new NegocioException(MENSAJE_ERROR_CREAR_COTIZACION, e);
+            
+        }
+        
     }
     
-    public CotizacionDTO editarCotizacion(Long id, CotizacionDTO dto) {
-        if (id == null) throw new IllegalArgumentException("El ID es necesario para editar.");
+    public CotizacionDetalleDTO obtenerCotizacion(Long idCotizacion) throws NegocioException {
         
-        validarCotizacion(dto);
+        if(idCotizacion == null) throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_OBTENER);
         
-        Cotizacion cotizacionEditada = DTOMapeadores.toEntity(dto);
-
-        return Mapeadores.toDTO(cotizacionEditada);
+        try {
+            return Mapeadores.toDTODetalle(cotizacionesDAO.obtenerCotizacion(idCotizacion));
+        } catch (PersistenciaException e) {
+            throw new NegocioException(MENSAJE_ERROR_OBTENER_COTIZACION, e);
+        }
+        
     }
     
+    public List<CotizacionResumenDTO> obtenerTodasCotizaciones() throws NegocioException {
+        
+        try {
+            return Mapeadores.toDTOCotizaciones(cotizacionesDAO.obtenerTodasCotizaciones());
+        } catch (PersistenciaException e) {
+            throw new NegocioException(MENSAJE_ERROR_OBTENER_TODAS_COTIZACIONES, e);
+        }
+        
+    }
     
-    private void validarCotizacion (CotizacionDTO dto) {
+    public CotizacionDetalleDTO actualizarCotizacion(CotizacionActualizarDTO dto) throws NegocioException{
+        
+        if (dto.getId() == null) throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_ACTUALIZAR);
+        
+        //validarCotizacion(dto);
+        
+        Cotizacion cotizacionActualizar = DTOMapeadores.toEntity(dto);
+
+        try {
+            return Mapeadores.toDTODetalle(cotizacionesDAO.actualizarCotizacion(cotizacionActualizar));
+        } catch (PersistenciaException e) {
+            throw new NegocioException(MENSAJE_ERROR_ACTUALIZAR_COTIZACION, e);
+        }
+    }
+    
+    public CotizacionDetalleDTO eliminarCotizacion(Long idCotizacion) throws NegocioException{
+        
+        if(idCotizacion == null) throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_ELIMINAR);
+        
+        try {
+            return Mapeadores.toDTODetalle(cotizacionesDAO.eliminarCotizacion(idCotizacion));
+        } catch (PersistenciaException e) {
+            throw new NegocioException(MENSAJE_ERROR_ELIMINAR_COTIZACION, e);
+        }
+        
+    }
+    
+    private void validarCotizacion (CotizacionDetalleDTO dto) {
         if (dto.getPrecioManoObra() == null || dto.getPrecioManoObra().compareTo(BigDecimal.ZERO) < 0) {
             throw new RuntimeException("El precio de mano de obra no es válido, debe ser mayor a 0");
         }
@@ -71,4 +136,6 @@ public class AdministradorCotizaciones {
             throw new IllegalArgumentException("El diagnóstico es demasiado breve. Por favor, sea más específico.");
         }
     }
+
+
 }
