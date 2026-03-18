@@ -11,22 +11,22 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>DTONegocios</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>Persistencia_TRAG</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>Mapeadores</artifactId>
+            <artifactId>ExcepcionesNegocio_TRAG</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>ExcepcionesNegocio_TRAG</artifactId>
+            <artifactId>DTONegocios_TRAG</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Mapeadores_TRAG</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -1,11 +1,10 @@
-
 package com.mycompany.administradorcotizaciones_trag;
 
 
 import dtos.cotizacion.CotizacionActualizarDTO;
+import dtos.cotizacion.CotizacionAgregarDTO;
 import dtos.cotizacion.CotizacionDetalleDTO;
 import dtos.cotizacion.CotizacionResumenDTO;
-import dtos.cotizacion.CotizacionAgregarDTO;
 import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
 import entidades.Cotizacion;
 import enums.EstadoCotizacionNegocios;
@@ -15,24 +14,22 @@ import interfaces.ICotizacionesDAO;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import mappers.DTOMapeadores;
-import mappers.Mapeadores;
 
 /**
  *
  * @author sonic
  */
 public class AdministradorCotizaciones {
-    
+
     private ICotizacionesDAO cotizacionesDAO;
-    
+
     private static final int MAX_LONGITUD_ESTADO = 255;
     private static final BigDecimal PRECIO_MAXIMO = new BigDecimal("99999999.99");
-    
+
     private static final String MENSAJE_ID_COTIZACION_AUSENTE_OBTENER = "El ID es necesario para obtener una cotización";
     private static final String MENSAJE_ID_COTIZACION_AUSENTE_ACTUALIZAR = "El ID es necesario para actualizar una cotización";
     private static final String MENSAJE_ID_COTIZACION_AUSENTE_ELIMINAR = "El ID es necesario para eliminar una cotización";
-    
+
     private static final String MENSAJE_ERROR_CREAR_COTIZACION = "Error al crear la cotización";
     private static final String MENSAJE_ERROR_OBTENER_COTIZACION = "Error al obtener la cotización";
     private static final String MENSAJE_ERROR_OBTENER_TODAS_COTIZACIONES = "Error al obtener las cotizaciones";
@@ -43,73 +40,78 @@ public class AdministradorCotizaciones {
         this.cotizacionesDAO = cotizacionesDAO;
     }
 
-    public CotizacionDetalleDTO crearCotizacion(CotizacionAgregarDTO dto) throws NegocioException{
-        
-        //validarCotizacion(dto);
+    public CotizacionDetalleDTO crearCotizacion(CotizacionAgregarDTO dto) throws NegocioException {
+
+        validarCotizacionAgregar(dto);
         
         dto.setEstadoCotizacion(EstadoCotizacionNegocios.ACTIVA);
         //aqui se mapea a entidad y se llama al metodo de la DAO para crear la cotizacion
         Cotizacion cotizacionRegistrada = DTOMapeadores.toEntity(dto);
-        
+
         try {
             return Mapeadores.toDTODetalle(cotizacionesDAO.agregarCotizacion(cotizacionRegistrada));
         } catch (PersistenciaException e) {
             throw new NegocioException(MENSAJE_ERROR_CREAR_COTIZACION, e);
-            
+
         }
-        
+
     }
-    
+
     public CotizacionDetalleDTO obtenerCotizacion(Long idCotizacion) throws NegocioException {
-        
-        if(idCotizacion == null) throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_OBTENER);
-        
+
+        if (idCotizacion == null) {
+            throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_OBTENER);
+        }
+
         try {
             CotizacionDetalleDTO cotizacionDetalle = Mapeadores.toDTODetalle(cotizacionesDAO.obtenerCotizacion(idCotizacion));
             List<InsumoCotizacionDetalleDTO> insumosCotizacion = cotizacionDetalle.getInsumosCotizacion();
-            
-            for(InsumoCotizacionDetalleDTO dto: insumosCotizacion){
+
+            for (InsumoCotizacionDetalleDTO dto : insumosCotizacion) {
                 dto.setSubtotal(BigDecimal.valueOf(dto.getCantidadRequerida()).multiply(dto.getPrecio()));
             }
-            
+
             return cotizacionDetalle;
         } catch (PersistenciaException e) {
             throw new NegocioException(MENSAJE_ERROR_OBTENER_COTIZACION, e);
         }
-        
+
     }
-    
+
     public List<CotizacionResumenDTO> obtenerTodasCotizaciones() throws NegocioException {
-        
+
         try {
             List<CotizacionResumenDTO> cotizaciones = Mapeadores.toDTOCotizaciones(cotizacionesDAO.obtenerTodasCotizaciones());
-            
-            for(CotizacionResumenDTO cotizacion: cotizaciones){
-                
+
+            for (CotizacionResumenDTO cotizacion : cotizaciones) {
+
                 BigDecimal total = cotizacion.getPrecioManoObra().add(
-                    cotizacion.getInsumosCotizacion().stream().map(insumo -> {
-                        insumo.setSubtotal(insumo.getPrecio().multiply(BigDecimal.valueOf(insumo.getCantidadRequerida())));
-                        return insumo.getSubtotal();
-                    }).reduce(BigDecimal.ZERO, BigDecimal::add)
+                        cotizacion.getInsumosCotizacion().stream().map(insumo -> {
+                            insumo.setSubtotal(insumo.getPrecio().multiply(BigDecimal.valueOf(insumo.getCantidadRequerida())));
+                            return insumo.getSubtotal();
+                        }).reduce(BigDecimal.ZERO, BigDecimal::add)
                 );
-                
+
                 cotizacion.setPrecioTotal(total);
-                
+
             }
-            
+
             return cotizaciones;
-            
+
         } catch (PersistenciaException e) {
             throw new NegocioException(MENSAJE_ERROR_OBTENER_TODAS_COTIZACIONES, e);
         }
-        
+
     }
-    
-    public CotizacionDetalleDTO actualizarCotizacion(CotizacionActualizarDTO dto) throws NegocioException{
+
+    public CotizacionDetalleDTO actualizarCotizacion(CotizacionActualizarDTO dto) throws NegocioException {
+
+        if (dto.getId() == null) {
+            throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_ACTUALIZAR);
+        }
+
+        validarCotizacionActualizar(dto);
         
-        if (dto.getId() == null) throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_ACTUALIZAR);
-        
-        //validarCotizacion(dto);
         dto.setFechaCreacion(LocalDateTime.now());
         Cotizacion cotizacionActualizar = DTOMapeadores.toEntity(dto);
 
@@ -119,50 +121,97 @@ public class AdministradorCotizaciones {
             throw new NegocioException(MENSAJE_ERROR_ACTUALIZAR_COTIZACION, e);
         }
     }
-    
-    public CotizacionDetalleDTO eliminarCotizacion(Long idCotizacion) throws NegocioException{
-        
-        if(idCotizacion == null) throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_ELIMINAR);
-        
+
+    public CotizacionDetalleDTO eliminarCotizacion(Long idCotizacion) throws NegocioException {
+
+        if (idCotizacion == null) {
+            throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_ELIMINAR);
+        }
+
         try {
             return Mapeadores.toDTODetalle(cotizacionesDAO.eliminarCotizacion(idCotizacion));
         } catch (PersistenciaException e) {
             throw new NegocioException(MENSAJE_ERROR_ELIMINAR_COTIZACION, e);
         }
-        
+
     }
-    
-    private void validarCotizacion (CotizacionDetalleDTO dto) {
-        if (dto.getPrecioManoObra() == null || dto.getPrecioManoObra().compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("El precio de mano de obra no es válido, debe ser mayor a 0");
+
+    // MÉTODOS DE VALIDACIÓN REFACTORIZADOS
+    private void validarCotizacionAgregar(CotizacionAgregarDTO dto) throws NegocioException {
+        if (dto == null) {
+            throw new NegocioException("Los datos de la cotización no pueden ser nulos.");
         }
-        if (dto.getDiagnosticoGeneral() == null || dto.getDiagnosticoGeneral().isEmpty()) {
-            throw new RuntimeException("El diagnóstico no puede estar vacío.");
+        validarPrecioManoObra(dto.getPrecioManoObra());
+        validarEstadoAutomovil(dto.getEstadoAutomovil());
+        validarDiagnosticoGeneral(dto.getDiagnosticoGeneral());
+    }
+
+    private void validarCotizacionActualizar(CotizacionActualizarDTO dto) throws NegocioException {
+        if (dto == null) {
+            throw new NegocioException("Los datos de la cotización no pueden ser nulos.");
         }
-        
-        if (dto.getEstadoAutomovil()== null || dto.getEstadoAutomovil().isEmpty()) {
-            throw new RuntimeException("El estado del automovil no puede estar vacio.");
+        validarPrecioManoObra(dto.getPrecioManoObra());
+        validarEstadoAutomovil(dto.getEstadoAutomovil());
+        validarDiagnosticoGeneral(dto.getDiagnosticoGeneral());
+    }
+
+    private void validarPrecioManoObra(BigDecimal precioManoObra) {
+        if (precioManoObra == null || precioManoObra.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("El precio de mano de obra no es válido, debe ser mayor o igual a 0.");
         }
-        
-        if (dto.getPrecioManoObra().compareTo(PRECIO_MAXIMO) > 0) {
+        if (precioManoObra.compareTo(PRECIO_MAXIMO) > 0) {
             throw new IllegalArgumentException("El precio excede el límite permitido del sistema.");
         }
+    }
 
-        if (dto.getEstadoAutomovil() != null) {
-            if (dto.getEstadoAutomovil().trim().length() > MAX_LONGITUD_ESTADO) {
-                throw new IllegalArgumentException("La descripción del estado no puede superar los " 
-                    + MAX_LONGITUD_ESTADO + " caracteres.");
-            }
+    private void validarEstadoAutomovil(String estadoAutomovil) {
+        if (estadoAutomovil == null || estadoAutomovil.trim().isEmpty()) {
+            throw new IllegalArgumentException("El estado del automóvil no puede estar vacío.");
         }
+        if (estadoAutomovil.trim().length() > MAX_LONGITUD_ESTADO) {
+            throw new IllegalArgumentException("La descripción del estado no puede superar los "
+                    + MAX_LONGITUD_ESTADO + " caracteres.");
+        }
+    }
 
-        if (dto.getDiagnosticoGeneral() == null || dto.getDiagnosticoGeneral().trim().isEmpty()) {
+    private void validarDiagnosticoGeneral(String diagnosticoGeneral) {
+        if (diagnosticoGeneral == null || diagnosticoGeneral.trim().isEmpty()) {
             throw new IllegalArgumentException("El diagnóstico general es obligatorio para procesar la cotización.");
         }
-
-        if (dto.getDiagnosticoGeneral().trim().length() < 10) {
+        if (diagnosticoGeneral.trim().length() < 10) {
             throw new IllegalArgumentException("El diagnóstico es demasiado breve. Por favor, sea más específico.");
         }
     }
 
-
+//    private void validarCotizacion (CotizacionDetalleDTO dto) {
+//        if (dto.getPrecioManoObra() == null || dto.getPrecioManoObra().compareTo(BigDecimal.ZERO) < 0) {
+//            throw new RuntimeException("El precio de mano de obra no es válido, debe ser mayor a 0");
+//        }
+//        if (dto.getDiagnosticoGeneral() == null || dto.getDiagnosticoGeneral().isEmpty()) {
+//            throw new RuntimeException("El diagnóstico no puede estar vacío.");
+//        }
+//        
+//        if (dto.getEstadoAutomovil()== null || dto.getEstadoAutomovil().isEmpty()) {
+//            throw new RuntimeException("El estado del automovil no puede estar vacio.");
+//        }
+//        
+//        if (dto.getPrecioManoObra().compareTo(PRECIO_MAXIMO) > 0) {
+//            throw new IllegalArgumentException("El precio excede el límite permitido del sistema.");
+//        }
+//
+//        if (dto.getEstadoAutomovil() != null) {
+//            if (dto.getEstadoAutomovil().trim().length() > MAX_LONGITUD_ESTADO) {
+//                throw new IllegalArgumentException("La descripción del estado no puede superar los " 
+//                    + MAX_LONGITUD_ESTADO + " caracteres.");
+//            }
+//        }
+//
+//        if (dto.getDiagnosticoGeneral() == null || dto.getDiagnosticoGeneral().trim().isEmpty()) {
+//            throw new IllegalArgumentException("El diagnóstico general es obligatorio para procesar la cotización.");
+//        }
+//
+//        if (dto.getDiagnosticoGeneral().trim().length() < 10) {
+//            throw new IllegalArgumentException("El diagnóstico es demasiado breve. Por favor, sea más específico.");
+//        }
+//    }
 }
