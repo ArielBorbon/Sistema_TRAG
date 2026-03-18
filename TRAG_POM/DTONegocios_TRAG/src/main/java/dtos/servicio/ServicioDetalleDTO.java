@@ -1,7 +1,9 @@
 
 package dtos.servicio;
 
+import insumoservicio.InsumoServicioDetalleDTO;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -13,15 +15,17 @@ public class ServicioDetalleDTO {
     private String nombre;
     private String descripcion;
     private BigDecimal precioManoObraSugerido;
+    private List<InsumoServicioDetalleDTO> insumosServicio;
 
     public ServicioDetalleDTO() {
     }
 
-    public ServicioDetalleDTO(Long id, String nombre, String descripcion, BigDecimal precioManoObraSugerido) {
+    public ServicioDetalleDTO(Long id, String nombre, String descripcion, BigDecimal precioManoObraSugerido, List<InsumoServicioDetalleDTO> insumosServicio) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioManoObraSugerido = precioManoObraSugerido;
+        this.insumosServicio = insumosServicio;
     }
 
     public Long getId() {
@@ -38,6 +42,10 @@ public class ServicioDetalleDTO {
 
     public BigDecimal getPrecioManoObraSugerido() {
         return precioManoObraSugerido;
+    }
+
+    public List<InsumoServicioDetalleDTO> getInsumosServicio() {
+        return insumosServicio;
     }
     
     

@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @author PC Gamer
  */
 @Entity
-@Table(name = "Usuario")
+@Table(name = "usuarios")
 public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

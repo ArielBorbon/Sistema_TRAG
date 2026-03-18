@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * @author PC Gamer
  */
 @Entity
-@Table(name = "Proveedor")
+@Table(name = "proveedores")
 public class Proveedor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

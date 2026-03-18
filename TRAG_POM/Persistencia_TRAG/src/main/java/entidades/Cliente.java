@@ -20,7 +20,7 @@ import javax.persistence.Table;
  * @author PC Gamer
  */
 @Entity
-@Table(name = "Cliente")
+@Table(name = "clientes")
 public class Cliente implements Serializable {
 
     

@@ -21,12 +21,11 @@ public class CotizacionActualizarDTO{
     private LocalDateTime fechaCreacion;
     private List<InsumoCotizacionActualizarDTO> insumosCotizacion;
 
-    public CotizacionActualizarDTO(Long id, BigDecimal precioManoObra, String estadoAutomovil, String diagnosticoGeneral, LocalDateTime fechaCreacion, List<InsumoCotizacionActualizarDTO> insumosCotizacion) {
+    public CotizacionActualizarDTO(Long id, BigDecimal precioManoObra, String estadoAutomovil, String diagnosticoGeneral, List<InsumoCotizacionActualizarDTO> insumosCotizacion) {
         this.id = id;
         this.precioManoObra = precioManoObra;
         this.estadoAutomovil = estadoAutomovil;
         this.diagnosticoGeneral = diagnosticoGeneral;
-        this.fechaCreacion = fechaCreacion;
         this.insumosCotizacion = insumosCotizacion;
     }
     
@@ -52,6 +51,10 @@ public class CotizacionActualizarDTO{
 
     public List<InsumoCotizacionActualizarDTO> getInsumosCotizacion() {
         return insumosCotizacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
     
 

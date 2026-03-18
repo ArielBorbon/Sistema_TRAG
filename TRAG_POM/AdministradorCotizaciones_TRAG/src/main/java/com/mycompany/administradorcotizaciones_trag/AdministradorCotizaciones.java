@@ -6,12 +6,14 @@ import dtos.cotizacion.CotizacionActualizarDTO;
 import dtos.cotizacion.CotizacionDetalleDTO;
 import dtos.cotizacion.CotizacionResumenDTO;
 import dtos.cotizacion.CotizacionAgregarDTO;
+import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
 import entidades.Cotizacion;
 import enums.EstadoCotizacionNegocios;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.ICotizacionesDAO;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import mappers.DTOMapeadores;
 import mappers.Mapeadores;
@@ -63,7 +65,14 @@ public class AdministradorCotizaciones {
         if(idCotizacion == null) throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_OBTENER);
         
         try {
-            return Mapeadores.toDTODetalle(cotizacionesDAO.obtenerCotizacion(idCotizacion));
+            CotizacionDetalleDTO cotizacionDetalle = Mapeadores.toDTODetalle(cotizacionesDAO.obtenerCotizacion(idCotizacion));
+            List<InsumoCotizacionDetalleDTO> insumosCotizacion = cotizacionDetalle.getInsumosCotizacion();
+            
+            for(InsumoCotizacionDetalleDTO dto: insumosCotizacion){
+                dto.setSubtotal(BigDecimal.valueOf(dto.getCantidadRequerida()).multiply(dto.getPrecio()));
+            }
+            
+            return cotizacionDetalle;
         } catch (PersistenciaException e) {
             throw new NegocioException(MENSAJE_ERROR_OBTENER_COTIZACION, e);
         }
@@ -73,7 +82,23 @@ public class AdministradorCotizaciones {
     public List<CotizacionResumenDTO> obtenerTodasCotizaciones() throws NegocioException {
         
         try {
-            return Mapeadores.toDTOCotizaciones(cotizacionesDAO.obtenerTodasCotizaciones());
+            List<CotizacionResumenDTO> cotizaciones = Mapeadores.toDTOCotizaciones(cotizacionesDAO.obtenerTodasCotizaciones());
+            
+            for(CotizacionResumenDTO cotizacion: cotizaciones){
+                
+                BigDecimal total = cotizacion.getPrecioManoObra().add(
+                    cotizacion.getInsumosCotizacion().stream().map(insumo -> {
+                        insumo.setSubtotal(insumo.getPrecio().multiply(BigDecimal.valueOf(insumo.getCantidadRequerida())));
+                        return insumo.getSubtotal();
+                    }).reduce(BigDecimal.ZERO, BigDecimal::add)
+                );
+                
+                cotizacion.setPrecioTotal(total);
+                
+            }
+            
+            return cotizaciones;
+            
         } catch (PersistenciaException e) {
             throw new NegocioException(MENSAJE_ERROR_OBTENER_TODAS_COTIZACIONES, e);
         }
@@ -85,7 +110,7 @@ public class AdministradorCotizaciones {
         if (dto.getId() == null) throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_ACTUALIZAR);
         
         //validarCotizacion(dto);
-        
+        dto.setFechaCreacion(LocalDateTime.now());
         Cotizacion cotizacionActualizar = DTOMapeadores.toEntity(dto);
 
         try {

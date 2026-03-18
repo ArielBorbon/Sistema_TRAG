@@ -9,7 +9,6 @@ import excepciones.PersistenciaException;
 import interfaces.IServiciosDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 
 
@@ -67,7 +66,7 @@ public class ServiciosDAO implements IServiciosDAO{
             String jpql = "SELECT DISTINCT s FROM Servicio s " +
                           "LEFT JOIN FETCH s.insumosServicio i " +
                           "WHERE s.id = :id AND s.activo = :activo " +
-                          "AND (i IS NULL OR i.activo = :activoInsumo)";
+                          "AND (i.id IS NULL OR i.activo = :activoInsumo)";
 
             return em.createQuery(jpql, Servicio.class)
                      .setParameter("id", idServicio)
@@ -91,7 +90,7 @@ public class ServiciosDAO implements IServiciosDAO{
             String jpql = "SELECT DISTINCT s FROM Servicio s " +
                           "LEFT JOIN FETCH s.insumosServicio i " +
                           "WHERE s.activo = :activo " +
-                          "AND (i IS NULL OR i.activo = :activoInsumo)";
+                          "AND (i.id IS NULL OR i.activo = :activoInsumo)";
 
             return em.createQuery(jpql, Servicio.class)
                      .setParameter("activo", true)

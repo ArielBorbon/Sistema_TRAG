@@ -2,6 +2,7 @@
 package dtos.cotizacion;
 
 import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
+import enums.EstadoCotizacionNegocios;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,8 +23,9 @@ public class CotizacionResumenDTO {
     private BigDecimal precioManoObra;
     private List<InsumoCotizacionDetalleDTO> insumosCotizacion;
     private BigDecimal precioTotal;
+    private EstadoCotizacionNegocios estadoCotizacion;
 
-    public CotizacionResumenDTO(String nombreCliente, String apellidoPaternoCliente, String marcaAutomovil, String modeloAutomovil, Integer anioAutomovil, LocalDateTime fechaCreacion, BigDecimal precioManoObra, List<InsumoCotizacionDetalleDTO> insumosCotizacion) {
+    public CotizacionResumenDTO(String nombreCliente, String apellidoPaternoCliente, String marcaAutomovil, String modeloAutomovil, Integer anioAutomovil, LocalDateTime fechaCreacion, BigDecimal precioManoObra, List<InsumoCotizacionDetalleDTO> insumosCotizacion, EstadoCotizacionNegocios estadoCotizacion) {
         this.nombreCliente = nombreCliente;
         this.apellidoPaternoCliente = apellidoPaternoCliente;
         this.marcaAutomovil = marcaAutomovil;
@@ -32,6 +34,7 @@ public class CotizacionResumenDTO {
         this.fechaCreacion = fechaCreacion;
         this.precioManoObra = precioManoObra;
         this.insumosCotizacion = insumosCotizacion;
+        this.estadoCotizacion = estadoCotizacion;
     }
 
     public String getNombreCliente() {
@@ -72,6 +75,14 @@ public class CotizacionResumenDTO {
 
     public void setPrecioTotal(BigDecimal precioTotal) {
         this.precioTotal = precioTotal;
+    }
+
+    public EstadoCotizacionNegocios getEstadoCotizacion() {
+        return estadoCotizacion;
+    }
+
+    public void setEstadoCotizacion(EstadoCotizacionNegocios estadoCotizacion) {
+        this.estadoCotizacion = estadoCotizacion;
     }
  
 }

@@ -12,6 +12,7 @@ public class ClienteResumenDTO {
     private String apellidoMaterno;
 
     public ClienteResumenDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno) {
+        this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -32,5 +33,11 @@ public class ClienteResumenDTO {
     public String getApellidoMaterno() {
         return apellidoMaterno;
     }
+
+    public Long getId() {
+        return id;
+    }
+    
+    
     
 }

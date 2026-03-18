@@ -4,23 +4,35 @@ package com.mycompany.pruebas_trag;
 
 import com.mycompany.administradorautomoviles_trag.IAdministradorAutomoviles;
 import com.mycompany.administradorclientes_trag.IAdministradorClientes;
+import com.mycompany.administradorcotizaciones_trag.IAdministradorCotizaciones;
 import com.mycompany.administradorinsumos_trag.IAdministradorInsumos;
 import com.mycompany.administradorordenestrabajo.IAdministradorOrdenesTrabajo;
 import com.mycompany.administradorservicios_trag.IAdministradorServicios;
 import com.mycompany.negocios_trag.FabricaNegocios;
 import dtos.automovil.AutomovilAgregarDTO;
+import dtos.automovil.AutomovilResumenDTO;
 import dtos.cliente.ClienteAgregarDTO;
+import dtos.cliente.ClienteResumenDTO;
+import dtos.cotizacion.CotizacionActualizarDTO;
+import dtos.cotizacion.CotizacionDetalleDTO;
+import dtos.cotizacion.CotizacionResumenDTO;
+import dtos.insumocotizacion.InsumoCotizacionActualizarDTO;
 import dtos.insumocotizacion.InsumoCotizacionAgregarDTO;
+import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
 import dtos.insumos.InsumoAgregarDTO;
 import dtos.ordentrabajo.OrdenTrabajoCotizacionAgregarDTO;
 import dtos.servicio.ServicioAgregarDTO;
+import dtos.servicio.ServicioResumenDTO;
 import enums.EstadoClienteNegocios;
 import excepciones.NegocioException;
 import insumoservicio.InsumoServicioAgregarDTO;
+import insumoservicio.InsumoServicioDetalleDTO;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 /**
  *
  * @author 
@@ -29,8 +41,15 @@ public class Pruebas_TRAG {
 
     public static void main(String[] args) {
         
-        //Registro de clientes
+
         IAdministradorClientes administradorClientes = FabricaNegocios.obtenerAdministradorClientes();
+        IAdministradorAutomoviles administradorAutomoviles = FabricaNegocios.obtenerAdministradorAutomoviles();
+        IAdministradorInsumos administradorInsumos = FabricaNegocios.obtenerAdministadorInsumos();
+        IAdministradorServicios administradorServicios = FabricaNegocios.obtenerAdministradorServicios();
+        IAdministradorOrdenesTrabajo administradorOrdenesTrabajo = FabricaNegocios.obtenerAdministradorOrdenesTrabajo();
+        IAdministradorCotizaciones administradorCotizaciones = FabricaNegocios.obtenerAdministradorCotizaciones();
+        
+        //Registro de clientes
         
         try {
             administradorClientes.crearCliente(new ClienteAgregarDTO(
@@ -80,7 +99,7 @@ public class Pruebas_TRAG {
         }
         
         // Registro de automóviles
-        IAdministradorAutomoviles administradorAutomoviles = FabricaNegocios.obtenerAdministradorAutomoviles();
+        
         try {
             administradorAutomoviles.crearAutomovil(
                     new AutomovilAgregarDTO(
@@ -122,15 +141,6 @@ public class Pruebas_TRAG {
                             4L)
             );
             
-            administradorAutomoviles.crearAutomovil(
-                    new AutomovilAgregarDTO(
-                            2005, 
-                            "OEY834",
-                            "672342111",
-                            "Lobo",
-                            "Ford", 
-                            4L)
-            );
             
             administradorAutomoviles.crearAutomovil(
                     new AutomovilAgregarDTO(
@@ -149,7 +159,7 @@ public class Pruebas_TRAG {
         
         //Registro de Insumos
         
-        IAdministradorInsumos administradorInsumos = FabricaNegocios.obtenerAdministadorInsumos();
+
         
         // Servicio 1
         try {
@@ -234,8 +244,7 @@ public class Pruebas_TRAG {
         }
         
         //Registro de Servicios
-        
-        IAdministradorServicios administradorServicios = FabricaNegocios.obtenerAdministradorServicios();
+       
         
         try{
             administradorServicios.crearServicio(new ServicioAgregarDTO(
@@ -300,7 +309,6 @@ public class Pruebas_TRAG {
         
         // Registro de Ordenes de Trabajo (En estado de Cotización)
         
-        IAdministradorOrdenesTrabajo administradorOrdenesTrabajo = FabricaNegocios.obtenerAdministradorOrdenesTrabajo();
         
         try {
             
@@ -358,7 +366,7 @@ public class Pruebas_TRAG {
             
             administradorOrdenesTrabajo.crearOrdenTrabajo(
                     new OrdenTrabajoCotizacionAgregarDTO(
-                            6L,
+                            5L,
                             3L,
                             new BigDecimal("800.00"),
                             "Localización de fuga activa mediante trazador UV en el cuerpo flexible de la manguera de descarga. Se observa degradación del material "
@@ -370,10 +378,10 @@ public class Pruebas_TRAG {
                                     + " que deja las tuberías expuestas a impactos de piedras o desechos del camino, factor que probablemente contribuyó al daño actual.",
                             LocalDateTime.of(2026, Month.MARCH, 14, 10, 0), 
                             List.of(
-                                    new InsumoCotizacionAgregarDTO(1, new BigDecimal("240.00"), 8L),
-                                    new InsumoCotizacionAgregarDTO(2, new BigDecimal("45.00"), 9L),
-                                    new InsumoCotizacionAgregarDTO(1, new BigDecimal("190.00"), 10L),
-                                    new InsumoCotizacionAgregarDTO(2, new BigDecimal("15.00"), 3L)
+                                    new InsumoCotizacionAgregarDTO(1, new BigDecimal("300.00"), 8L),
+                                    new InsumoCotizacionAgregarDTO(2, new BigDecimal("50.00"), 9L),
+                                    new InsumoCotizacionAgregarDTO(1, new BigDecimal("210.00"), 10L),
+                                    new InsumoCotizacionAgregarDTO(2, new BigDecimal("17.00"), 3L)
                             )
                     )
             );
@@ -381,8 +389,207 @@ public class Pruebas_TRAG {
         } catch (NegocioException e) {
             System.out.println(e.getMessage());
         }
-     
         
+        
+        
+
+        ClienteResumenDTO clientePrueba = null;
+        try {
+            // Consultar Clientes:
+            System.out.println("-".repeat(50));
+            List<ClienteResumenDTO> clientes = administradorClientes.obtenerTodosClientes();
+            
+            System.out.println("\nClientes registrados: ");
+            for(ClienteResumenDTO cliente: clientes){
+                if(cliente.getId() == 2L) clientePrueba = cliente;
+                System.out.println(cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno());
+            }
+            
+        } catch (NegocioException e) {
+            
+            System.out.println(e.getCause().getCause());
+        }
+        
+        
+        // Consultar automoviles de un cliente
+        System.out.println("-".repeat(50));
+        System.out.println("\nConsultar automóviles del cliente 2: ");
+        try{ 
+            
+            List<AutomovilResumenDTO> automovilesCliente = administradorClientes.obtenerCliente(clientePrueba.getId()).getAutomoviles();
+            
+            for(AutomovilResumenDTO automovil: automovilesCliente){
+                System.out.println(automovil.getMarca() + ", " + automovil.getModelo() + ", " + automovil.getAnio());
+            }
+            
+            
+        } catch (NegocioException e) {
+            System.out.println(e);
+        }
+    
+        // Consulta de servicios
+        System.out.println("-".repeat(50));
+        System.out.println("\nConsulta de servicios:");
+        
+        ServicioResumenDTO servicioEjemplo = null;
+        List<ServicioResumenDTO> servicios;
+        try {
+            servicios = administradorServicios.obtenerTodosServicios();
+            for(ServicioResumenDTO servicio: servicios){
+                if(servicio.getId() == 3L) servicioEjemplo = servicio;
+                System.out.println(servicio.getNombre());
+            }
+            
+        } catch (NegocioException e) {
+            System.out.println(e.getCause().getCause());
+        }
+        
+        // Consulta de insumos de servicio
+        System.out.println("-".repeat(50));
+        System.out.println("\nConsulta de insumos de servicio 3: ");
+        
+        try {
+            List<InsumoServicioDetalleDTO> insumosServicio = administradorServicios.obtenerServicio(servicioEjemplo.getId()).getInsumosServicio();
+            
+            for(InsumoServicioDetalleDTO insumoServicio: insumosServicio){
+                
+                System.out.println(
+                        insumoServicio.getId() + 
+                        ", " + insumoServicio.getInsumo().getNombre() +
+                                ", " + insumoServicio.getInsumo().getPrecioSugerido()  +
+                                ", " + insumoServicio.getCantidadDefault() + 
+                                ", " + insumoServicio.getSubtotal());
+            }
+        } catch (NegocioException e) {
+            System.out.println(e.getCause().getCause());
+        }
+        
+        // Consulta de insumos de cotización
+        System.out.println("-".repeat(50));
+        System.out.println("\nConsulta de insumos de cotización 3");
+        
+        try {
+            CotizacionDetalleDTO cotizacion = administradorCotizaciones.obtenerCotizacion(3L);
+            
+            List<InsumoCotizacionDetalleDTO> insumosCotizacion = cotizacion.getInsumosCotizacion();
+            
+            for(InsumoCotizacionDetalleDTO insumoCotizacion: insumosCotizacion){
+                System.out.println(
+                        insumoCotizacion.getId() +
+                                "," + insumoCotizacion.getInsumo().getNombre() +
+                                ", " + insumoCotizacion.getPrecio()  +
+                                ", " + insumoCotizacion.getCantidadRequerida() + 
+                                ", " + insumoCotizacion.getSubtotal());
+            }
+            
+        } catch (NegocioException e) {
+            System.out.println(e.getCause().getCause());
+        }
+        
+        // Consulta de cotización
+        System.out.println("-".repeat(50));
+        System.out.println("\nConsulta de cotización 3 antes de actualizar");
+        
+        try {
+            CotizacionDetalleDTO cotizacion = administradorCotizaciones.obtenerCotizacion(3L);
+            
+            System.out.println("ID: " + cotizacion.getId());
+            System.out.println("Estado automovil: " + cotizacion.getEstadoAutomovil());
+            System.out.println("Diagnóstico general: " + cotizacion.getDiagnosticoGeneral());
+            System.out.println("Fecha: " + cotizacion.getFechaCreacion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            System.out.println("Precio mano de obra: " + cotizacion.getPrecioManoObra());
+            System.out.println("Insumos en cotización: ");
+            List<InsumoCotizacionDetalleDTO> insumosCotizacion = cotizacion.getInsumosCotizacion();
+            
+            for(InsumoCotizacionDetalleDTO insumoCotizacion: insumosCotizacion){
+                System.out.println(
+                        insumoCotizacion.getId() +
+                                "," + insumoCotizacion.getInsumo().getNombre() +
+                                ", " + insumoCotizacion.getPrecio()  +
+                                ", " + insumoCotizacion.getCantidadRequerida() + 
+                                ", " + insumoCotizacion.getSubtotal());
+            }
+            
+        } catch (NegocioException e) {
+            System.out.println(e.getCause().getCause());
+        }
+        
+        // Actualziación de cotización
+        System.out.println("-".repeat(50));
+        System.out.println("\nActualización de Cotización 3");
+        
+        try {
+            administradorCotizaciones.actualizarCotizacion(
+                    new CotizacionActualizarDTO(
+                            3L,
+                            new BigDecimal("1000.00"),
+                            "Localización de fuga activa mediante trazador UV en el cuerpo flexible de la manguera de descarga. Se observa degradación del material "
+                                    + "por fatiga térmica y roce con componentes del chasis, lo que ha provocado una pérdida total de la carga. Se diagnostica la "
+                                    + "reconstrucción de la línea mediante el reemplazo de la sección de caucho y el reaprovechamiento de los conectores de aluminio"
+                                    + " originales para asegurar el sellado.",
+                            "El sistema de enfriamiento del motor (radiador y ventiladores) está en buen estado, lo cual es favorable para el intercambio de calor del "
+                                    + "condensador. La carrocería presenta los soportes de las líneas de aire íntegros, aunque falta una tolva protectora inferior, lo"
+                                    + " que deja las tuberías expuestas a impactos de piedras o desechos del camino, factor que probablemente contribuyó al daño actual.",
+                            List.of(
+                                    new InsumoCotizacionActualizarDTO(9L, 1, new BigDecimal("400.00"), 3L, 8L),
+                                    new InsumoCotizacionActualizarDTO(11L, 3, new BigDecimal("210.00"), 3L, 10L),
+                                    new InsumoCotizacionActualizarDTO(12L, 2, new BigDecimal("20.00"), 3L, 3L)
+                            )
+                    )
+            );
+        } catch (NegocioException e) {
+            System.out.println(e.getCause().getCause());
+        }
+        
+        
+        System.out.println("\nConsulta de cotización 3 actualizada");
+        
+        try {
+            CotizacionDetalleDTO cotizacion = administradorCotizaciones.obtenerCotizacion(3L);
+            
+            System.out.println("ID: " + cotizacion.getId());
+            System.out.println("Estado automovil: " + cotizacion.getEstadoAutomovil());
+            System.out.println("Diagnóstico general: " + cotizacion.getDiagnosticoGeneral());
+            System.out.println("Fecha: " + cotizacion.getFechaCreacion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            System.out.println("Precio mano de obra: " + cotizacion.getPrecioManoObra());
+            System.out.println("Insumos en cotización: ");
+            List<InsumoCotizacionDetalleDTO> insumosCotizacion = cotizacion.getInsumosCotizacion();
+            
+            for(InsumoCotizacionDetalleDTO insumoCotizacion: insumosCotizacion){
+                System.out.println(
+                        insumoCotizacion.getId() +
+                                "," + insumoCotizacion.getInsumo().getNombre() +
+                                ", " + insumoCotizacion.getPrecio()  +
+                                ", " + insumoCotizacion.getCantidadRequerida() + 
+                                ", " + insumoCotizacion.getSubtotal());
+            }
+            
+        } catch (NegocioException e) {
+            System.out.println(e.getCause().getCause());
+        }
+    
+        System.out.println("-".repeat(50));
+        // Cancelación de cotización
+        System.out.println("\nCancelar Cotización");
+        
+        try {
+            administradorCotizaciones.eliminarCotizacion(2L);
+            
+            System.out.println("\nCotizaciones después de cancela r la Cotización 2: ");
+            List<CotizacionResumenDTO> cotizaciones = administradorCotizaciones.obtenerTodasCotizaciones();
+
+            for(CotizacionResumenDTO cotizacion: cotizaciones){
+                System.out.println("\nCliente: " + cotizacion.getNombreCliente() + " " + cotizacion.getApellidoPaternoCliente());
+                System.out.println("Automóvil: " + cotizacion.getMarcaAutomovil() + " " + cotizacion.getModeloAutomovil() + " " + cotizacion.getAnioAutomovil());
+                System.out.println("Fecha: " + cotizacion.getFechaCreacion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                System.out.println("Total: " + cotizacion.getPrecioTotal());
+                System.out.println("Estado: " + cotizacion.getEstadoCotizacion());
+            }
+        
+        } catch (NegocioException e) {
+            System.out.println(e.getCause().getCause());
+        }
         
     }
+
 }

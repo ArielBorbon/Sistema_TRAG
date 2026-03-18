@@ -129,6 +129,7 @@ public class DTOMapeadores {
         entidad.setNombre(dto.getNombre());
         entidad.setDescripcion(dto.getDescripcion());
         entidad.setPrecioManoObraSugerido(dto.getPrecioManoObraSugerido());
+        entidad.setInsumosServicio(toEntityInsumosServicio(dto.getInsumosServicio()));
         return entidad;
     }
      
@@ -171,6 +172,7 @@ public class DTOMapeadores {
         entidad.setDiagnosticoGeneral(dto.getDiagnosticoGeneral());
         entidad.setFechaCreacion(dto.getFechaCreacion());
         entidad.setInsumosCotizacion(DTOMapeadores.toEntityInsumosCotizacionActualizar(dto.getInsumosCotizacion()));
+        
         return entidad;
     }
 
@@ -213,14 +215,25 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public static InsumoServicio toEntity(InsumoServicioAgregarDTO dto) {
+    public static InsumoServicio toEntityInsumoServicio(InsumoServicioAgregarDTO dto) {
         if (dto == null) {
             return null;
         }
         InsumoServicio entidad = new InsumoServicio();
         entidad.setCantidadDefault(dto.getCantidadDefault());
-        entidad.setServicio(new Servicio());
+        entidad.setServicio(new Servicio(dto.getIdServicio()));
+        entidad.setInsumo(new Insumo(dto.getIdInsumo()));
         return entidad;
+    }
+    
+    public static List<InsumoServicio> toEntityInsumosServicio(List<InsumoServicioAgregarDTO> dtos){
+        
+        if (dtos == null) {
+            return null;
+        }
+        return dtos.stream()
+                .map(DTOMapeadores::toEntityInsumoServicio)
+                .collect(Collectors.toList());
     }
 
     public static Cita toEntityCita(CitaDTO dto) {

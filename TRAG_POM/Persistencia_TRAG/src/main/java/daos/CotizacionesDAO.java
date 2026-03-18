@@ -16,6 +16,8 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 
 
 
@@ -77,12 +79,13 @@ public class CotizacionesDAO implements ICotizacionesDAO{
             String jpql = "SELECT DISTINCT c FROM Cotizacion c " +
                           "LEFT JOIN FETCH c.insumosCotizacion i " +
                           "WHERE c.id = :id AND c.estadoCotizacion != :estadoCotizacion " +
-                          "AND (i IS NULL OR i.activo = :activoInsumo)";
+                          "AND (i.id IS NULL OR i.activo = :activoInsumo)";
 
             return em.createQuery(jpql, Cotizacion.class)
                      .setParameter("id", idCotizacion)
                      .setParameter("estadoCotizacion", EstadoCotizacion.CANCELADA)
                      .setParameter("activoInsumo", true)
+                     .setHint(QueryHints.REFRESH, HintValues.TRUE)
                      .getSingleResult();
 
         } catch (NoResultException e) {
@@ -99,14 +102,15 @@ public class CotizacionesDAO implements ICotizacionesDAO{
         EntityManager em = Conexion.crearConexion();
         try {
             String jpql = "SELECT DISTINCT c FROM Cotizacion c " +
-                          "LEFT JOIN FETCH c.insumosCotizacion i " +
-                          "WHERE c.estadoCotizacion != :estadoCotizacion " +
-                          "AND (i IS NULL OR i.activo = :activoInsumo)";
+              "LEFT JOIN FETCH c.insumosCotizacion i " + 
+              "WHERE (i.id IS NULL OR i.activo = :activoInsumo)";
 
-            return em.createQuery(jpql, Cotizacion.class)
-                     .setParameter("estadoCotizacion", EstadoCotizacion.CANCELADA)
+            List<Cotizacion> cotizaciones = em.createQuery(jpql, Cotizacion.class)
                      .setParameter("activoInsumo", true)
+                     .setHint(QueryHints.REFRESH, HintValues.TRUE)
                      .getResultList();
+
+            return cotizaciones;
 
         } catch (Exception e) {
             throw new PersistenciaException(MENSAJE_ERROR_CONSULTA_TODAS, e);
@@ -157,10 +161,10 @@ public class CotizacionesDAO implements ICotizacionesDAO{
                         InsumoCotizacion existente = mapaExistentes.get(idInsumo);
 
                         if (existente != null) {
-                            // Si ya existía, se actualiza y se activa
                             existente.setActivo(true);
+                            existente.setCantidadRequerida(entrante.getCantidadRequerida());
+                            existente.setPrecio(entrante.getPrecio());
                         } else {
-                            // Si es nuevo, se crea.
                             Insumo referenciaInsumo = em.getReference(Insumo.class, idInsumo);
                             entrante.setInsumo(referenciaInsumo);
                             entrante.setCotizacion(cotizacionExistente);

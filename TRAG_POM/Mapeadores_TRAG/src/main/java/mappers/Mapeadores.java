@@ -20,6 +20,7 @@ import dtos.automovil.AutomovilDetalleDTO;
 import dtos.cliente.ClienteResumenDTO;
 import dtos.cotizacion.CotizacionDetalleDTO;
 import dtos.insumocotizacion.InsumoCotizacionAgregarDTO;
+import dtos.insumos.InsumoResumenDTO;
 import dtos.ordentrabajo.OrdenTrabajoDetalleDTO;
 import dtos.servicio.ServicioDetalleDTO;
 import entidades.Automovil;
@@ -39,6 +40,7 @@ import entidades.Servicio;
 import entidades.Trabajo;
 import entidades.Usuario;
 import enums.EstadoClienteNegocios;
+import enums.EstadoCotizacionNegocios;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -100,7 +102,10 @@ public class Mapeadores {
                 entidad.getApellidoMaterno(),
                 entidad.getTelefono(), 
                 entidad.getCorreo(),
-                EstadoClienteNegocios.valueOf(entidad.getEstado().name())
+                EstadoClienteNegocios.valueOf(entidad.getEstado().name()),
+                entidad.getAutomoviles().stream()
+                    .map(Mapeadores::toDTOResumen)
+                    .collect(Collectors.toList())
         );
        
         return dto;
@@ -144,7 +149,11 @@ public class Mapeadores {
                 entidad.getId(), 
                 entidad.getNombre(), 
                 entidad.getDescripcion(), 
-                entidad.getPrecioManoObraSugerido());
+                entidad.getPrecioManoObraSugerido(),
+                entidad.getInsumosServicio().stream()
+                    .map(Mapeadores::toDTODetalle)
+                    .collect(Collectors.toList())
+        );
         return dto;
     }
     
@@ -195,7 +204,8 @@ public class Mapeadores {
                 entidad.getOrdenTrabajo().getAutomovil().getAnio(),
                 entidad.getFechaCreacion(),
                 entidad.getPrecioManoObra(),
-                Mapeadores.toDTOInsumosCotizacionDetalle(entidad.getInsumosCotizacion())
+                Mapeadores.toDTOInsumosCotizacionDetalle(entidad.getInsumosCotizacion()),
+                EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name())
         );
         
         return dto;
@@ -219,6 +229,18 @@ public class Mapeadores {
                 entidad.getNombre(),
                 entidad.getPrecioSugerido(),
                 null
+        );
+
+        return dto;
+    }
+    
+    public static InsumoResumenDTO toDTOResumen(Insumo entidad) {
+        if (entidad == null) {
+            return null;
+        }
+        InsumoResumenDTO dto = new InsumoResumenDTO(
+                entidad.getNombre(),
+                entidad.getPrecioSugerido()
         );
 
         return dto;
@@ -282,7 +304,7 @@ public class Mapeadores {
                     entidad.getId(), 
                     entidad.getCantidadDefault(), 
                     entidad.getServicio().getId(), 
-                    entidad.getInsumo().getId()
+                    Mapeadores.toDTOResumen(entidad.getInsumo())
                 );
         return dto;
     }
@@ -317,7 +339,7 @@ public class Mapeadores {
                 entidad.getCantidadRequerida(),
                 entidad.getPrecio(),
                 entidad.getCotizacion().getId(), 
-                entidad.getInsumo().getId()
+                Mapeadores.toDTOResumen(entidad.getInsumo())
         );
         return dto;
     }

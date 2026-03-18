@@ -7,7 +7,9 @@ import dtos.servicio.ServicioResumenDTO;
 import entidades.Servicio;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
+import insumoservicio.InsumoServicioDetalleDTO;
 import interfaces.IServiciosDAO;
+import java.math.BigDecimal;
 import java.util.List;
 import mappers.DTOMapeadores;
 import mappers.Mapeadores;
@@ -47,7 +49,15 @@ public class AdministradorServicios {
         if(idServicio == null) throw new NegocioException(MENSAJE_ID_SERVICIO_AUSENTE_OBTENER);
         
         try {
-            return Mapeadores.toDTODetalle(serviciosDAO.obtenerServicio(idServicio));
+            ServicioDetalleDTO servicioDetalle = Mapeadores.toDTODetalle(serviciosDAO.obtenerServicio(idServicio));
+            List<InsumoServicioDetalleDTO> insumosServicio = servicioDetalle.getInsumosServicio();
+            
+            for(InsumoServicioDetalleDTO dto: insumosServicio){
+                dto.setSubtotal(BigDecimal.valueOf(dto.getCantidadDefault()).multiply(dto.getInsumo().getPrecioSugerido()));
+            }
+            
+            return servicioDetalle;
+            
         } catch (PersistenciaException e) {
             throw new NegocioException(MENSAJE_ERROR_OBTENER_SERVICIO, e);
         }
@@ -61,37 +71,7 @@ public class AdministradorServicios {
         } catch (PersistenciaException e) {
             throw new NegocioException(MENSAJE_ERROR_OBTENER_TODOS_SERVICIOS, e);
         }
-//        List<ServicioLecturaDTO> serviciosEjemplo = new ArrayList<>();
         
-//        serviciosEjemplo.add(
-//                new ServicioLecturaDTO(
-//                        1L,
-//                        "Cambio de filtro de cabina", 
-//                        "Descripcion Cambio de filtro de cabina",
-//                        new BigDecimal("20000")
-//                )
-//        );
-//        
-//        serviciosEjemplo.add(
-//                new ServicioLecturaDTO(
-//                        2L,
-//                        "Cambio de evaporador", 
-//                        "Descripcion Cambio de evaporador",
-//                        new BigDecimal("15000")
-//                )
-//        );
-//        
-//        serviciosEjemplo.add(
-//                new ServicioLecturaDTO(
-//                        3L,
-//                        "Reparación y servicio del compresor", 
-//                        "Descripcion Reparación y servicio del compresor",
-//                        new BigDecimal("30000")
-//                )
-//        );
-//
-//        return serviciosEjemplo;
-//        
     }
         
 }

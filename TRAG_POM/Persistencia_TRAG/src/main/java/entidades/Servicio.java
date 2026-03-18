@@ -19,7 +19,7 @@ import javax.persistence.Table;
  * @author
  */
 @Entity
-@Table(name = "Servicio")
+@Table(name = "servicios")
 public class Servicio implements Serializable {
 
     @Id

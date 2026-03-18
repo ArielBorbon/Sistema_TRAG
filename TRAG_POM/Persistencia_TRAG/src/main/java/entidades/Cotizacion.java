@@ -25,7 +25,7 @@ import javax.persistence.Table;
  * @author 
  */
 @Entity
-@Table(name = "Cotizacion")
+@Table(name = "cotizaciones")
 public class Cotizacion implements Serializable {
 
     public Cotizacion() {

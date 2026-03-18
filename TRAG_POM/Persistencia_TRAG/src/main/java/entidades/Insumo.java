@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @author PC Gamer
  */
 @Entity
-@Table(name = "Insumo")
+@Table(name = "insumos")
 public class Insumo implements Serializable {
 
     public Insumo() {

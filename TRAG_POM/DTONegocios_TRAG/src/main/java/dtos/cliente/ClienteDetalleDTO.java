@@ -1,7 +1,9 @@
 
 package dtos.cliente;
 
+import dtos.automovil.AutomovilResumenDTO;
 import enums.EstadoClienteNegocios;
+import java.util.List;
 
 /**
  *
@@ -16,11 +18,12 @@ public class ClienteDetalleDTO {
     private String telefono;
     private String correo;
     private EstadoClienteNegocios estado;
+    private List<AutomovilResumenDTO> automoviles;
 
     public ClienteDetalleDTO() {
     }
 
-    public ClienteDetalleDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, EstadoClienteNegocios estado) {
+    public ClienteDetalleDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, EstadoClienteNegocios estado, List<AutomovilResumenDTO> automoviles) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -28,6 +31,7 @@ public class ClienteDetalleDTO {
         this.telefono = telefono;
         this.correo = correo;
         this.estado = estado;
+        this.automoviles = automoviles;
     }
 
     public Long getId() {
@@ -61,5 +65,10 @@ public class ClienteDetalleDTO {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public List<AutomovilResumenDTO> getAutomoviles() {
+        return automoviles;
+    }
+
 
 }

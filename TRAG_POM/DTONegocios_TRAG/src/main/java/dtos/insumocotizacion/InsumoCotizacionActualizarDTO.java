@@ -23,11 +23,6 @@ public class InsumoCotizacionActualizarDTO {
         this.idInsumo = idInsumo;
     }
 
-    public InsumoCotizacionActualizarDTO(Long id, Integer cantidadRequerida, BigDecimal precio) {
-        this.id = id;
-        this.cantidadRequerida = cantidadRequerida;
-        this.precio = precio;
-    }
 
     public Long getId() {
         return id;
