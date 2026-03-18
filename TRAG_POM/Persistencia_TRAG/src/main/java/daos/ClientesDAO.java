@@ -55,7 +55,7 @@ public class ClientesDAO implements IClientesDAO{
         try {
             String jpql = "SELECT DISTINCT c FROM Cliente c " +
                           "LEFT JOIN FETCH c.automoviles a ON a.activo = true " +
-                          "WHERE c.id = :id AND c.estadoCliente != :estadoCliente";
+                          "WHERE c.id = :id AND c.estado != :estadoCliente";
 
             return em.createQuery(jpql, Cliente.class)
                      .setParameter("id", idCliente)

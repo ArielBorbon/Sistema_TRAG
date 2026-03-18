@@ -3,6 +3,7 @@ package daos;
 
 import conexion.Conexion;
 import entidades.Automovil;
+import entidades.Cliente;
 import excepciones.PersistenciaException;
 import interfaces.IAutomovilesDAO;
 import java.util.List;
@@ -31,11 +32,16 @@ public class AutomovilesDAO implements IAutomovilesDAO{
             EntityTransaction transaccion = em.getTransaction();
             transaccion.begin();
 
+            if (automovil.getCliente() != null && automovil.getCliente().getId() != null) {
+                Cliente referenciaCliente = em.getReference(Cliente.class, automovil.getCliente().getId());
+                automovil.setCliente(referenciaCliente);
+            }
+
             em.persist(automovil);
 
             transaccion.commit();
             return automovil;
-            
+
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
