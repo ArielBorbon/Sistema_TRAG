@@ -1,7 +1,7 @@
 
 package dtos.cliente;
 
-import enums.EstadoCliente;
+import enums.EstadoClienteNegocios;
 
 /**
  *
@@ -13,9 +13,9 @@ public class ClienteAgregarDTO {
     private String apellidoMaterno;
     private String telefono;
     private String correo;
-    private EstadoCliente estado;
+    private EstadoClienteNegocios estado;
 
-    public ClienteAgregarDTO(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, EstadoCliente estado) {
+    public ClienteAgregarDTO(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, EstadoClienteNegocios estado) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -44,11 +44,12 @@ public class ClienteAgregarDTO {
         return correo;
     }
 
-    public EstadoCliente getEstado() {
+    public EstadoClienteNegocios getEstado() {
         return estado;
     }
 
-    
-    
+    public void setEstado(EstadoClienteNegocios estado) {
+        this.estado = estado;
+    }
     
 }

@@ -6,11 +6,10 @@ import dtos.cliente.ClienteAgregarDTO;
 import dtos.cliente.ClienteDetalleDTO;
 import dtos.cliente.ClienteResumenDTO;
 import entidades.Cliente;
-import enums.EstadoCliente;
+import enums.EstadoClienteNegocios;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IClientesDAO;
-import java.util.ArrayList;
 import java.util.List;
 import mappers.DTOMapeadores;
 import mappers.Mapeadores;
@@ -43,6 +42,7 @@ public class AdministradorClientes {
     public ClienteDetalleDTO crearCliente(ClienteAgregarDTO dto) throws NegocioException {
 //        validarCliente(dto);
 
+        dto.setEstado(EstadoClienteNegocios.HABILITADO);
         // Aquí se mapea a entidad y se llama al método de la DAO para crear el cliente
         Cliente clienteRegistrar = DTOMapeadores.toEntity(dto);
 

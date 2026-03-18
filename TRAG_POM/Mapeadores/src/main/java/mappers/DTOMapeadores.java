@@ -37,6 +37,7 @@ import entidades.Proveedor;
 import entidades.Servicio;
 import entidades.Trabajo;
 import entidades.Usuario;
+import enums.EstadoCliente;
 import insumoservicio.InsumoServicioAgregarDTO;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,6 +79,7 @@ public class DTOMapeadores {
         entidad.setApellidoMaterno(dto.getApellidoMaterno());
         entidad.setTelefono(dto.getTelefono());
         entidad.setCorreo(dto.getCorreo());
+        entidad.setEstado(EstadoCliente.valueOf(dto.getEstado().name()));
         return entidad;
     }
     

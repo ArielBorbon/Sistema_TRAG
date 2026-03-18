@@ -1,7 +1,7 @@
 
 package dtos.cliente;
 
-import enums.EstadoCliente;
+import enums.EstadoClienteNegocios;
 
 /**
  *
@@ -15,12 +15,12 @@ public class ClienteDetalleDTO {
     private String apellidoMaterno;
     private String telefono;
     private String correo;
-    private EstadoCliente estado;
+    private EstadoClienteNegocios estado;
 
     public ClienteDetalleDTO() {
     }
 
-    public ClienteDetalleDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, EstadoCliente estado) {
+    public ClienteDetalleDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, EstadoClienteNegocios estado) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -54,7 +54,7 @@ public class ClienteDetalleDTO {
         return correo;
     }
 
-    public EstadoCliente getEstado() {
+    public EstadoClienteNegocios getEstado() {
         return estado;
     }
 

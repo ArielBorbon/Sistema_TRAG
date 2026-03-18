@@ -38,6 +38,7 @@ import entidades.Proveedor;
 import entidades.Servicio;
 import entidades.Trabajo;
 import entidades.Usuario;
+import enums.EstadoClienteNegocios;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -99,7 +100,7 @@ public class Mapeadores {
                 entidad.getApellidoMaterno(),
                 entidad.getTelefono(), 
                 entidad.getCorreo(),
-                entidad.getEstado()
+                EstadoClienteNegocios.valueOf(entidad.getEstado().name())
         );
        
         return dto;
