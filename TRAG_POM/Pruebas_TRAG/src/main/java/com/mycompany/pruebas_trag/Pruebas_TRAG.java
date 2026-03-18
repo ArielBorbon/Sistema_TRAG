@@ -30,55 +30,55 @@ public class Pruebas_TRAG {
     public static void main(String[] args) {
         
         // Registro de clientes
-        IAdministradorClientes administradorClientes = FabricaNegocios.obtenerAdministradorClientes();
-        
-        try {
-            administradorClientes.crearCliente(new ClienteAgregarDTO(
-                            "Roberto",
-                            "Pérez",
-                            "López",
-                            "644123456",
-                            "robertoperez@gmail.com",
-                            EstadoClienteNegocios.HABILITADO)
-            );
-            administradorClientes.crearCliente(new ClienteAgregarDTO(
-                            "Manuel",
-                            "Romo",
-                            "López",
-                            "6443216549",
-                            "manuelr@gmail.com", 
-                            EstadoClienteNegocios.HABILITADO)
-            );
-            administradorClientes.crearCliente(new ClienteAgregarDTO(
-                            "Ariel",
-                            "Borbón",
-                            "Izaguirre",
-                            "6447894561",
-                            "aborbon@gmail.com", 
-                            EstadoClienteNegocios.HABILITADO)
-            );
-            administradorClientes.crearCliente(new ClienteAgregarDTO(
-                            "Sebastián",
-                            "Bórquez",
-                            "Huerta",
-                            "6441472589",
-                            "borquezsebastian@gmail.com", 
-                            EstadoClienteNegocios.HABILITADO)
-            );
-            
-            administradorClientes.crearCliente(new ClienteAgregarDTO(
-                            "Yuri",
-                            "García",
-                            "López",
-                            "6447539514",
-                            "yurig@gmail.com", 
-                            EstadoClienteNegocios.HABILITADO)
-            );
-            
-        } catch (NegocioException e) {
-            System.out.println(e.getMessage());
-        }
-        
+//        IAdministradorClientes administradorClientes = FabricaNegocios.obtenerAdministradorClientes();
+//        
+//        try {
+//            administradorClientes.crearCliente(new ClienteAgregarDTO(
+//                            "Roberto",
+//                            "Pérez",
+//                            "López",
+//                            "644123456",
+//                            "robertoperez@gmail.com",
+//                            EstadoClienteNegocios.HABILITADO)
+//            );
+//            administradorClientes.crearCliente(new ClienteAgregarDTO(
+//                            "Manuel",
+//                            "Romo",
+//                            "López",
+//                            "6443216549",
+//                            "manuelr@gmail.com", 
+//                            EstadoClienteNegocios.HABILITADO)
+//            );
+//            administradorClientes.crearCliente(new ClienteAgregarDTO(
+//                            "Ariel",
+//                            "Borbón",
+//                            "Izaguirre",
+//                            "6447894561",
+//                            "aborbon@gmail.com", 
+//                            EstadoClienteNegocios.HABILITADO)
+//            );
+//            administradorClientes.crearCliente(new ClienteAgregarDTO(
+//                            "Sebastián",
+//                            "Bórquez",
+//                            "Huerta",
+//                            "6441472589",
+//                            "borquezsebastian@gmail.com", 
+//                            EstadoClienteNegocios.HABILITADO)
+//            );
+//            
+//            administradorClientes.crearCliente(new ClienteAgregarDTO(
+//                            "Yuri",
+//                            "García",
+//                            "López",
+//                            "6447539514",
+//                            "yurig@gmail.com", 
+//                            EstadoClienteNegocios.HABILITADO)
+//            );
+//            
+//        } catch (NegocioException e) {
+//            System.out.println(e.getMessage());
+//        }
+//        
 //        // Registro de automóviles
 //        IAdministradorAutomoviles administradorAutomoviles = FabricaNegocios.obtenerAdministradorAutomoviles();
 //        try {
@@ -147,91 +147,91 @@ public class Pruebas_TRAG {
 //        }
 //       
 //        
-//        // Registro de Insumos
-//        
-//        IAdministradorInsumos administradorInsumos = FabricaNegocios.obtenerAdministadorInsumos();
-//        
-//        // Servicio 1
-//        try {
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Evaporador",
-//                            new BigDecimal("1800.00")
-//                    )
-//            );
-//            
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Válvula de Expansión",
-//                            new BigDecimal("450.00")
-//                    )
-//            );
-//            
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Kit de O-Rings (Sellos)",
-//                            new BigDecimal("15.00")
-//                    )
-//            );
-//            
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Gas Refrigerante R134a 500gr",
-//                            new BigDecimal("300.00")
-//                    )
-//            );
-//            
-//            // Servicio 2
-//            
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Aceite PAG 46/100",
-//                            new BigDecimal("280.00")
-//                    )
-//            );
-//            
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Sello de Flecha (Mecánico)",
-//                            new BigDecimal("350.00")
-//                    )
-//            );
-//            
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Rodamiento de Polea",
-//                            new BigDecimal("220.00")
-//                    )
-//            );
-//            
-//            // Servicio 3
-//            
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Manguera de Barrera #8 o #10, 1m",
-//                            new BigDecimal("240.00")
-//                    )
-//            );
-//            
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Férulas (Casquillos de aluminio)",
-//                            new BigDecimal("45.00")
-//                    )
-//            );
-//            
-//            administradorInsumos.crearInsumo(
-//                    new InsumoAgregarDTO(
-//                            "Limpiador de Tubería (Flush)",
-//                            new BigDecimal("190.00")
-//                    )
-//            );
-//            
-//            
-//            
-//        } catch (NegocioException e) {
-//            System.out.println(e.getMessage());
-//        }
+        // Registro de Insumos
+        
+        IAdministradorInsumos administradorInsumos = FabricaNegocios.obtenerAdministadorInsumos();
+        
+        // Servicio 1
+        try {
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Evaporador",
+                            new BigDecimal("1800.00")
+                    )
+            );
+            
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Válvula de Expansión",
+                            new BigDecimal("450.00")
+                    )
+            );
+            
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Kit de O-Rings (Sellos)",
+                            new BigDecimal("15.00")
+                    )
+            );
+            
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Gas Refrigerante R134a 500gr",
+                            new BigDecimal("300.00")
+                    )
+            );
+            
+            // Servicio 2
+            
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Aceite PAG 46/100",
+                            new BigDecimal("280.00")
+                    )
+            );
+            
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Sello de Flecha (Mecánico)",
+                            new BigDecimal("350.00")
+                    )
+            );
+            
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Rodamiento de Polea",
+                            new BigDecimal("220.00")
+                    )
+            );
+            
+            // Servicio 3
+            
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Manguera de Barrera #8 o #10, 1m",
+                            new BigDecimal("240.00")
+                    )
+            );
+            
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Férulas (Casquillos de aluminio)",
+                            new BigDecimal("45.00")
+                    )
+            );
+            
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO(
+                            "Limpiador de Tubería (Flush)",
+                            new BigDecimal("190.00")
+                    )
+            );
+            
+            
+            
+        } catch (NegocioException e) {
+            System.out.println(e.getMessage());
+        }
 //        
 //        // Registro de Servicios
 //        

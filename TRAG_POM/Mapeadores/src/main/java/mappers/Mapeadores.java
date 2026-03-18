@@ -218,7 +218,7 @@ public class Mapeadores {
                 entidad.getId(),
                 entidad.getNombre(),
                 entidad.getPrecioSugerido(),
-                entidad.getProveedor().getId()
+                null
         );
 
         return dto;
