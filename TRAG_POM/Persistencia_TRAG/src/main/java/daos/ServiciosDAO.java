@@ -10,6 +10,8 @@ import interfaces.IServiciosDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 
 
 
@@ -95,6 +97,32 @@ public class ServiciosDAO implements IServiciosDAO{
             return em.createQuery(jpql, Servicio.class)
                      .setParameter("activo", true)
                      .setParameter("activoInsumo", true)
+                     .getResultList();
+
+        } catch (Exception e) {
+            throw new PersistenciaException(MENSAJE_ERROR_CONSULTA_TODAS, e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<Servicio> obtenerServiciosNombre(String nombreServicio) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            String terminoBusqueda = "%" + nombreServicio.trim().toLowerCase() + "%";
+
+            String jpql = "SELECT DISTINCT s FROM Servicio s " +
+                          "LEFT JOIN FETCH s.insumosServicio i " +
+                          "WHERE s.activo = :activo " +
+                          "AND (i.id IS NULL OR i.activo = :activoInsumo) " +
+                          "AND LOWER(s.nombre) LIKE :nombre";
+
+            return em.createQuery(jpql, Servicio.class)
+                     .setParameter("activo", true)
+                     .setParameter("activoInsumo", true)
+                     .setParameter("nombre", terminoBusqueda)
+                     .setHint(QueryHints.REFRESH, HintValues.TRUE) 
                      .getResultList();
 
         } catch (Exception e) {

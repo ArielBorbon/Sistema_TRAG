@@ -7,6 +7,7 @@ import dtos.cotizacion.CotizacionResumenDTO;
 import dtos.cotizacion.CotizacionAgregarDTO;
 import dtos.cotizacion.CotizacionDetalleDTO;
 import excepciones.NegocioException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -49,11 +50,16 @@ public class FAdministradorCotizaciones implements IAdministradorCotizaciones{
         return administradorCotizaciones.obtenerTodasCotizaciones();
     }
     
-    /**
-     * Fachada para la actualización de una cotización existente.
-     * @param dto Datos actualizados.
-     * @return Cotización actualizada.
-     */
+    @Override
+    public List<CotizacionResumenDTO> obtenerCotizacionesNombre(String nombreCliente) throws NegocioException {
+        return administradorCotizaciones.obtenerCotizacionesNombreCliente(nombreCliente);
+    }
+    
+    @Override
+    public List<CotizacionResumenDTO> obtenerCotizacionesFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin) throws NegocioException {
+        return administradorCotizaciones.obtenerCotizacionesFecha(fechaInicio, fechaFin);
+    }
+    
     @Override
     public CotizacionDetalleDTO actualizarCotizacion(CotizacionActualizarDTO dto) throws NegocioException{
         return administradorCotizaciones.actualizarCotizacion(dto);
@@ -63,5 +69,6 @@ public class FAdministradorCotizaciones implements IAdministradorCotizaciones{
     public CotizacionDetalleDTO eliminarCotizacion(Long idCotizacion) throws NegocioException {
         return administradorCotizaciones.eliminarCotizacion(idCotizacion);
     }
+
 
 }

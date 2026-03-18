@@ -3,7 +3,9 @@ package com.mycompany.administradorinsumos_trag;
 
 import dtos.insumos.InsumoAgregarDTO;
 import dtos.insumos.InsumoDetalleDTO;
+import dtos.insumos.InsumoResumenDTO;
 import excepciones.NegocioException;
+import java.util.List;
 
 /**
  *
@@ -25,6 +27,11 @@ public class FAdministradorInsumos implements IAdministradorInsumos{
     @Override
     public InsumoDetalleDTO obtenerInsumo(Long idInsumo) throws NegocioException {
         return administradorInsumos.obtenerInsumo(idInsumo);
+    }
+
+    @Override
+    public List<InsumoResumenDTO> obtenerInsumosNombre(String nombreInsumo) throws NegocioException {
+        return administradorInsumos.obtenerInsumosNombre(nombreInsumo);
     }
     
 }

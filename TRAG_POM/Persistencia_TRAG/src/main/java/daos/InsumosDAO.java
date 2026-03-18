@@ -5,6 +5,7 @@ import conexion.Conexion;
 import entidades.Insumo;
 import excepciones.PersistenciaException;
 import interfaces.IInsumosDAO;
+import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
@@ -42,6 +43,25 @@ public class InsumosDAO implements IInsumosDAO{
         EntityManager em = Conexion.crearConexion();
         try {
             return em.find(Insumo.class, idInsumo);
+        } catch (Exception e) {
+            throw new PersistenciaException(MENSAJE_ERROR_CONSULTA, e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<Insumo> obtenerInsumosNombre(String nombreInsumo) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            String terminoBusqueda = "%" + nombreInsumo.trim().toLowerCase() + "%";
+
+            String jpql = "SELECT i FROM Insumo i WHERE LOWER(i.nombre) LIKE :nombre";
+
+            return em.createQuery(jpql, Insumo.class)
+                     .setParameter("nombre", terminoBusqueda)
+                     .getResultList();
+
         } catch (Exception e) {
             throw new PersistenciaException(MENSAJE_ERROR_CONSULTA, e);
         } finally {

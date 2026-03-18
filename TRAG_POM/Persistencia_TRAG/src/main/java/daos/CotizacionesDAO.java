@@ -9,6 +9,7 @@ import entidades.Servicio;
 import enums.EstadoCotizacion;
 import excepciones.PersistenciaException;
 import interfaces.ICotizacionesDAO;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,8 @@ public class CotizacionesDAO implements ICotizacionesDAO{
     private final String MENSAJE_ERROR_AGREGAR = "Error al agregar la cotización";
     private final String MENSAJE_ERROR_CONSULTA = "Error al consultar la cotización";
     private final String MENSAJE_ERROR_CONSULTA_TODAS = "Error al consultar todas las cotizaciones";
+    private final String MENSAJE_ERROR_CONSULTA_NOMBRE_CLIENTE = "Error al consultar las cotizaciones por nombre de cliente";
+    private final String MENSAJE_ERROR_CONSULTA_FECHAS = "Error al consultar las cotizaciones por rango de fechas";
     private final String MENSAJE_ERROR_ACTUALIZAR = "Error al actualizar la cotización";
     private final String MENSAJE_ERROR_CANCELAR = "Error al cancelar la cotización";
     
@@ -114,6 +117,64 @@ public class CotizacionesDAO implements ICotizacionesDAO{
 
         } catch (Exception e) {
             throw new PersistenciaException(MENSAJE_ERROR_CONSULTA_TODAS, e);
+        } finally {
+            em.close();
+        }
+    }
+    
+    @Override
+    public List<Cotizacion> obtenerCotizacionesNombreCliente(String nombreCliente) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            // Se prepara el término para buscar en minúsculas y con comodines
+            String terminoBusqueda = "%" + nombreCliente.trim().toLowerCase() + "%";
+
+            // Se crea la consulta
+            String jpql = "SELECT DISTINCT c FROM Cotizacion c " +
+                          "LEFT JOIN FETCH c.insumosCotizacion i " +
+                          "JOIN c.ordenTrabajo ot " +
+                          "JOIN ot.automovil a " +
+                          "JOIN a.cliente cl " +
+                          "WHERE (i.id IS NULL OR i.activo = :activoInsumo) " +
+                          "AND LOWER(CONCAT(cl.nombre, ' ', cl.apellidoPaterno, ' ', COALESCE(cl.apellidoMaterno, ''))) LIKE :nombreCliente";
+
+            List<Cotizacion> cotizaciones = em.createQuery(jpql, Cotizacion.class)
+                     .setParameter("activoInsumo", true)
+                     .setParameter("nombreCliente", terminoBusqueda)
+                     .setHint(QueryHints.REFRESH, HintValues.TRUE)
+                     .getResultList();
+
+            return cotizaciones;
+
+        } catch (Exception e) {
+            throw new PersistenciaException(MENSAJE_ERROR_CONSULTA_NOMBRE_CLIENTE, e);
+        } finally {
+            em.close();
+        }
+    }
+    
+    @Override
+    public List<Cotizacion> obtenerCotizacionesFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            
+            String jpql = "SELECT DISTINCT c FROM Cotizacion c " +
+                          "LEFT JOIN FETCH c.insumosCotizacion i " +
+                          "WHERE (i.id IS NULL OR i.activo = :activoInsumo) " +
+                          "AND c.fechaCreacion BETWEEN :fechaInicio AND :fechaFin";
+
+            List<Cotizacion> cotizaciones = em.createQuery(jpql, Cotizacion.class)
+                     .setParameter("activoInsumo", true)
+                     .setParameter("fechaInicio", fechaInicio)
+                     .setParameter("fechaFin", fechaFin)
+                     .setHint(QueryHints.REFRESH, HintValues.TRUE)
+                     .getResultList();
+
+            return cotizaciones;
+
+        } catch (Exception e) {
+            
+            throw new PersistenciaException("Error al consultar las cotizaciones por rango de fechas.", e); 
         } finally {
             em.close();
         }
@@ -223,4 +284,5 @@ public class CotizacionesDAO implements ICotizacionesDAO{
             em.close();
         }
     }
+    
 }

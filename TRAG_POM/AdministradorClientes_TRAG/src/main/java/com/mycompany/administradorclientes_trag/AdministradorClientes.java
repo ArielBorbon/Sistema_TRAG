@@ -128,20 +128,7 @@ public class AdministradorClientes {
 
     }
 
-//    public List<ClienteDTO> obtenerClientesActivos() {
-//        //List<Cliente> clientes = dao.obtenerPorEstado(EstadoCliente.HABILITADO);
-//        //return Mapeadores.toDTOClientes(entidades);
-//        return new ArrayList<>(); 
-//    }
-//
-//    public List<ClienteDTO> obtenerClientesInactivos() {
-//        //List<Cliente> clientes = dao.obtenerPorEstado(EstadoCliente.DESHABILITADO);
-//        //return Mapeadores.toDTOClientes(entidades);
-//        return new ArrayList<>();
-//    }
     
-    
-    // MÉTODOS DE VALIDACIÓN REFACTORIZADOS
     private void validarClienteAgregar(ClienteAgregarDTO dto) throws NegocioException {
         if (dto == null) {
             throw new NegocioException("Los datos del cliente no pueden ser nulos.");
@@ -212,47 +199,5 @@ public class AdministradorClientes {
             }
         }
     }
-
-//    private void validarCliente(ClienteDTO dto) {
-//        // Validaciones de Nombre
-//        if (dto.getNombre() == null || dto.getNombre().trim().isEmpty()) {
-//            throw new IllegalArgumentException("El nombre del cliente no puede estar vacío.");
-//        }
-//        if (dto.getNombre().trim().length() > MAX_LONGITUD_NOMBRE_APELLIDO) {
-//            throw new IllegalArgumentException("El nombre no puede superar los " + MAX_LONGITUD_NOMBRE_APELLIDO + " caracteres.");
-//        }
-//
-//        // Validaciones de Apellido Paterno
-//        if (dto.getApellidoPaterno() == null || dto.getApellidoPaterno().trim().isEmpty()) {
-//            throw new IllegalArgumentException("El apellido paterno no puede estar vacío.");
-//        }
-//        if (dto.getApellidoPaterno().trim().length() > MAX_LONGITUD_NOMBRE_APELLIDO) {
-//            throw new IllegalArgumentException("El apellido paterno no puede superar los " + MAX_LONGITUD_NOMBRE_APELLIDO + " caracteres.");
-//        }
-//
-//        // Validaciones de Apellido Materno
-//        if (dto.getApellidoMaterno() != null && dto.getApellidoMaterno().trim().length() > MAX_LONGITUD_NOMBRE_APELLIDO) {
-//            throw new IllegalArgumentException("El apellido materno no puede superar los " + MAX_LONGITUD_NOMBRE_APELLIDO + " caracteres.");
-//        }
-//
-//        // Validaciones de Teléfono 
-//        if (dto.getTelefono() != null && dto.getTelefono().trim().length() > MAX_LONGITUD_TELEFONO) {
-//            throw new IllegalArgumentException("El teléfono no puede superar los " + MAX_LONGITUD_TELEFONO + " caracteres.");
-//        }
-//
-//        // Validaciones de Correo
-//        if (dto.getCorreo() != null && !dto.getCorreo().trim().isEmpty()) {
-//            String correo = dto.getCorreo().trim();
-//
-//            if (correo.length() > MAX_LONGITUD_CORREO) {
-//                throw new IllegalArgumentException(
-//                        "El correo no puede superar los " + MAX_LONGITUD_CORREO + " caracteres."
-//                );
-//            }
-//
-//            if (!correo.matches(REGEX_CORREO)) {
-//                throw new IllegalArgumentException("El formato del correo electrónico es inválido.");
-//            }
-//        }
-//    }
+ 
 }

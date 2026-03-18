@@ -16,9 +16,9 @@
         <module>ExcepcionesNegocio_TRAG</module>
         <module>Pruebas_TRAG</module>
         <module>Negocios_TRAG</module>
-        <module>AdministradorOrdenesTrabajo</module>
         <module>DTONegocios_TRAG</module>
         <module>Mapeadores_TRAG</module>
+        <module>AdministradorOrdenesTrabajo_TRAG</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

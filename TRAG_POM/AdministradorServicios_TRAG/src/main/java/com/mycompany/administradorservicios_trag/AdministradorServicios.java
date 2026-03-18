@@ -11,6 +11,8 @@ import insumoservicio.InsumoServicioDetalleDTO;
 import interfaces.IServiciosDAO;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mappers.DTOMapeadores;
 import mappers.Mapeadores;
 
@@ -27,6 +29,7 @@ public class AdministradorServicios {
     private static final String MENSAJE_ERROR_CREAR_SERVICIO = "Error al crear el servicio";
     private static final String MENSAJE_ERROR_OBTENER_SERVICIO = "Error al obtener el servicio";
     private static final String MENSAJE_ERROR_OBTENER_TODOS_SERVICIOS = "Error al obtener los servicios";
+    private static final String MENSAJE_ERROR_OBTENER_SERVICIOS_NOMBRE = "Error al obtener los servicios por nombre";
 
     public AdministradorServicios(IServiciosDAO serviciosDAO) {
         this.serviciosDAO = serviciosDAO;
@@ -72,6 +75,14 @@ public class AdministradorServicios {
             throw new NegocioException(MENSAJE_ERROR_OBTENER_TODOS_SERVICIOS, e);
         }
         
+    }
+    
+    public List<ServicioResumenDTO> obtenerServiciosNombre(String nombreServicio) throws NegocioException {
+        try {
+            return Mapeadores.toDTOServicios(serviciosDAO.obtenerServiciosNombre(nombreServicio));
+        } catch (PersistenciaException e) {
+            throw new NegocioException(MENSAJE_ERROR_OBTENER_TODOS_SERVICIOS, e);
+        }
     }
         
 }

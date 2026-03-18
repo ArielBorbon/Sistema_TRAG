@@ -30,10 +30,13 @@ public class FAdministradorServicios implements IAdministradorServicios{
     }
     
     @Override
-    public List<ServicioResumenDTO> obtenerTodosServicios() throws NegocioException{
-        
+    public List<ServicioResumenDTO> obtenerTodosServicios() throws NegocioException{ 
         return administradorServicios.obtenerTodosServicios();
-        
+    }
+
+    @Override
+    public List<ServicioResumenDTO> obtenerServiciosNombre(String nombreServicio) throws NegocioException {
+        return administradorServicios.obtenerServiciosNombre(nombreServicio);
     }
     
 }

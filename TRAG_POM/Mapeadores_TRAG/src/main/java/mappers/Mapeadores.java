@@ -186,7 +186,7 @@ public class Mapeadores {
                 entidad.getEstadoAutomovil(), 
                 entidad.getDiagnosticoGeneral(),
                 entidad.getFechaCreacion(),
-                Mapeadores.toDTOInsumosCotizacionDetalle(entidad.getInsumosCotizacion())
+                Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion())
         );
         
         return dto;
@@ -204,7 +204,7 @@ public class Mapeadores {
                 entidad.getOrdenTrabajo().getAutomovil().getAnio(),
                 entidad.getFechaCreacion(),
                 entidad.getPrecioManoObra(),
-                Mapeadores.toDTOInsumosCotizacionDetalle(entidad.getInsumosCotizacion()),
+                Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion()),
                 EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name())
         );
         
@@ -246,12 +246,21 @@ public class Mapeadores {
         return dto;
     }
 
-    public static List<InsumoDetalleDTO> toDTOInsumos(List<Insumo> entidades) {
+    public static List<InsumoDetalleDTO> toDTODetalleInsumos(List<Insumo> entidades) {
         if (entidades == null) {
             return null;
         }
         return entidades.stream()
                 .map(Mapeadores::toDTODetalle)
+                .collect(Collectors.toList());
+    }
+    
+    public static List<InsumoResumenDTO> toDTOResumenInsumos(List<Insumo> entidades) {
+        if (entidades == null) {
+            return null;
+        }
+        return entidades.stream()
+                .map(Mapeadores::toDTOResumen)
                 .collect(Collectors.toList());
     }
     
@@ -344,7 +353,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public static List<InsumoCotizacionDetalleDTO> toDTOInsumosCotizacionDetalle(List<InsumoCotizacion> entidades){
+    public static List<InsumoCotizacionDetalleDTO> toDTODetalleInsumosCotizacion(List<InsumoCotizacion> entidades){
         
         if (entidades == null) {
             return null;
