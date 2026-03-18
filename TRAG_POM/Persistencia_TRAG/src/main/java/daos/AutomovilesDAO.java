@@ -1,6 +1,5 @@
 package daos;
 
-
 import conexion.Conexion;
 import entidades.Automovil;
 import entidades.Cliente;
@@ -11,22 +10,21 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 
-
 /**
  *
- * @author 
+ * @author
  */
-public class AutomovilesDAO implements IAutomovilesDAO{
+public class AutomovilesDAO implements IAutomovilesDAO {
 
     private final String MENSAJE_ERROR_AGREGAR = "Error al agregar el automóvil.";
     private final String MENSAJE_ERROR_CONSULTA = "Error al consultar el automóvil.";
     private final String MENSAJE_ERROR_CONSULTA_TODAS = "Error al consultar todos los automóviles.";
     private final String MENSAJE_ERROR_ACTUALIZAR = "Error al actualizar el automóvil.";
     private final String MENSAJE_ERROR_ELIMINAR = "Error al eliminar el automóvil.";
-    
+
     @Override
     public Automovil crearAutomovil(Automovil automovil) throws PersistenciaException {
-        
+
         EntityManager em = Conexion.crearConexion();
         try {
             EntityTransaction transaccion = em.getTransaction();
@@ -46,25 +44,25 @@ public class AutomovilesDAO implements IAutomovilesDAO{
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            throw new PersistenciaException(MENSAJE_ERROR_AGREGAR, e); 
+            throw new PersistenciaException(MENSAJE_ERROR_AGREGAR, e);
         } finally {
             em.close();
         }
-        
+
     }
 
     @Override
     public Automovil obtenerAutomovil(Long idAutomovil) throws PersistenciaException {
-        
+
         EntityManager em = Conexion.crearConexion();
         try {
-            String jpql = "SELECT a FROM Automovil a " +
-                          "WHERE a.id = :id AND a.activo = :activo";
-
+            String jpql = "SELECT a FROM Automovil a "
+                    + "JOIN FETCH a.cliente "
+                    + "WHERE a.id = :id AND a.activo = :activo";
             return em.createQuery(jpql, Automovil.class)
-                     .setParameter("id", idAutomovil)
-                     .setParameter("activo", true)
-                     .getSingleResult();
+                    .setParameter("id", idAutomovil)
+                    .setParameter("activo", true)
+                    .getSingleResult();
 
         } catch (NoResultException e) {
             return null;
@@ -73,29 +71,106 @@ public class AutomovilesDAO implements IAutomovilesDAO{
         } finally {
             em.close();
         }
-        
+
     }
 
     @Override
     public List<Automovil> obtenerTodosAutomoviles() throws PersistenciaException {
-        
+
         EntityManager em = Conexion.crearConexion();
         try {
-            
-            String jpql = "SELECT a FROM Automovil a " +
-                      "WHERE a.activo = :activo";
+
+            String jpql = "SELECT a FROM Automovil a "
+                    + "JOIN FETCH a.cliente "
+                    + "WHERE a.activo = :activo";
 
             return em.createQuery(jpql, Automovil.class)
-                     .setParameter("activo", true)
-                     .getResultList();
-
+                    .setParameter("activo", true)
+                    .getResultList();
 
         } catch (Exception e) {
             throw new PersistenciaException(MENSAJE_ERROR_CONSULTA_TODAS, e);
         } finally {
             em.close();
         }
-        
+
     }
-    
+
+    @Override
+    public Automovil actualizarAutomovil(Automovil automovil) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            EntityTransaction transaccion = em.getTransaction();
+            transaccion.begin();
+
+            if (automovil.getCliente() != null && automovil.getCliente().getId() != null) {
+                Cliente referenciaCliente = em.getReference(Cliente.class, automovil.getCliente().getId());
+                automovil.setCliente(referenciaCliente);
+            }
+
+            Automovil automovilActualizado = em.merge(automovil);
+
+            transaccion.commit();
+            return automovilActualizado;
+
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new PersistenciaException(MENSAJE_ERROR_ACTUALIZAR, e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<Automovil> obtenerAutomovilesCliente(Long idCliente) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            String jpql = "SELECT a FROM Automovil a "
+                    + "JOIN FETCH a.cliente c " 
+                    + "WHERE c.id = :idCliente AND a.activo = :activo";
+
+            return em.createQuery(jpql, Automovil.class)
+                    .setParameter("idCliente", idCliente)
+                    .setParameter("activo", true)
+                    .getResultList();
+
+        } catch (Exception e) {
+            throw new PersistenciaException(MENSAJE_ERROR_CONSULTA_TODAS, e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public Automovil desactivarAutomovil(Long idAutomovil) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            EntityTransaction transaccion = em.getTransaction();
+            transaccion.begin();
+
+            Automovil automovil = em.find(Automovil.class, idAutomovil);
+
+            if (automovil != null) {
+                automovil.setActivo(false);
+
+                automovil = em.merge(automovil);
+                transaccion.commit();
+                return automovil;
+            } else {
+                transaccion.rollback();
+                return null;
+            }
+
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new PersistenciaException(MENSAJE_ERROR_ELIMINAR, e);
+        } finally {
+            em.close();
+        }
+    }
+
 }
