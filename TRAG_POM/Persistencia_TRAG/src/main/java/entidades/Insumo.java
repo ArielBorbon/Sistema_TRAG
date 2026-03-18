@@ -39,7 +39,7 @@ public class Insumo implements Serializable {
     private BigDecimal precioSugerido;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "proveedor_id", nullable = false)
+    @JoinColumn(name = "proveedor_id", nullable = true)
     private Proveedor proveedor;
 
     public Long getId() {
