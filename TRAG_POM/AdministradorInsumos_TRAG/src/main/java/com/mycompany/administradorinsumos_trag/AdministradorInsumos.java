@@ -9,14 +9,18 @@ import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IInsumosDAO;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mappers.DTOMapeadores;
 import mappers.Mapeadores;
 
 /**
  *
- * @author 
+ * Archivo: AdinistradorInusmos.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class AdministradorInsumos {
     

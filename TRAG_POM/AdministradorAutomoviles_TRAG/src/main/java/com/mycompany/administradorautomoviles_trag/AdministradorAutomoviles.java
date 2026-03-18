@@ -1,23 +1,26 @@
 
 package com.mycompany.administradorautomoviles_trag;
 
-import com.mycompany.administradorclientes_trag.IAdministradorClientes;
 import dtos.automovil.AutomovilAgregarDTO;
 import dtos.automovil.AutomovilDetalleDTO;
 import dtos.automovil.AutomovilResumenDTO;
-import dtos.cliente.ClienteDetalleDTO;
 import entidades.Automovil;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IAutomovilesDAO;
-import java.util.ArrayList;
 import java.util.List;
 import mappers.DTOMapeadores;
 import mappers.Mapeadores;
 
 /**
  *
- * @author 
+ * Archivo: AdinistradorAutomoviles.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class AdministradorAutomoviles {
 

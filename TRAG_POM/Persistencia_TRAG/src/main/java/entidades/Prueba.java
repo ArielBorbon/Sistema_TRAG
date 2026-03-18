@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package entidades;
 
 import java.io.Serializable;
@@ -13,10 +10,16 @@ import javax.persistence.Id;
 
 /**
  *
- * @author PC Gamer
+ * Archivo: Prueba.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 @Entity
-public class prueba implements Serializable {
+public class Prueba implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,10 +56,10 @@ public class prueba implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof prueba)) {
+        if (!(object instanceof Prueba)) {
             return false;
         }
-        prueba other = (prueba) object;
+        Prueba other = (Prueba) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 

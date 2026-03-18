@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package pruebas;
 
 import conexion.Conexion;
@@ -9,9 +6,15 @@ import javax.persistence.EntityManager;
 
 /**
  *
- * @author PC Gamer
+ * Archivo: Prueba.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
-public class prueba {
+public class Prueba {
 
     public static void main(String[] args) {
         EntityManager em = Conexion.crearConexion();
@@ -19,7 +22,7 @@ public class prueba {
         try {
             em.getTransaction().begin();
 
-            entidades.prueba p = new entidades.prueba();
+            entidades.Prueba p = new entidades.Prueba();
             p.setNombre("Ariels");
 
             em.persist(p);

@@ -41,15 +41,18 @@ import entidades.Trabajo;
 import entidades.Usuario;
 import enums.EstadoClienteNegocios;
 import enums.EstadoCotizacionNegocios;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  *
- * @author PC Gamer
+ * Archivo: Mapeadores.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class Mapeadores {
 

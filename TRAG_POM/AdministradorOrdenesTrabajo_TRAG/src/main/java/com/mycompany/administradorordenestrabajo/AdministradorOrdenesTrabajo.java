@@ -7,7 +7,6 @@ import dtos.cotizacion.CotizacionDetalleDTO;
 import dtos.ordentrabajo.OrdenTrabajoAgregarDTO;
 import dtos.ordentrabajo.OrdenTrabajoCotizacionAgregarDTO;
 import dtos.ordentrabajo.OrdenTrabajoDetalleDTO;
-import enums.EstadoCotizacionNegocios;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IOrdenesTrabajoDAO;
@@ -16,7 +15,13 @@ import mappers.Mapeadores;
 
 /**
  *
- * @author 
+ * Archivo: AdministradorOrdenesTrabajo.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class AdministradorOrdenesTrabajo {
  

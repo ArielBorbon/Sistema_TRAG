@@ -39,11 +39,21 @@ import entidades.Trabajo;
 import entidades.Usuario;
 import enums.EstadoCliente;
 import enums.EstadoCotizacion;
-import enums.EstadoCotizacionNegocios;
 import insumoservicio.InsumoServicioAgregarDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+/**
+ *
+ * Archivo: DTOMapeadores.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
+ */
 
 public class DTOMapeadores {
 

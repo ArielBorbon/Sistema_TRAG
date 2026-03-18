@@ -1,13 +1,17 @@
 
 package dtos.insumoimprevisto;
 
-import imprevisto.ImprevistoDetalleDTO;
-import dtos.insumos.InsumoDetalleDTO;
 import java.math.BigDecimal;
 
 /**
  *
- * @author 
+ * Archivo: InsumoImprevistoDetalleDTO.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class InsumoImprevistoDetalleDTO {
 

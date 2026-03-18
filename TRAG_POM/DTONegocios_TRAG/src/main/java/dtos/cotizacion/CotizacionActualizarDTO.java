@@ -3,14 +3,19 @@
 package dtos.cotizacion;
 
 import dtos.insumocotizacion.InsumoCotizacionActualizarDTO;
-import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  *
- * @author 
+ * Archivo: CotizacionActualizarDTO.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class CotizacionActualizarDTO{
     
