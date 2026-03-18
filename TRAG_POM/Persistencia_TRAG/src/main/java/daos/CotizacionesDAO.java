@@ -5,11 +5,14 @@ import conexion.Conexion;
 import entidades.Cotizacion;
 import entidades.Insumo;
 import entidades.InsumoCotizacion;
+import entidades.Servicio;
 import enums.EstadoCotizacion;
 import excepciones.PersistenciaException;
 import interfaces.ICotizacionesDAO;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
@@ -35,11 +38,28 @@ public class CotizacionesDAO implements ICotizacionesDAO{
             EntityTransaction transaccion = em.getTransaction();
             transaccion.begin();
 
+            if (cotizacion.getServicio() != null && cotizacion.getServicio().getId() != null) {
+                Servicio referenciaServicio = em.getReference(Servicio.class, cotizacion.getServicio().getId());
+                cotizacion.setServicio(referenciaServicio);
+            }
+
+            if (cotizacion.getInsumosCotizacion() != null && !cotizacion.getInsumosCotizacion().isEmpty()) {
+                for (InsumoCotizacion insumoCotizacion : cotizacion.getInsumosCotizacion()) {
+                    
+                    insumoCotizacion.setCotizacion(cotizacion);
+
+                    if (insumoCotizacion.getInsumo() != null && insumoCotizacion.getInsumo().getId() != null) {
+                        Insumo referenciaInsumo = em.getReference(Insumo.class, insumoCotizacion.getInsumo().getId());
+                        insumoCotizacion.setInsumo(referenciaInsumo);
+                    }
+                }
+            }
+
             em.persist(cotizacion);
 
             transaccion.commit();
             return cotizacion;
-            
+
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
@@ -104,79 +124,73 @@ public class CotizacionesDAO implements ICotizacionesDAO{
             Cotizacion cotizacionExistente = em.find(Cotizacion.class, cotizacion.getId());
 
             if (cotizacionExistente != null) {
-                
+
                 if (cotizacion.getPrecioManoObra() != null) {
                     cotizacionExistente.setPrecioManoObra(cotizacion.getPrecioManoObra());
                 }
                 if (cotizacion.getEstadoAutomovil() != null) {
                     cotizacionExistente.setEstadoAutomovil(cotizacion.getEstadoAutomovil());
                 }
-                
                 if(cotizacion.getDiagnosticoGeneral() != null){
                     cotizacionExistente.setDiagnosticoGeneral(cotizacion.getDiagnosticoGeneral());
                 }
-                
                 if(cotizacion.getFechaCreacion() != null){
                     cotizacionExistente.setFechaCreacion(cotizacion.getFechaCreacion());
                 }
-                
+
                 if (cotizacion.getInsumosCotizacion() != null) {
 
-                    // Se obtiene los ids de los Insumos actualizados
-                    List<Long> idsInsumosNuevos = new ArrayList<>();
-                    for (InsumoCotizacion nuevo: cotizacion.getInsumosCotizacion()) {
-                        idsInsumosNuevos.add(nuevo.getInsumo().getId());
+                    Map<Long, InsumoCotizacion> mapaExistentes = new HashMap<>();
+                    for (InsumoCotizacion existente : cotizacionExistente.getInsumosCotizacion()) {
+                        mapaExistentes.put(existente.getInsumo().getId(), existente);
                     }
 
-                    // Se desactivan los InsumoCotizacion que ya no están presentes
-                    for (InsumoCotizacion existente: cotizacionExistente.getInsumosCotizacion()) {
-                        if (!idsInsumosNuevos.contains(existente.getInsumo().getId())) {
+
+                    List<InsumoCotizacion> insumosNuevos = new ArrayList<>();
+
+                    // Se procesan los datos a actualziar
+                    List<Long> idsEntrantes = new ArrayList<>();
+                    for (InsumoCotizacion entrante : cotizacion.getInsumosCotizacion()) {
+                        Long idInsumo = entrante.getInsumo().getId();
+                        idsEntrantes.add(idInsumo);
+
+                        InsumoCotizacion existente = mapaExistentes.get(idInsumo);
+
+                        if (existente != null) {
+                            // Si ya existía, se actualiza y se activa
+                            existente.setActivo(true);
+                        } else {
+                            // Si es nuevo, se crea.
+                            Insumo referenciaInsumo = em.getReference(Insumo.class, idInsumo);
+                            entrante.setInsumo(referenciaInsumo);
+                            entrante.setCotizacion(cotizacionExistente);
+                            entrante.setActivo(true);
+                            insumosNuevos.add(entrante);
+                        }
+                    }
+
+                    // Se desactivan los que no vienen en la lista
+                    for (InsumoCotizacion existente : cotizacionExistente.getInsumosCotizacion()) {
+                        if (!idsEntrantes.contains(existente.getInsumo().getId())) {
                             existente.setActivo(false);
                         }
                     }
 
-                    // Se procesa la lista actualizada
-                    for (InsumoCotizacion insumoActualizacion: cotizacion.getInsumosCotizacion()) {
-                        Long idInsumoEntrante = insumoActualizacion.getInsumo().getId();
-
-                        // Se determina si el insumo ya estaba o es nuevo, en la cotización
-                        InsumoCotizacion insumoEncontrado = null;
-                        for (InsumoCotizacion existente: cotizacionExistente.getInsumosCotizacion()) {
-                            if (existente.getInsumo().getId().equals(idInsumoEntrante)) {
-                                insumoEncontrado = existente;
-                                break;
-                            }
-                        }
-
-                        if (insumoEncontrado != null) {
-                            // Si ya estaba presente, se actualiza y activa
-                            insumoEncontrado.setCantidadRequerida(insumoActualizacion.getCantidadRequerida());
-                            insumoEncontrado.setPrecio(insumoActualizacion.getPrecio());
-                            insumoEncontrado.setActivo(true);
-                        } else {
-                            // Si no estaba, se le asigna la referencia del insumo y se agrega a la lista en la cotizacion
-                            Insumo referenciaInsumo = em.getReference(Insumo.class, idInsumoEntrante);
-                            insumoActualizacion.setInsumo(referenciaInsumo);
-                            insumoActualizacion.setCotizacion(cotizacionExistente);
-                            insumoActualizacion.setActivo(true);
-
-                            cotizacionExistente.getInsumosCotizacion().add(insumoActualizacion);
-                        }
+                    // Se agregan nuevos a la colección de la entidad
+                    if (!insumosNuevos.isEmpty()) {
+                        cotizacionExistente.getInsumosCotizacion().addAll(insumosNuevos);
                     }
                 }
-                
             }
 
             em.getTransaction().commit();
             return cotizacionExistente;
-            
-            } catch (Exception e) {
-                if (em.getTransaction().isActive()) {
-                    em.getTransaction().rollback();
-                }
 
-                throw new PersistenciaException(MENSAJE_ERROR_ACTUALIZAR, e);
-
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new PersistenciaException(MENSAJE_ERROR_ACTUALIZAR, e);
         } finally {
             em.close();
         }

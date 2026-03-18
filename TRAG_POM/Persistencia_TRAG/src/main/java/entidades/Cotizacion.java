@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -60,16 +61,18 @@ public class Cotizacion implements Serializable {
     @Column(nullable = false)
     private EstadoCotizacion estadoCotizacion;
 
-    @OneToMany (mappedBy = "cotizacion_id", fetch = FetchType.LAZY)
+    @OneToMany (mappedBy = "cotizacion", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<InsumoCotizacion> insumosCotizacion;
     
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orden_trabajo_id", nullable = false, unique = true)
+    @OneToOne(mappedBy = "cotizacion", fetch = FetchType.LAZY)
     private OrdenTrabajo ordenTrabajo;
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "servicio_id", nullable = false, unique = true)
     private Servicio servicio;
+    
+    @Column(nullable = false)
+    private Boolean activo = true;
     
     public Long getId() {
         return id;

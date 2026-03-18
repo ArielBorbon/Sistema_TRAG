@@ -151,6 +151,7 @@ public class DTOMapeadores {
         entidad.setDiagnosticoGeneral(dto.getDiagnosticoGeneral());
         entidad.setFechaCreacion(dto.getFechaCreacion());
         entidad.setInsumosCotizacion(DTOMapeadores.toEntityInsumosCotizacionAgregar(dto.getInsumosCotizacion()));
+        entidad.setServicio(new Servicio(dto.getIdServicio()));
         return entidad;
     }
     
