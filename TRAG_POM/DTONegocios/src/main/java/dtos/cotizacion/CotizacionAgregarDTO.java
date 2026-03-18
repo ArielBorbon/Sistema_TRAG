@@ -3,6 +3,7 @@ package dtos.cotizacion;
 
 import dtos.insumocotizacion.InsumoCotizacionAgregarDTO;
 import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
+import enums.EstadoCotizacionNegocios;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ public class CotizacionAgregarDTO{
     private LocalDateTime fechaCreacion;
     private List<InsumoCotizacionAgregarDTO> insumosCotizacion;
     private Long idServicio;
+    private EstadoCotizacionNegocios estadoCotizacion;
 
     public CotizacionAgregarDTO(BigDecimal precioManoObra, String estadoAutomovil, String diagnosticoGeneral, LocalDateTime fechaCreacion, List<InsumoCotizacionAgregarDTO> insumosCotizacion, Long idServicio) {
         this.precioManoObra = precioManoObra;
@@ -53,5 +55,12 @@ public class CotizacionAgregarDTO{
         return idServicio;
     }
 
+    public EstadoCotizacionNegocios getEstadoCotizacion() {
+        return estadoCotizacion;
+    }
+
+    public void setEstadoCotizacion(EstadoCotizacionNegocios estadoCotizacion) {
+        this.estadoCotizacion = estadoCotizacion;
+    }
     
 }

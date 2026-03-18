@@ -38,6 +38,8 @@ import entidades.Servicio;
 import entidades.Trabajo;
 import entidades.Usuario;
 import enums.EstadoCliente;
+import enums.EstadoCotizacion;
+import enums.EstadoCotizacionNegocios;
 import insumoservicio.InsumoServicioAgregarDTO;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -153,6 +155,7 @@ public class DTOMapeadores {
         entidad.setDiagnosticoGeneral(dto.getDiagnosticoGeneral());
         entidad.setFechaCreacion(dto.getFechaCreacion());
         entidad.setInsumosCotizacion(DTOMapeadores.toEntityInsumosCotizacionAgregar(dto.getInsumosCotizacion()));
+        entidad.setEstadoCotizacion(EstadoCotizacion.valueOf(dto.getEstadoCotizacion().name()));
         entidad.setServicio(new Servicio(dto.getIdServicio()));
         return entidad;
     }

@@ -7,6 +7,7 @@ import dtos.cotizacion.CotizacionDetalleDTO;
 import dtos.ordentrabajo.OrdenTrabajoAgregarDTO;
 import dtos.ordentrabajo.OrdenTrabajoCotizacionAgregarDTO;
 import dtos.ordentrabajo.OrdenTrabajoDetalleDTO;
+import enums.EstadoCotizacionNegocios;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IOrdenesTrabajoDAO;

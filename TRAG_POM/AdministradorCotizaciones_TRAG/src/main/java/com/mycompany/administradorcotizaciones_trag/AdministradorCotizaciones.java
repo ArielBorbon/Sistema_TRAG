@@ -7,6 +7,7 @@ import dtos.cotizacion.CotizacionDetalleDTO;
 import dtos.cotizacion.CotizacionResumenDTO;
 import dtos.cotizacion.CotizacionAgregarDTO;
 import entidades.Cotizacion;
+import enums.EstadoCotizacionNegocios;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.ICotizacionesDAO;
@@ -44,6 +45,7 @@ public class AdministradorCotizaciones {
         
         //validarCotizacion(dto);
         
+        dto.setEstadoCotizacion(EstadoCotizacionNegocios.ACTIVA);
         //aqui se mapea a entidad y se llama al metodo de la DAO para crear la cotizacion
         Cotizacion cotizacionRegistrada = DTOMapeadores.toEntity(dto);
         

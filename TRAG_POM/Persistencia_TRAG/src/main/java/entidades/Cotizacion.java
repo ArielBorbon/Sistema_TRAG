@@ -49,7 +49,7 @@ public class Cotizacion implements Serializable {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precioManoObra;
 
-    @Column(length = 255)
+    @Column(length = 1000)
     private String estadoAutomovil;
 
     @Column(columnDefinition = "TEXT")
@@ -68,7 +68,7 @@ public class Cotizacion implements Serializable {
     private OrdenTrabajo ordenTrabajo;
     
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "servicio_id", nullable = false, unique = true)
+    @JoinColumn(name = "servicio_id", nullable = false)
     private Servicio servicio;
     
     @Column(nullable = false)
