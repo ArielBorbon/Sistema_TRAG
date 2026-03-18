@@ -21,7 +21,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author PC Gamer
+ * @author 
  */
 @Entity
 @Table(name = "Cotizacion")
@@ -66,6 +66,10 @@ public class Cotizacion implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_trabajo_id", nullable = false, unique = true)
     private OrdenTrabajo ordenTrabajo;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "servicio_id", nullable = false, unique = true)
+    private Servicio servicio;
     
     public Long getId() {
         return id;
@@ -129,6 +133,14 @@ public class Cotizacion implements Serializable {
 
     public void setOrdenTrabajo(OrdenTrabajo ordenTrabajo) {
         this.ordenTrabajo = ordenTrabajo;
+    }
+
+    public Servicio getServicio() {
+        return servicio;
+    }
+
+    public void setServicio(Servicio servicio) {
+        this.servicio = servicio;
     }
     
 

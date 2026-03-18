@@ -3,29 +3,22 @@ package mappers;
 
 import dtos.automovil.AutomovilActualizarDTO;
 import dtos.automovil.AutomovilAgregarDTO;
-import dtos.automovil.AutomovilDetalleDTO;
 import dtos.CitaDTO;
 import dtos.cliente.ClienteActualizarDTO;
 import dtos.cliente.ClienteAgregarDTO;
 import dtos.cotizacion.CotizacionActualizarDTO;
 import dtos.cotizacion.CotizacionAgregarDTO;
-import dtos.cotizacion.CotizacionDetalleDTO;
 import dtos.DetallePagoDTO;
 import imprevisto.ImprevistoDetalleDTO;
-import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
-import dtos.insumos.InsumoDetalleDTO;
-import dtos.insumoimprevisto.InsumoImprevistoDetalleDTO;
-import insumoservicio.InsumoServicioDetalleDTO;
 import dtos.insumotrabajoadquirido.InsumoTrabajoAdquiridoDetalleDTO;
-import dtos.OrdenTrabajoDTO;
 import dtos.ProveedorDTO;
 import dtos.servicio.ServicioActualizarDTO;
 import dtos.servicio.ServicioAgregarDTO;
-import dtos.servicio.ServicioDetalleDTO;
 import dtos.trabajo.TrabajoDetalleDTO;
-import dtos.UsuarioDTO;
+import dtos.usuario.UsuarioDetalleDTO;
 import dtos.insumocotizacion.InsumoCotizacionActualizarDTO;
 import dtos.insumocotizacion.InsumoCotizacionAgregarDTO;
+import dtos.insumoimprevisto.InsumoImprevistoDetalleDTO;
 import dtos.insumos.InsumoAgregarDTO;
 import dtos.ordentrabajo.OrdenTrabajoAgregarDTO;
 import entidades.Automovil;
@@ -51,7 +44,7 @@ import java.util.stream.Collectors;
 
 public class DTOMapeadores {
 
-    public static Usuario toEntity(UsuarioDTO dto) {
+    public static Usuario toEntityUsuario(UsuarioDetalleDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -66,12 +59,12 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public static List<Usuario> toEntityUsuarios(List<UsuarioDTO> dtos) {
+    public static List<Usuario> toEntityUsuarios(List<UsuarioDetalleDTO> dtos) {
         if (dtos == null) {
             return null;
         }
         return dtos.stream()
-                .map(DTOMapeadores::toEntity)
+                .map(DTOMapeadores::toEntityUsuario)
                 .collect(Collectors.toList());
     }
 
@@ -103,7 +96,7 @@ public class DTOMapeadores {
     }
 
 
-    public static Proveedor toEntity(ProveedorDTO dto) {
+    public static Proveedor toEntityProveedor(ProveedorDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -120,7 +113,7 @@ public class DTOMapeadores {
             return null;
         }
         return dtos.stream()
-                .map(DTOMapeadores::toEntity)
+                .map(DTOMapeadores::toEntityProveedor)
                 .collect(Collectors.toList());
     }
 
@@ -224,7 +217,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public static Cita toEntity(CitaDTO dto) {
+    public static Cita toEntityCita(CitaDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -241,7 +234,7 @@ public class DTOMapeadores {
             return null;
         }
         return dtos.stream()
-                .map(DTOMapeadores::toEntity)
+                .map(DTOMapeadores::toEntityCita)
                 .collect(Collectors.toList());
     }
 
@@ -310,7 +303,7 @@ public class DTOMapeadores {
         return entidad;
     }
 
-    public static Trabajo toEntity(TrabajoDetalleDTO dto) {
+    public static Trabajo toEntityTrabajo(TrabajoDetalleDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -328,7 +321,7 @@ public class DTOMapeadores {
             return null;
         }
         return dtos.stream()
-                .map(DTOMapeadores::toEntity)
+                .map(DTOMapeadores::toEntityTrabajo)
                 .collect(Collectors.toList());
     }
 

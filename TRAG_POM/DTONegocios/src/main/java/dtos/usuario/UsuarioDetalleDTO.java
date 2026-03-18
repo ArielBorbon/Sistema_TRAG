@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package dtos;
+
+package dtos.usuario;
 
 import enums.EstadoUsuario;
 import enums.RolUsuario;
@@ -11,7 +8,7 @@ import enums.RolUsuario;
  *
  * @author PC Gamer
  */
-public class UsuarioDTO {
+public class UsuarioDetalleDTO {
 
     private Long id;
     private String correo;
@@ -21,10 +18,10 @@ public class UsuarioDTO {
     private EstadoUsuario estado;
     private RolUsuario rol;
 
-    public UsuarioDTO() {
+    public UsuarioDetalleDTO() {
     }
 
-    public UsuarioDTO(Long id, String correo, String nombre, String apellidoPaterno, String apellidoMaterno, EstadoUsuario estado, RolUsuario rol) {
+    public UsuarioDetalleDTO(Long id, String correo, String nombre, String apellidoPaterno, String apellidoMaterno, EstadoUsuario estado, RolUsuario rol) {
         this.id = id;
         this.correo = correo;
         this.nombre = nombre;

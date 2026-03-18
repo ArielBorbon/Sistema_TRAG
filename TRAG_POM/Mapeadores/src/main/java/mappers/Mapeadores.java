@@ -15,7 +15,7 @@ import dtos.OrdenTrabajoDTO;
 import dtos.ProveedorDTO;
 import dtos.servicio.ServicioResumenDTO;
 import dtos.trabajo.TrabajoDetalleDTO;
-import dtos.UsuarioDTO;
+import dtos.usuario.UsuarioDetalleDTO;
 import dtos.automovil.AutomovilDetalleDTO;
 import dtos.cliente.ClienteResumenDTO;
 import dtos.cotizacion.CotizacionDetalleDTO;
@@ -50,11 +50,11 @@ import java.util.stream.Collectors;
  */
 public class Mapeadores {
 
-    public static UsuarioDTO toDTO(Usuario entidad) {
+    public static UsuarioDetalleDTO toDTO(Usuario entidad) {
         if (entidad == null) {
             return null;
         }
-        UsuarioDTO dto = new UsuarioDTO();
+        UsuarioDetalleDTO dto = new UsuarioDetalleDTO();
         dto.setId(entidad.getId());
         dto.setCorreo(entidad.getCorreo());
         dto.setNombre(entidad.getNombre());
@@ -65,7 +65,7 @@ public class Mapeadores {
         return dto;
     }
 
-    public static List<UsuarioDTO> toDTOUsuarios(List<Usuario> entidades) {
+    public static List<UsuarioDetalleDTO> toDTOUsuarios(List<Usuario> entidades) {
         if (entidades == null) {
             return null;
         }
