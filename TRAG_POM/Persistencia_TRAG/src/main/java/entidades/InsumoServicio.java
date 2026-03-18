@@ -34,6 +34,9 @@ public class InsumoServicio implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insumo_id", nullable = false)
     private Insumo insumo;
+    
+    @Column(nullable = false)
+    private Boolean activo = true;
 
     public Long getId() {
         return id;
@@ -66,6 +69,13 @@ public class InsumoServicio implements Serializable {
     public void setInsumo(Insumo insumo) {
         this.insumo = insumo;
     }
-    
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
     
 }

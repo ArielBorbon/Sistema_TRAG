@@ -2,6 +2,8 @@ package daos;
 
 
 import conexion.Conexion;
+import entidades.Insumo;
+import entidades.InsumoServicio;
 import entidades.Servicio;
 import excepciones.PersistenciaException;
 import interfaces.IServiciosDAO;
@@ -26,17 +28,27 @@ public class ServiciosDAO implements IServiciosDAO{
     
     @Override
     public Servicio crearServicio(Servicio servicio) throws PersistenciaException {
-        
         EntityManager em = Conexion.crearConexion();
         try {
-            EntityTransaction transaccion = em.getTransaction();
-            transaccion.begin();
+            em.getTransaction().begin();
+
+            if (servicio.getInsumosServicio() != null && !servicio.getInsumosServicio().isEmpty()) {
+
+                for (InsumoServicio insumoSerivicio: servicio.getInsumosServicio()) {
+                    insumoSerivicio.setServicio(servicio);
+
+                    if (insumoSerivicio.getInsumo() != null && insumoSerivicio.getInsumo().getId() != null) {
+                        Insumo referenciaInsumo = em.getReference(Insumo.class, insumoSerivicio.getInsumo().getId());
+                        insumoSerivicio.setInsumo(referenciaInsumo);
+                    }
+                }
+            }
 
             em.persist(servicio);
 
-            transaccion.commit();
+            em.getTransaction().commit();
             return servicio;
-            
+
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
@@ -45,7 +57,6 @@ public class ServiciosDAO implements IServiciosDAO{
         } finally {
             em.close();
         }
-        
     }
 
     @Override

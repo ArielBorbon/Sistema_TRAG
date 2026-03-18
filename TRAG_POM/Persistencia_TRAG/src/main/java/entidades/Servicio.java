@@ -4,6 +4,7 @@ package entidades;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author PC Gamer
+ * @author
  */
 @Entity
 @Table(name = "Servicio")
@@ -37,7 +38,7 @@ public class Servicio implements Serializable {
     @Column(nullable = false)
     private Boolean activo = true;
     
-    @OneToMany (mappedBy = "servicio_id", fetch = FetchType.LAZY)
+    @OneToMany (mappedBy = "servicio", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<InsumoServicio> insumosServicio;
 
     public Servicio() {

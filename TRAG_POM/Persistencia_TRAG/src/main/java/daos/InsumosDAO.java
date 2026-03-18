@@ -16,6 +16,7 @@ public class InsumosDAO implements IInsumosDAO{
  
     private final String MENSAJE_ERROR_AGREGAR = "Error al agregar el insumo.";
     private final String MENSAJE_ERROR_CONSULTA = "Error al consultar el insumo.";
+    
     @Override
     public Insumo crearInsumo(Insumo insumo) throws PersistenciaException {
         EntityManager em = Conexion.crearConexion();
