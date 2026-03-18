@@ -31,7 +31,7 @@ public class AdministradorCotizaciones {
 
     private ICotizacionesDAO cotizacionesDAO;
 
-    private static final int MAX_LONGITUD_ESTADO = 255;
+    private static final int MAX_LONGITUD_ESTADO = 1000;
     private static final BigDecimal PRECIO_MAXIMO = new BigDecimal("99999999.99");
 
     private static final String MENSAJE_ID_COTIZACION_AUSENTE_OBTENER = "El ID es necesario para obtener una cotización";

@@ -41,6 +41,10 @@ public class AdministradorOrdenesTrabajo {
         Long idAutomovil = dto.getIdAutomovil();
         Long idServicio = dto.getIdServicio();
         
+        if(idAutomovil == null || idServicio == null){
+            throw new NegocioException(MENSAJE_ERROR_CREAR_ORDEN_TRABAJO);
+        }
+        
         CotizacionDetalleDTO cotizacionCreadaDTO = null;
         try {
             cotizacionCreadaDTO = administradorCotizaciones.crearCotizacion(
@@ -77,6 +81,11 @@ public class AdministradorOrdenesTrabajo {
     }
     
     public OrdenTrabajoDetalleDTO obtenerOrdenTrabajo(Long idOrdenTrabajo) throws NegocioException{
+        
+        if(idOrdenTrabajo == null){
+            throw new NegocioException(MENSAJE_ERROR_OBTENER_ORDEN_TRABAJO);
+        }
+        
         try {
             return Mapeadores.toDTODetalle(ordenesTrabajoDAO.obtenerOrdenTrabajo(idOrdenTrabajo));
         } catch (PersistenciaException e) {
