@@ -1,21 +1,37 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package presentacion.vistas;
+
+import dtos.cliente.ClienteResumenDTO;
+import java.awt.Dimension;
+import java.util.List;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import presentacion.interfaces.IControlAgregarCotizacion;
+import presentacion.interfaces.vistas.IVistaSeleccionClienteAuto;
 
 /**
  *
  * @author romom
  */
-public class VistaSeleccionClienteAuto extends javax.swing.JFrame {
+public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccionClienteAuto{
 
+    private static final Logger LOG = Logger.getLogger(VistaSeleccionClienteAuto.class.getName());
+    
+    private IControlAgregarCotizacion control;
+    
     /**
      * Creates new form VistaSeleccionClienteAuto
      */
-    public VistaSeleccionClienteAuto() {
+    public VistaSeleccionClienteAuto(IControlAgregarCotizacion control) {
         initComponents();
+        this.control = control;
+        
+        setLocationRelativeTo(null);
+        
+        
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -25,61 +41,239 @@ public class VistaSeleccionClienteAuto extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         panelEncabezado1 = new presentacion.vistas.PanelEncabezado();
         panelEncabezado2 = new presentacion.vistas.PanelEncabezado();
         panelEncabezado3 = new presentacion.vistas.PanelEncabezado();
         panelEncabezado4 = new presentacion.vistas.PanelEncabezado();
         panelEncabezado5 = new presentacion.vistas.PanelEncabezado();
+        panelPrincipal = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        imgCliente = new javax.swing.JLabel();
+        imgAutomovil = new javax.swing.JLabel();
+        Añadir = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        cmbBoxClientes = new javax.swing.JComboBox<>();
+        cmbBoxAutomoviles = new javax.swing.JComboBox<>();
+        jPanel3 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1100, 700));
         setPreferredSize(new java.awt.Dimension(1100, 700));
         getContentPane().add(panelEncabezado5, java.awt.BorderLayout.PAGE_START);
 
+        panelPrincipal.setLayout(new java.awt.GridBagLayout());
+
+        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+        java.awt.GridBagLayout jPanel2Layout = new java.awt.GridBagLayout();
+        jPanel2Layout.columnWidths = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        jPanel2Layout.rowHeights = new int[] {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0};
+        jPanel2.setLayout(jPanel2Layout);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("Nuevo Servicio");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(36, 63, 0, 0);
+        jPanel2.add(jLabel1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        panelPrincipal.add(jPanel2, gridBagConstraints);
+
+        jPanel1.setBackground(new java.awt.Color(255, 153, 51));
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        jLabel2.setText("Cliente");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(0, 91, 0, 0);
+        jPanel1.add(jLabel2, gridBagConstraints);
+
+        jLabel3.setText("Automóvil");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(0, 39, 0, 0);
+        jPanel1.add(jLabel3, gridBagConstraints);
+
+        ImageIcon iconoOriginalCliente = new javax.swing.ImageIcon(getClass().getResource("/cliente.png"));
+        java.awt.Image imgEscaladaCliente = iconoOriginalCliente.getImage().getScaledInstance(100, 80, java.awt.Image.SCALE_SMOOTH);
+        imgCliente.setIcon(new javax.swing.ImageIcon(imgEscaladaCliente));
+        imgCliente.setMaximumSize(new java.awt.Dimension(100, 80));
+        imgCliente.setMinimumSize(new java.awt.Dimension(100, 80));
+        imgCliente.setPreferredSize(new java.awt.Dimension(100, 80));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LAST_LINE_END;
+        jPanel1.add(imgCliente, gridBagConstraints);
+
+        ImageIcon iconoOriginalAutomovil = new javax.swing.ImageIcon(getClass().getResource("/automovil.png"));
+        java.awt.Image imgEscaladaAutomovil = iconoOriginalAutomovil.getImage().getScaledInstance(100, 57, java.awt.Image.SCALE_SMOOTH);
+        imgAutomovil.setIcon(new javax.swing.ImageIcon(imgEscaladaAutomovil));
+        imgAutomovil.setMaximumSize(new java.awt.Dimension(100, 80));
+        imgAutomovil.setMinimumSize(new java.awt.Dimension(100, 80));
+        imgAutomovil.setPreferredSize(new java.awt.Dimension(100, 80));
+        Dimension dimensionAutomovil = new Dimension(100, 80);
+        imgAutomovil.setPreferredSize(dimensionAutomovil);
+        imgAutomovil.setMaximumSize(dimensionAutomovil);
+        imgAutomovil.setMinimumSize(dimensionAutomovil);
+        imgAutomovil.setSize(dimensionAutomovil);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LAST_LINE_END;
+        jPanel1.add(imgAutomovil, gridBagConstraints);
+
+        Añadir.setText("Añadir");
+        Añadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AñadirActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        jPanel1.add(Añadir, gridBagConstraints);
+
+        jButton1.setText("Añadir");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        jPanel1.add(jButton1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 31);
+        jPanel1.add(cmbBoxClientes, gridBagConstraints);
+
+        cmbBoxAutomoviles.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 69);
+        jPanel1.add(cmbBoxAutomoviles, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        panelPrincipal.add(jPanel1, gridBagConstraints);
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 204));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 60, 20, 60));
+        jPanel3.setLayout(new java.awt.BorderLayout());
+
+        jButton2.setText("Volver");
+        jPanel3.add(jButton2, java.awt.BorderLayout.LINE_END);
+
+        jButton3.setText("Continuar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton3, java.awt.BorderLayout.LINE_START);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        panelPrincipal.add(jPanel3, gridBagConstraints);
+
+        getContentPane().add(panelPrincipal, java.awt.BorderLayout.CENTER);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VistaSeleccionClienteAuto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VistaSeleccionClienteAuto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VistaSeleccionClienteAuto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VistaSeleccionClienteAuto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void AñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AñadirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AñadirActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VistaSeleccionClienteAuto().setVisible(true);
-            }
-        });
-    }
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Añadir;
+    private javax.swing.JComboBox<String> cmbBoxAutomoviles;
+    private javax.swing.JComboBox<ClienteResumenDTO> cmbBoxClientes;
+    private javax.swing.JLabel imgAutomovil;
+    private javax.swing.JLabel imgCliente;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private presentacion.vistas.PanelEncabezado panelEncabezado1;
     private presentacion.vistas.PanelEncabezado panelEncabezado2;
     private presentacion.vistas.PanelEncabezado panelEncabezado3;
     private presentacion.vistas.PanelEncabezado panelEncabezado4;
     private presentacion.vistas.PanelEncabezado panelEncabezado5;
+    private javax.swing.JPanel panelPrincipal;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void cargarClientes(List<ClienteResumenDTO> clientes) {
+        cmbBoxClientes.removeAllItems();
+        clientes.forEach(cmbBoxClientes::addItem);
+    }
+
+    @Override
+    public void cargarAutosCliente() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    @Override
+    public void mostrarError(String mensajeError) {
+
+        javax.swing.JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+
+        
+
+    }
+
+    @Override
+    public void mostrar() {
+        setVisible(true);
+    }
+
+    @Override
+    public void ocultar() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }
