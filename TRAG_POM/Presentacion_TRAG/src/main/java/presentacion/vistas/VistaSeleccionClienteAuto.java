@@ -26,18 +26,16 @@ public class VistaSeleccionClienteAuto extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        panelEncabezado1 = new presentacion.vistas.PanelEncabezado();
+        panelEncabezado2 = new presentacion.vistas.PanelEncabezado();
+        panelEncabezado3 = new presentacion.vistas.PanelEncabezado();
+        panelEncabezado4 = new presentacion.vistas.PanelEncabezado();
+        panelEncabezado5 = new presentacion.vistas.PanelEncabezado();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(1100, 700));
+        setPreferredSize(new java.awt.Dimension(1100, 700));
+        getContentPane().add(panelEncabezado5, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -78,5 +76,10 @@ public class VistaSeleccionClienteAuto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private presentacion.vistas.PanelEncabezado panelEncabezado1;
+    private presentacion.vistas.PanelEncabezado panelEncabezado2;
+    private presentacion.vistas.PanelEncabezado panelEncabezado3;
+    private presentacion.vistas.PanelEncabezado panelEncabezado4;
+    private presentacion.vistas.PanelEncabezado panelEncabezado5;
     // End of variables declaration//GEN-END:variables
 }
