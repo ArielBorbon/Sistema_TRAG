@@ -11,7 +11,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>DTONegocios</artifactId>
+            <artifactId>DTONegocios_TRAG</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
