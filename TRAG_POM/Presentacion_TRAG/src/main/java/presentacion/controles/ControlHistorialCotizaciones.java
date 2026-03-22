@@ -4,10 +4,16 @@
  */
 package presentacion.controles;
 
+import com.mycompany.administradorcotizaciones_trag.IAdministradorCotizaciones;
+import com.mycompany.negocios_trag.FabricaNegocios;
 import dtos.cotizacion.CotizacionResumenDTO;
+import excepciones.NegocioException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import presentacion.fabrica.FabricaVistas;
 import presentacion.interfaces.IControlHistorialCotizaciones;
 import presentacion.interfaces.vistas.IHistorialCotizaciones;
@@ -18,31 +24,76 @@ import presentacion.interfaces.vistas.IHistorialCotizaciones;
  */
 public class ControlHistorialCotizaciones implements IControlHistorialCotizaciones {
 
+    // Dependencias
+    private IAdministradorCotizaciones administradorCotizaciones;
     private IHistorialCotizaciones vista;
 
+    /**
+     * Constructor del controlador.
+     * Inicializa las dependencias de la capa de Negocios usando la Fábrica.
+     */
     public ControlHistorialCotizaciones() {
+        // Obtenemos la instancia de negocios tal como lo hiciste en AgregarCotizacion
+        this.administradorCotizaciones = FabricaNegocios.obtenerAdministradorCotizaciones();
     }
 
     @Override
     public void iniciar() {
+        // Inicializamos la vista usando nuestra fábrica de vistas
         this.vista = FabricaVistas.getVistaHistorialCotizaciones(this);
         this.vista.mostrar();
         
-        buscarCotizaciones(null, null, null, null);
+        // Al arrancar la pantalla, traemos todas las cotizaciones sin filtros
+        buscarCotizaciones(null, null, null, "Todos");
     }
 
     @Override
     public void buscarCotizaciones(String nombreCliente, LocalDateTime fechaInicio, LocalDateTime fechaFin, String estado) {
-        
+        try {
+            List<CotizacionResumenDTO> listaFiltrada = administradorCotizaciones.obtenerTodasCotizaciones();
+            if (nombreCliente != null && !nombreCliente.trim().isEmpty()) {
+                String busquedaLower = nombreCliente.trim().toLowerCase();
+                listaFiltrada = listaFiltrada.stream()
+                        .filter(c -> c.getNombreCliente().toLowerCase().contains(busquedaLower) ||
+                                c.getApellidoPaternoCliente().toLowerCase().contains(busquedaLower))
+                        .collect(Collectors.toList());
+            }
+            if (fechaInicio != null || fechaFin != null) {
+                listaFiltrada = listaFiltrada.stream()
+                        .filter(c -> {
+                            boolean cumpleInicio = (fechaInicio == null) || !c.getFechaCreacion().isBefore(fechaInicio);
+                            boolean cumpleFin = (fechaFin == null) || !c.getFechaCreacion().isAfter(fechaFin);
+                            return cumpleInicio && cumpleFin;
+                        })
+                        .collect(Collectors.toList());
+            }
+            if (estado != null && !estado.equalsIgnoreCase("Todos")) {
+                listaFiltrada = listaFiltrada.stream()
+                        .filter(c -> c.getEstadoCotizacion() != null &&
+                                c.getEstadoCotizacion().name().equalsIgnoreCase(estado))
+                        .collect(Collectors.toList());
+            }
+            if (listaFiltrada.isEmpty()) {
+                vista.mostrarMensajeRapido("No se encontraron cotizaciones con los parámetros de búsqueda.");
+            }
+            vista.mostrarCotizaciones(listaFiltrada);
+        } catch (NegocioException ex) {
+            Logger.getLogger(ControlHistorialCotizaciones.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public void verDetalleCotizacion(CotizacionResumenDTO cotizacionSeleccionada) {
-
+        // Aquí eventualmente instanciarás el controlador de la pantalla de "Detalles"
+        // Por ahora, solo mandamos un mensaje para comprobar que el botón de la card funcione
+        vista.mostrarMensajeRapido("Abriendo detalles de la cotización de: " + 
+                cotizacionSeleccionada.getNombreCliente() + " " + 
+                cotizacionSeleccionada.getApellidoPaternoCliente());
     }
 
     @Override
     public void regresar() {
         this.vista.ocultar();
+        // Aquí podrías instanciar el controlador del menú principal para volver
     }
 }

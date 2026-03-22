@@ -34,7 +34,6 @@ public class VistaHistorialCotizaciones extends javax.swing.JFrame implements IH
 
     private IControlHistorialCotizaciones control;
 
-    // NUEVOS COMPONENTES
     private PanelEncabezado panelEncabezado;
     private JPanel panelFiltros;
     private JPanel contenedorTarjetas;
@@ -129,7 +128,19 @@ public class VistaHistorialCotizaciones extends javax.swing.JFrame implements IH
         contenedorTarjetas.removeAll();
 
         if (cotizaciones == null || cotizaciones.isEmpty()) {
-            mostrarMensajeRapido("No se encontraron cotizaciones");
+            
+            JPanel panelVacio = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 50));
+            panelVacio.setBackground(new Color(245, 245, 245));
+            
+            JLabel lblVacio = new JLabel("No se encontraron cotizaciones.");
+            lblVacio.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            lblVacio.setForeground(new Color(150, 150, 150));
+            
+            panelVacio.add(lblVacio);
+            contenedorTarjetas.add(panelVacio);
+            
+            contenedorTarjetas.revalidate();
+            contenedorTarjetas.repaint();
             return;
         }
 
