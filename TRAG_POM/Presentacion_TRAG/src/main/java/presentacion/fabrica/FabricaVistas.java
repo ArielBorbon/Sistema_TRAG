@@ -3,12 +3,15 @@ package presentacion.fabrica;
 
 import presentacion.interfaces.IControlAgregarCotizacion;
 import presentacion.interfaces.IControlHistorialCotizaciones;
+import presentacion.interfaces.vistas.IConsultaCotizacion;
 import presentacion.interfaces.vistas.IHistorialCotizaciones;
 import presentacion.interfaces.vistas.IPruebaAgregarCotizacion;
 import presentacion.interfaces.vistas.IVistaSeleccionClienteAuto;
 import presentacion.vistas.PruebaAgregarCotizacion;
 import presentacion.vistas.VistaHistorialCotizaciones;
 import presentacion.vistas.VistaSeleccionClienteAuto;
+import presentacion.interfaces.IControlConsultaCotizacion;
+import presentacion.vistas.VistaConsultaCotizacion;
 
 /**
  *
@@ -36,6 +39,13 @@ public class FabricaVistas {
         
         return historialCotizaciones;
     }
-    
+   
+   public static IConsultaCotizacion getVistaConsultarCotizacion(IControlConsultaCotizacion control){
+       
+       IConsultaCotizacion consultaCotizacion = new VistaConsultaCotizacion(control);
+       
+       return consultaCotizacion;
+       
+   }
     
 }
