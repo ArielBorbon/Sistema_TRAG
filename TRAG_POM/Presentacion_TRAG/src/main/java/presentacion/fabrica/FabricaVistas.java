@@ -2,9 +2,12 @@
 package presentacion.fabrica;
 
 import presentacion.interfaces.IControlAgregarCotizacion;
+import presentacion.interfaces.IControlHistorialCotizaciones;
+import presentacion.interfaces.vistas.IHistorialCotizaciones;
 import presentacion.interfaces.vistas.IPruebaAgregarCotizacion;
 import presentacion.interfaces.vistas.IVistaSeleccionClienteAuto;
 import presentacion.vistas.PruebaAgregarCotizacion;
+import presentacion.vistas.VistaHistorialCotizaciones;
 import presentacion.vistas.VistaSeleccionClienteAuto;
 
 /**
@@ -26,6 +29,13 @@ public class FabricaVistas {
        IVistaSeleccionClienteAuto vistaSeleccionClienteAuto = new VistaSeleccionClienteAuto(control);
        return vistaSeleccionClienteAuto;
    }
+   
+   public static IHistorialCotizaciones getVistaHistorialCotizaciones(IControlHistorialCotizaciones control){
+        
+        IHistorialCotizaciones historialCotizaciones = new VistaHistorialCotizaciones(control);
+        
+        return historialCotizaciones;
+    }
     
     
 }

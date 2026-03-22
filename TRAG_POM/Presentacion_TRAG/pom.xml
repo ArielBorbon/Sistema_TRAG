@@ -15,9 +15,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Negocios_TRAG</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.toedter</groupId>
+            <artifactId>jcalendar</artifactId>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -27,6 +27,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>AdministradorAutomoviles_TRAG</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Negocios_TRAG</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
