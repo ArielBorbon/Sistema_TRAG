@@ -8,10 +8,8 @@ import presentacion.interfaces.IVista;
  */
 public interface IConsultaCotizacion extends IVista{
     
-    // Actualiza el detalle de la cotización
     public abstract void mostrarDetalleCotizacion(List<CotizacionResumenDTO> cotizaciones);
     
-    // Para mostrar mensajes de error si no se encuentran resultados
     public abstract void mostrarMensajeRapido(String mensaje);
     
     public abstract void limpiarBusqueda();

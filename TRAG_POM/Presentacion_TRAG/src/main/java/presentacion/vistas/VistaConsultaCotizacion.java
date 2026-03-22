@@ -1,22 +1,94 @@
 package presentacion.vistas;
 
 import dtos.cotizacion.CotizacionResumenDTO;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 import presentacion.interfaces.IControlConsultaCotizacion;
 import presentacion.interfaces.vistas.IConsultaCotizacion;
 /**
  * @author Yuri Germán Garcí López - 252583
  */
 public class VistaConsultaCotizacion extends javax.swing.JFrame implements IConsultaCotizacion {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VistaConsultaCotizacion.class.getName());
 
     private IControlConsultaCotizacion control;
+    
+    private PanelEncabezado panelEncabezado;
+    private JPanel panelFondo;
 
     public VistaConsultaCotizacion(IControlConsultaCotizacion control) {
         this.control = control;
         initComponents();
-        //configurarLayout();
+        configurarLayout();
+        setLocationRelativeTo(null);
+    }
+    
+    public VistaConsultaCotizacion() {
+        initComponents();
+        configurarLayout();
+        setLocationRelativeTo(null);
+    }
+    
+    private void configurarLayout(){
+        this.getContentPane().setLayout(new BorderLayout());
+
+        // importar el encabezado
+        panelEncabezado = new PanelEncabezado();
+        this.getContentPane().add(panelEncabezado, BorderLayout.NORTH);
+        
+        // panel que solo pinta el fondo de color
+        panelFondo = new JPanel();
+        panelFondo.setBackground(new Color(243, 243, 243));
+        this.getContentPane().add(panelFondo, BorderLayout.CENTER);
+        
+        // poner el icono del cliente el label
+        etqIconoUsuario.setIcon(cargarIcono("/cliente.png", 55, 55));
+        etqIconoUsuario.setPreferredSize(new Dimension(55, 55));
+        
+        // poner icono del automovil en el label
+        etqIconoAutomovil.setIcon(cargarIcono("/automovil.png", 80, 80));
+        etqIconoAutomovil.setPreferredSize(new Dimension(80, 80));
+        etqIconoAutomovil.setMinimumSize(new Dimension(80, 80));
+        etqIconoAutomovil.setMaximumSize(new Dimension(80, 80));
+    }
+    
+    private ImageIcon cargarIcono(String ruta, int anchoMax, int altoMax) {
+        try {
+            java.net.URL url = getClass().getResource(ruta);
+
+            if (url == null) {
+                System.err.println("No se encontró la imagen: " + ruta);
+                return new ImageIcon();
+            }
+
+            ImageIcon icono = new ImageIcon(url);
+            Image img = icono.getImage();
+
+            int anchoOriginal = img.getWidth(null);
+            int altoOriginal = img.getHeight(null);
+
+            if (anchoOriginal <= 0 || altoOriginal <= 0) {
+                return new ImageIcon();
+            }
+
+            double escala = Math.min(
+                    (double) anchoMax / anchoOriginal,
+                    (double) altoMax / altoOriginal
+            );
+
+            int nuevoAncho = (int) (anchoOriginal * escala);
+            int nuevoAlto = (int) (altoOriginal * escala);
+
+            Image imgEscalada = img.getScaledInstance(nuevoAncho, nuevoAlto, Image.SCALE_SMOOTH);
+            return new ImageIcon(imgEscalada);
+
+        } catch (Exception e) {
+            return new ImageIcon();
+        }
     }
 
     /**
@@ -28,44 +100,250 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        etqCotización = new javax.swing.JLabel();
+        etqIconoUsuario = new javax.swing.JLabel();
+        etqNombreCliente = new javax.swing.JLabel();
+        etqIconoAutomovil = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        btnEliminarInsumo = new javax.swing.JButton();
+        btnAniadirInsumo = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
+        etqAutomovil = new javax.swing.JLabel();
+        etqAnioAutomovil = new javax.swing.JLabel();
+        etqFecha = new javax.swing.JLabel();
+        etqFechaCotizacion = new javax.swing.JLabel();
+        etqTotalPiezas = new javax.swing.JLabel();
+        etqTotalPiezasCotizacion = new javax.swing.JLabel();
+        etqManoObra = new javax.swing.JLabel();
+        etqTotalManoObra = new javax.swing.JLabel();
+        etqTotal = new javax.swing.JLabel();
+        etqTotalCotizacion = new javax.swing.JLabel();
+        btnGuardar = new javax.swing.JButton();
+        btnIniciarTrabajo = new javax.swing.JButton();
+        etqApellido = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(243, 243, 243));
+        setMaximumSize(new java.awt.Dimension(1000, 720));
+        setMinimumSize(new java.awt.Dimension(1000, 720));
+        setPreferredSize(new java.awt.Dimension(1000, 720));
+
+        etqCotización.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        etqCotización.setForeground(new java.awt.Color(0, 0, 0));
+        etqCotización.setText("Cotización");
+
+        etqNombreCliente.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        etqNombreCliente.setForeground(new java.awt.Color(0, 0, 0));
+        etqNombreCliente.setText("cliente");
+
+        btnEliminarInsumo.setBackground(new java.awt.Color(255, 243, 177));
+        btnEliminarInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEliminarInsumo.setForeground(new java.awt.Color(0, 0, 0));
+        btnEliminarInsumo.setText("Eliminar Insumo");
+        btnEliminarInsumo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarInsumoActionPerformed(evt);
+            }
+        });
+
+        btnAniadirInsumo.setBackground(new java.awt.Color(188, 226, 255));
+        btnAniadirInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAniadirInsumo.setForeground(new java.awt.Color(0, 0, 0));
+        btnAniadirInsumo.setText("Añadir Insumo");
+        btnAniadirInsumo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAniadirInsumoActionPerformed(evt);
+            }
+        });
+
+        btnVolver.setBackground(new java.awt.Color(186, 226, 255));
+        btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnVolver.setForeground(new java.awt.Color(0, 0, 0));
+        btnVolver.setText("Volver");
+
+        etqAutomovil.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        etqAutomovil.setForeground(new java.awt.Color(0, 0, 0));
+        etqAutomovil.setText("auto");
+
+        etqAnioAutomovil.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        etqAnioAutomovil.setForeground(new java.awt.Color(0, 0, 0));
+        etqAnioAutomovil.setText("anio");
+
+        etqFecha.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        etqFecha.setForeground(new java.awt.Color(0, 0, 0));
+        etqFecha.setText("Fecha:");
+
+        etqFechaCotizacion.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        etqFechaCotizacion.setForeground(new java.awt.Color(0, 0, 0));
+        etqFechaCotizacion.setText("fecha");
+
+        etqTotalPiezas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        etqTotalPiezas.setForeground(new java.awt.Color(0, 0, 0));
+        etqTotalPiezas.setText("Total Piezas");
+
+        etqTotalPiezasCotizacion.setBackground(new java.awt.Color(255, 255, 255));
+        etqTotalPiezasCotizacion.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        etqTotalPiezasCotizacion.setForeground(new java.awt.Color(0, 0, 0));
+        etqTotalPiezasCotizacion.setText("total");
+
+        etqManoObra.setBackground(new java.awt.Color(255, 255, 255));
+        etqManoObra.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        etqManoObra.setForeground(new java.awt.Color(0, 0, 0));
+        etqManoObra.setText("Mano de obra (Intermedio)");
+
+        etqTotalManoObra.setBackground(new java.awt.Color(255, 255, 255));
+        etqTotalManoObra.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        etqTotalManoObra.setForeground(new java.awt.Color(0, 0, 0));
+        etqTotalManoObra.setText("total");
+
+        etqTotal.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        etqTotal.setForeground(new java.awt.Color(0, 0, 0));
+        etqTotal.setText("Total:");
+
+        etqTotalCotizacion.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        etqTotalCotizacion.setForeground(new java.awt.Color(0, 0, 0));
+        etqTotalCotizacion.setText("total");
+
+        btnGuardar.setBackground(new java.awt.Color(177, 255, 186));
+        btnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(0, 0, 0));
+        btnGuardar.setText("Guardar");
+        btnGuardar.setMaximumSize(new java.awt.Dimension(85, 32));
+        btnGuardar.setMinimumSize(new java.awt.Dimension(85, 32));
+        btnGuardar.setPreferredSize(new java.awt.Dimension(85, 32));
+
+        btnIniciarTrabajo.setBackground(new java.awt.Color(255, 243, 177));
+        btnIniciarTrabajo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnIniciarTrabajo.setForeground(new java.awt.Color(0, 0, 0));
+        btnIniciarTrabajo.setText("Iniciar Trabajo");
+        btnIniciarTrabajo.setMaximumSize(new java.awt.Dimension(85, 32));
+        btnIniciarTrabajo.setMinimumSize(new java.awt.Dimension(85, 32));
+        btnIniciarTrabajo.setPreferredSize(new java.awt.Dimension(85, 32));
+
+        etqApellido.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        etqApellido.setForeground(new java.awt.Color(0, 0, 0));
+        etqApellido.setText("apellido");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(etqIconoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(etqApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(etqNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(etqIconoAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(etqAnioAutomovil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(etqAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(etqCotización, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(etqFecha)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(etqFechaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(etqTotalPiezas)
+                            .addComponent(etqTotalPiezasCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(etqManoObra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(etqTotalManoObra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(etqTotal)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(etqTotalCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnVolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEliminarInsumo, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAniadirInsumo, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnIniciarTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(66, 66, 66))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(114, 114, 114)
+                .addComponent(etqCotización)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(etqAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(etqFechaCotizacion)
+                                .addComponent(etqFecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(etqAnioAutomovil))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(etqNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(etqApellido))
+                            .addComponent(etqIconoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(etqIconoAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(etqTotalPiezas)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(etqTotalPiezasCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(etqManoObra)
+                        .addGap(9, 9, 9)
+                        .addComponent(etqTotalManoObra)
+                        .addGap(57, 57, 57)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(etqTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(etqTotalCotizacion))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEliminarInsumo)
+                    .addComponent(btnAniadirInsumo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnIniciarTrabajo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(66, 66, 66))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnEliminarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInsumoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEliminarInsumoActionPerformed
+
+    private void btnAniadirInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAniadirInsumoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAniadirInsumoActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
         presentacion.interfaces.IControlConsultaCotizacion control = new presentacion.controles.ControlConsultaCotizacion();
         control.iniciar();
     }
@@ -87,7 +365,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
 
     @Override
     public void mostrar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.setVisible(true);
     }
 
     @Override
@@ -96,5 +374,26 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAniadirInsumo;
+    private javax.swing.JButton btnEliminarInsumo;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnIniciarTrabajo;
+    private javax.swing.JButton btnVolver;
+    private javax.swing.JLabel etqAnioAutomovil;
+    private javax.swing.JLabel etqApellido;
+    private javax.swing.JLabel etqAutomovil;
+    private javax.swing.JLabel etqCotización;
+    private javax.swing.JLabel etqFecha;
+    private javax.swing.JLabel etqFechaCotizacion;
+    private javax.swing.JLabel etqIconoAutomovil;
+    private javax.swing.JLabel etqIconoUsuario;
+    private javax.swing.JLabel etqManoObra;
+    private javax.swing.JLabel etqNombreCliente;
+    private javax.swing.JLabel etqTotal;
+    private javax.swing.JLabel etqTotalCotizacion;
+    private javax.swing.JLabel etqTotalManoObra;
+    private javax.swing.JLabel etqTotalPiezas;
+    private javax.swing.JLabel etqTotalPiezasCotizacion;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
