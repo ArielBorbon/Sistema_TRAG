@@ -560,12 +560,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
 
     @Override
     public void mostrarMensajeRapido(String mensaje) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void limpiarBusqueda() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        javax.swing.JOptionPane.showMessageDialog(this, mensaje);
     }
 
     @Override

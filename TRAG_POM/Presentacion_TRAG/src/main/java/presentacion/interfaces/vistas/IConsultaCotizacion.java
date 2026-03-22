@@ -12,6 +12,5 @@ public interface IConsultaCotizacion extends IVista{
     
     public abstract void mostrarMensajeRapido(String mensaje);
     
-    public abstract void limpiarBusqueda();
 
 }
