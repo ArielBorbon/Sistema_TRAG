@@ -51,34 +51,47 @@ public class ControlHistorialCotizaciones implements IControlHistorialCotizacion
     public void buscarCotizaciones(String nombreCliente, LocalDateTime fechaInicio, LocalDateTime fechaFin, String estado) {
         try {
             List<CotizacionResumenDTO> listaFiltrada = administradorCotizaciones.obtenerTodasCotizaciones();
+            
             if (nombreCliente != null && !nombreCliente.trim().isEmpty()) {
                 String busquedaLower = nombreCliente.trim().toLowerCase();
                 listaFiltrada = listaFiltrada.stream()
-                        .filter(c -> c.getNombreCliente().toLowerCase().contains(busquedaLower) ||
-                                c.getApellidoPaternoCliente().toLowerCase().contains(busquedaLower))
+                        .filter(c -> {
+                            // Protegemos el filtro de nombres nulos
+                            String nom = c.getNombreCliente() != null ? c.getNombreCliente().toLowerCase() : "";
+                            String ape = c.getApellidoPaternoCliente() != null ? c.getApellidoPaternoCliente().toLowerCase() : "";
+                            return nom.contains(busquedaLower) || ape.contains(busquedaLower);
+                        })
                         .collect(Collectors.toList());
             }
+            
             if (fechaInicio != null || fechaFin != null) {
                 listaFiltrada = listaFiltrada.stream()
                         .filter(c -> {
+                            // Si no hay fecha en BD, lo descartamos de la busqueda por fecha
+                            if (c.getFechaCreacion() == null) return false; 
                             boolean cumpleInicio = (fechaInicio == null) || !c.getFechaCreacion().isBefore(fechaInicio);
                             boolean cumpleFin = (fechaFin == null) || !c.getFechaCreacion().isAfter(fechaFin);
                             return cumpleInicio && cumpleFin;
                         })
                         .collect(Collectors.toList());
             }
+            
             if (estado != null && !estado.equalsIgnoreCase("Todos")) {
                 listaFiltrada = listaFiltrada.stream()
                         .filter(c -> c.getEstadoCotizacion() != null &&
                                 c.getEstadoCotizacion().name().equalsIgnoreCase(estado))
                         .collect(Collectors.toList());
             }
-            if (listaFiltrada.isEmpty()) {
-                vista.mostrarMensajeRapido("No se encontraron cotizaciones con los parámetros de búsqueda.");
-            }
+            
+            // Le enviamos la lista (ya sea con datos o vacía) a la vista
             vista.mostrarCotizaciones(listaFiltrada);
+            
         } catch (NegocioException ex) {
-            Logger.getLogger(ControlHistorialCotizaciones.class.getName()).log(Level.SEVERE, null, ex);
+            vista.mostrarMensajeRapido("Aviso: " + ex.getMessage());
+        } catch (Exception ex) {
+            // ¡ESTO ES CLAVE! Atrapa NullPointerExceptions silenciosos y te los muestra
+            vista.mostrarMensajeRapido("Error crítico al procesar datos: " + ex.toString());
+            ex.printStackTrace(); // Lo imprime en consola para que veas la línea exacta del error
         }
     }
 

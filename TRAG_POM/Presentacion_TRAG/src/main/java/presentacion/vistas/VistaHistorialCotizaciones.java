@@ -8,19 +8,27 @@ import com.toedter.calendar.JDateChooser;
 import dtos.cotizacion.CotizacionResumenDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import presentacion.interfaces.IControlHistorialCotizaciones;
@@ -69,8 +77,7 @@ public class VistaHistorialCotizaciones extends javax.swing.JFrame implements IH
 
         this.getContentPane().add(panelMenu, BorderLayout.CENTER);
         panelMenu.setLayout(new BorderLayout(10, 10));
-        
-        
+
         crearPanelFiltros();
         panelMenu.add(panelFiltros, BorderLayout.NORTH);
 
@@ -121,24 +128,23 @@ public class VistaHistorialCotizaciones extends javax.swing.JFrame implements IH
         panelFiltros.add(panelCentro, BorderLayout.CENTER);
     }
 
-
     @Override
     public void mostrarCotizaciones(List<CotizacionResumenDTO> cotizaciones) {
 
         contenedorTarjetas.removeAll();
 
         if (cotizaciones == null || cotizaciones.isEmpty()) {
-            
+
             JPanel panelVacio = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 50));
             panelVacio.setBackground(new Color(245, 245, 245));
-            
+
             JLabel lblVacio = new JLabel("No se encontraron cotizaciones.");
             lblVacio.setFont(new Font("Segoe UI", Font.PLAIN, 16));
             lblVacio.setForeground(new Color(150, 150, 150));
-            
+
             panelVacio.add(lblVacio);
             contenedorTarjetas.add(panelVacio);
-            
+
             contenedorTarjetas.revalidate();
             contenedorTarjetas.repaint();
             return;
@@ -155,29 +161,199 @@ public class VistaHistorialCotizaciones extends javax.swing.JFrame implements IH
     private JPanel crearCardCotizacion(CotizacionResumenDTO c) {
 
         JPanel card = new JPanel(new BorderLayout());
-        card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
-        card.setBackground(Color.WHITE);
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+        card.setBackground(new Color(245, 245, 245));
+        card.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        JPanel contenido = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
-        contenido.setBackground(Color.WHITE);
+        JPanel contenedor = new JPanel(new BorderLayout());
+        contenedor.setBackground(Color.WHITE);
+        contenedor.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true));
+        contenedor.setPreferredSize(new Dimension(850, 100));
+        contenedor.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
 
-        contenido.add(new JLabel(c.getNombreCliente()));
-        contenido.add(new JLabel(c.getMarcaAutomovil() + c.getModeloAutomovil()));
-        contenido.add(new JLabel(c.getFechaCreacion().toString()));
-        contenido.add(new JLabel("$" + c.getPrecioTotal()));
+        JPanel panelInfo = new JPanel(new GridBagLayout());
+        panelInfo.setBackground(Color.WHITE);
 
-        JButton btnVer = new JButton("👁");
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.insets = new Insets(0, 8, 0, 8);
+
+        gbc.gridx = 0;
+        gbc.weightx = 0;
+
+        JLabel lblIconoCliente = new JLabel(cargarIcono("/cliente.png", 55, 55));
+        lblIconoCliente.setPreferredSize(new Dimension(55, 55));
+        panelInfo.add(lblIconoCliente, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        JPanel panelNombre = new JPanel();
+        panelNombre.setLayout(new BoxLayout(panelNombre, BoxLayout.Y_AXIS));
+        panelNombre.setBackground(Color.WHITE);
+
+        
+        panelNombre.setPreferredSize(new Dimension(160, 50));
+        panelNombre.setMinimumSize(new Dimension(160, 50));
+        panelNombre.setMaximumSize(new Dimension(160, 50));
+
+        String nombre = c.getNombreCliente() != null ? c.getNombreCliente() : "";
+        String apellido = c.getApellidoPaternoCliente() != null ? c.getApellidoPaternoCliente() : "";
+
+        JLabel lblNombre = new JLabel(nombre);
+        lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblNombre.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+
+        JLabel lblApellido = new JLabel(apellido);
+        lblApellido.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblApellido.setForeground(Color.GRAY);
+        lblApellido.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+
+        panelNombre.add(lblNombre);
+        panelNombre.add(lblApellido);
+
+        panelInfo.add(panelNombre, gbc);
+
+        gbc.gridx = 2;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JLabel lblIconoAuto = new JLabel(cargarIcono("/automovil.png", 80, 80));
+        lblIconoAuto.setPreferredSize(new Dimension(80, 80));
+        lblIconoAuto.setMinimumSize(new Dimension(80, 80));
+        lblIconoAuto.setMaximumSize(new Dimension(80, 80));
+        lblIconoAuto.setHorizontalAlignment(SwingConstants.CENTER);
+        lblIconoAuto.setVerticalAlignment(SwingConstants.CENTER);
+        panelInfo.add(lblIconoAuto, gbc);
+
+        gbc.gridx = 3;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        JPanel panelAutoText = new JPanel();
+        panelAutoText.setLayout(new BoxLayout(panelAutoText, BoxLayout.Y_AXIS));
+        panelAutoText.setBackground(Color.WHITE);
+        
+        panelAutoText.setPreferredSize(new Dimension(160, 50));
+        panelAutoText.setMinimumSize(new Dimension(160, 50));
+        panelAutoText.setMaximumSize(new Dimension(160, 50));
+
+        String marca = c.getMarcaAutomovil() != null ? c.getMarcaAutomovil() : "";
+        String modelo = c.getModeloAutomovil() != null ? c.getModeloAutomovil() : "";
+
+        JLabel lblMarca = new JLabel(marca);
+        lblMarca.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblMarca.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+
+        JLabel lblModelo = new JLabel(modelo);
+        lblModelo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblModelo.setForeground(Color.GRAY);
+        lblModelo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+
+        panelAutoText.add(lblMarca);
+        panelAutoText.add(lblModelo);
+
+        panelInfo.add(panelAutoText, gbc);
+
+        gbc.gridx = 4;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        String fecha = (c.getFechaCreacion() != null)
+                ? c.getFechaCreacion().toLocalDate().toString()
+                : "N/A";
+
+        JLabel lblFecha = new JLabel(fecha);
+        lblFecha.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblFecha.setPreferredSize(new Dimension(110, 30));
+        lblFecha.setHorizontalAlignment(SwingConstants.CENTER);
+
+        panelInfo.add(lblFecha, gbc);
+
+
+        gbc.gridx = 5;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.EAST;
+
+        String precio = (c.getPrecioTotal() != null)
+                ? "$" + c.getPrecioTotal()
+                : "$0.00";
+
+        JLabel lblPrecio = new JLabel(precio);
+        lblPrecio.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblPrecio.setPreferredSize(new Dimension(100, 30));
+        lblPrecio.setHorizontalAlignment(SwingConstants.RIGHT);
+
+        panelInfo.add(lblPrecio, gbc);
+
+        
+        JButton btnVer = new JButton(cargarIcono("/ojo.png", 24, 24));
+        btnVer.setBackground(Color.WHITE);
+        btnVer.setBorder(BorderFactory.createLineBorder(new Color(180, 180, 180), 1, true));
+        btnVer.setFocusPainted(false);
+        btnVer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnVer.setPreferredSize(new Dimension(50, 40));
+
         btnVer.addActionListener(e -> {
             if (control != null) {
                 control.verDetalleCotizacion(c);
             }
         });
 
-        card.add(contenido, BorderLayout.CENTER);
-        card.add(btnVer, BorderLayout.EAST);
+        JPanel panelBtn = new JPanel(new GridBagLayout());
+        panelBtn.setBackground(Color.WHITE);
+        panelBtn.setPreferredSize(new Dimension(70, 100));
+        panelBtn.add(btnVer);
+
+
+        contenedor.add(panelInfo, BorderLayout.CENTER);
+        contenedor.add(panelBtn, BorderLayout.EAST);
+
+        card.add(contenedor, BorderLayout.CENTER);
 
         return card;
+    }
+
+    private ImageIcon cargarIcono(String ruta, int anchoMax, int altoMax) {
+        try {
+            java.net.URL url = getClass().getResource(ruta);
+
+            if (url == null) {
+                System.err.println("No se encontró la imagen: " + ruta);
+                return new ImageIcon();
+            }
+
+            ImageIcon icono = new ImageIcon(url);
+            Image img = icono.getImage();
+
+            int anchoOriginal = img.getWidth(null);
+            int altoOriginal = img.getHeight(null);
+
+            if (anchoOriginal <= 0 || altoOriginal <= 0) {
+                return new ImageIcon();
+            }
+
+            double escala = Math.min(
+                    (double) anchoMax / anchoOriginal,
+                    (double) altoMax / altoOriginal
+            );
+
+            int nuevoAncho = (int) (anchoOriginal * escala);
+            int nuevoAlto = (int) (altoOriginal * escala);
+
+            Image imgEscalada = img.getScaledInstance(nuevoAncho, nuevoAlto, Image.SCALE_SMOOTH);
+            return new ImageIcon(imgEscalada);
+
+        } catch (Exception e) {
+            return new ImageIcon();
+        }
     }
 
     private void configurarBusquedaEnTiempoReal() {
@@ -326,40 +502,11 @@ public class VistaHistorialCotizaciones extends javax.swing.JFrame implements IH
         }
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VistaHistorialCotizaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VistaHistorialCotizaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VistaHistorialCotizaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VistaHistorialCotizaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VistaHistorialCotizaciones().setVisible(true);
-            }
-        });
+    public static void main(String[] args) {
+        presentacion.interfaces.IControlHistorialCotizaciones control = new presentacion.controles.ControlHistorialCotizaciones();
+        control.iniciar();
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVolver;
