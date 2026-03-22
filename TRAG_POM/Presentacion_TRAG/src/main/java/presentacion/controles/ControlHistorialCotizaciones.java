@@ -28,18 +28,12 @@ public class ControlHistorialCotizaciones implements IControlHistorialCotizacion
     private IAdministradorCotizaciones administradorCotizaciones;
     private IHistorialCotizaciones vista;
 
-    /**
-     * Constructor del controlador.
-     * Inicializa las dependencias de la capa de Negocios usando la Fábrica.
-     */
     public ControlHistorialCotizaciones() {
-        // Obtenemos la instancia de negocios tal como lo hiciste en AgregarCotizacion
         this.administradorCotizaciones = FabricaNegocios.obtenerAdministradorCotizaciones();
     }
 
     @Override
     public void iniciar() {
-        // Inicializamos la vista usando nuestra fábrica de vistas
         this.vista = FabricaVistas.getVistaHistorialCotizaciones(this);
         this.vista.mostrar();
         
@@ -89,15 +83,20 @@ public class ControlHistorialCotizaciones implements IControlHistorialCotizacion
         } catch (NegocioException ex) {
             vista.mostrarMensajeRapido("Aviso: " + ex.getMessage());
         } catch (Exception ex) {
+
             // ¡ESTO ES CLAVE! Atrapa NullPointerExceptions silenciosos y te los muestra
             vista.mostrarMensajeRapido("Error crítico al procesar datos: " + ex.toString());
             ex.printStackTrace(); // Lo imprime en consola para que veas la línea exacta del error
+
+            vista.mostrarMensajeRapido("Error crítico al procesar datos: " + ex.toString());
+            ex.printStackTrace();
+
         }
     }
 
     @Override
     public void verDetalleCotizacion(CotizacionResumenDTO cotizacionSeleccionada) {
-        // Aquí eventualmente instanciarás el controlador de la pantalla de "Detalles"
+        // Aquí eventualmente se instanciará el controlador de la pantalla de "Detalles"
         // Por ahora, solo mandamos un mensaje para comprobar que el botón de la card funcione
         vista.mostrarMensajeRapido("Abriendo detalles de la cotización de: " + 
                 cotizacionSeleccionada.getNombreCliente() + " " + 
