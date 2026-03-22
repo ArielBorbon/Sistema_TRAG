@@ -260,74 +260,58 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         setPreferredSize(new java.awt.Dimension(1000, 720));
 
         etqCotización.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqCotización.setForeground(new java.awt.Color(0, 0, 0));
         etqCotización.setText("Cotización");
 
         etqNombreCliente.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqNombreCliente.setForeground(new java.awt.Color(0, 0, 0));
         etqNombreCliente.setText("cliente");
 
         btnEliminarInsumo.setBackground(new java.awt.Color(255, 243, 177));
         btnEliminarInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnEliminarInsumo.setForeground(new java.awt.Color(0, 0, 0));
         btnEliminarInsumo.setText("Eliminar Insumo");
 
         btnAniadirInsumo.setBackground(new java.awt.Color(188, 226, 255));
         btnAniadirInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnAniadirInsumo.setForeground(new java.awt.Color(0, 0, 0));
         btnAniadirInsumo.setText("Añadir Insumo");
 
         btnVolver.setBackground(new java.awt.Color(186, 226, 255));
         btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnVolver.setForeground(new java.awt.Color(0, 0, 0));
         btnVolver.setText("Volver");
 
         etqAutomovil.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqAutomovil.setForeground(new java.awt.Color(0, 0, 0));
         etqAutomovil.setText("auto");
 
         etqAnioAutomovil.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqAnioAutomovil.setForeground(new java.awt.Color(0, 0, 0));
         etqAnioAutomovil.setText("anio");
 
         etqFecha.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqFecha.setForeground(new java.awt.Color(0, 0, 0));
         etqFecha.setText("Fecha:");
 
         etqFechaCotizacion.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqFechaCotizacion.setForeground(new java.awt.Color(0, 0, 0));
         etqFechaCotizacion.setText("fecha");
 
         etqTotalPiezas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqTotalPiezas.setForeground(new java.awt.Color(0, 0, 0));
         etqTotalPiezas.setText("Total Piezas");
 
         etqTotalPiezasCotizacion.setBackground(new java.awt.Color(255, 255, 255));
         etqTotalPiezasCotizacion.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqTotalPiezasCotizacion.setForeground(new java.awt.Color(0, 0, 0));
         etqTotalPiezasCotizacion.setText("total");
 
         etqManoObra.setBackground(new java.awt.Color(255, 255, 255));
         etqManoObra.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqManoObra.setForeground(new java.awt.Color(0, 0, 0));
         etqManoObra.setText("Mano de obra (Intermedio)");
 
         etqTotalManoObra.setBackground(new java.awt.Color(255, 255, 255));
         etqTotalManoObra.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqTotalManoObra.setForeground(new java.awt.Color(0, 0, 0));
         etqTotalManoObra.setText("total");
 
         etqTotal.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqTotal.setForeground(new java.awt.Color(0, 0, 0));
         etqTotal.setText("Total:");
 
         etqTotalCotizacion.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqTotalCotizacion.setForeground(new java.awt.Color(0, 0, 0));
         etqTotalCotizacion.setText("total");
 
         btnGuardar.setBackground(new java.awt.Color(177, 255, 186));
         btnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(0, 0, 0));
         btnGuardar.setText("Guardar");
         btnGuardar.setMaximumSize(new java.awt.Dimension(85, 32));
         btnGuardar.setMinimumSize(new java.awt.Dimension(85, 32));
@@ -335,14 +319,12 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
 
         btnIniciarTrabajo.setBackground(new java.awt.Color(255, 243, 177));
         btnIniciarTrabajo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnIniciarTrabajo.setForeground(new java.awt.Color(0, 0, 0));
         btnIniciarTrabajo.setText("Iniciar Trabajo");
         btnIniciarTrabajo.setMaximumSize(new java.awt.Dimension(85, 32));
         btnIniciarTrabajo.setMinimumSize(new java.awt.Dimension(85, 32));
         btnIniciarTrabajo.setPreferredSize(new java.awt.Dimension(85, 32));
 
         etqApellido.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqApellido.setForeground(new java.awt.Color(0, 0, 0));
         etqApellido.setText("apellido");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -596,4 +578,9 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
     private javax.swing.JLabel etqTotalPiezasCotizacion;
     private javax.swing.JScrollPane scrollPiezas;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void mostrarError(String mensajeError) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

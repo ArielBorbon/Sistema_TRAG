@@ -210,18 +210,18 @@ public class AdministradorCotizaciones {
         validarDiagnosticoGeneral(dto.getDiagnosticoGeneral());
     }
 
-    private void validarPrecioManoObra(BigDecimal precioManoObra) {
+    private void validarPrecioManoObra(BigDecimal precioManoObra) throws NegocioException {
         if (precioManoObra == null || precioManoObra.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("El precio de mano de obra no es válido, debe ser mayor o igual a 0.");
+            throw new NegocioException("El precio de mano de obra no es válido, debe ser mayor o igual a 0.");
         }
         if (precioManoObra.compareTo(PRECIO_MAXIMO) > 0) {
-            throw new IllegalArgumentException("El precio excede el límite permitido del sistema.");
+            throw new NegocioException("El precio excede el límite permitido del sistema.");
         }
     }
 
-    private void validarEstadoAutomovil(String estadoAutomovil) {
+    private void validarEstadoAutomovil(String estadoAutomovil) throws NegocioException {
         if (estadoAutomovil == null || estadoAutomovil.trim().isEmpty()) {
-            throw new IllegalArgumentException("El estado del automóvil no puede estar vacío.");
+            throw new NegocioException("El estado del automóvil no puede estar vacío.");
         }
         if (estadoAutomovil.trim().length() > MAX_LONGITUD_ESTADO) {
             throw new IllegalArgumentException("La descripción del estado no puede superar los "
@@ -229,12 +229,9 @@ public class AdministradorCotizaciones {
         }
     }
 
-    private void validarDiagnosticoGeneral(String diagnosticoGeneral) {
+    private void validarDiagnosticoGeneral(String diagnosticoGeneral) throws NegocioException {
         if (diagnosticoGeneral == null || diagnosticoGeneral.trim().isEmpty()) {
-            throw new IllegalArgumentException("El diagnóstico general es obligatorio para procesar la cotización.");
-        }
-        if (diagnosticoGeneral.trim().length() < 10) {
-            throw new IllegalArgumentException("El diagnóstico es demasiado breve. Por favor, sea más específico.");
+            throw new NegocioException("El diagnóstico general es obligatorio para procesar la cotización.");
         }
     }
 

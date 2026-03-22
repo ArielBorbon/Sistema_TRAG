@@ -513,4 +513,9 @@ public class VistaHistorialCotizaciones extends javax.swing.JFrame implements IH
     private javax.swing.JPanel panelMenu;
     private javax.swing.JScrollPane scrollCotizaciones;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void mostrarError(String mensajeError) {
+        JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
 }

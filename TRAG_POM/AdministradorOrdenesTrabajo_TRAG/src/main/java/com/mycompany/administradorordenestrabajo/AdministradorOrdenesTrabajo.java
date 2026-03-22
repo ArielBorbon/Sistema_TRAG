@@ -10,6 +10,7 @@ import dtos.ordentrabajo.OrdenTrabajoDetalleDTO;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IOrdenesTrabajoDAO;
+import java.time.LocalDateTime;
 import mappers.DTOMapeadores;
 import mappers.Mapeadores;
 
@@ -44,6 +45,8 @@ public class AdministradorOrdenesTrabajo {
         if(idAutomovil == null || idServicio == null){
             throw new NegocioException(MENSAJE_ERROR_CREAR_ORDEN_TRABAJO);
         }
+        
+        dto.setFechaCreacion(LocalDateTime.now());
         
         CotizacionDetalleDTO cotizacionCreadaDTO = null;
         try {

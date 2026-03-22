@@ -1,12 +1,14 @@
 
 package presentacion.vistas;
 
+import dtos.automovil.AutomovilResumenDTO;
 import dtos.cliente.ClienteResumenDTO;
 import java.awt.Dimension;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import presentacion.interfaces.IControlAgregarCotizacion;
 import presentacion.interfaces.vistas.IVistaSeleccionClienteAuto;
 
@@ -61,8 +63,8 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         cmbBoxClientes = new javax.swing.JComboBox<>();
         cmbBoxAutomoviles = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnContinuar = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1100, 700));
@@ -71,7 +73,6 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
 
         panelPrincipal.setLayout(new java.awt.GridBagLayout());
 
-        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
         java.awt.GridBagLayout jPanel2Layout = new java.awt.GridBagLayout();
         jPanel2Layout.columnWidths = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         jPanel2Layout.rowHeights = new int[] {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0};
@@ -93,7 +94,6 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.weightx = 1.0;
         panelPrincipal.add(jPanel2, gridBagConstraints);
 
-        jPanel1.setBackground(new java.awt.Color(255, 153, 51));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         jLabel2.setText("Cliente");
@@ -162,6 +162,11 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
         jPanel1.add(jButton1, gridBagConstraints);
 
+        cmbBoxClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbBoxClientesActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -171,14 +176,18 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 31);
         jPanel1.add(cmbBoxClientes, gridBagConstraints);
 
-        cmbBoxAutomoviles.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbBoxAutomoviles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbBoxAutomovilesActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 69);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 39);
         jPanel1.add(cmbBoxAutomoviles, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -188,20 +197,24 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.weighty = 1.0;
         panelPrincipal.add(jPanel1, gridBagConstraints);
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 204));
         jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 60, 20, 60));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
-        jButton2.setText("Volver");
-        jPanel3.add(jButton2, java.awt.BorderLayout.LINE_END);
-
-        jButton3.setText("Continuar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnContinuar.setText("Continuar");
+        btnContinuar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnContinuarActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton3, java.awt.BorderLayout.LINE_START);
+        jPanel3.add(btnContinuar, java.awt.BorderLayout.LINE_END);
+
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnVolver, java.awt.BorderLayout.LINE_START);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -218,20 +231,53 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         // TODO add your handling code here:
     }//GEN-LAST:event_AñadirActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnVolverActionPerformed
 
+    private void cmbBoxClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxClientesActionPerformed
+        seleccionarCliente();
+    }//GEN-LAST:event_cmbBoxClientesActionPerformed
+
+    private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
+        continuar();
+    }//GEN-LAST:event_btnContinuarActionPerformed
+
+    private void cmbBoxAutomovilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxAutomovilesActionPerformed
+        seleccionarAutomovil();
+    }//GEN-LAST:event_cmbBoxAutomovilesActionPerformed
+
+    private void seleccionarCliente(){
+        ClienteResumenDTO clienteSeleccionado = (ClienteResumenDTO) cmbBoxClientes.getSelectedItem();
+        
+        if(clienteSeleccionado != null){
+            Long idClienteSeleccionado = clienteSeleccionado.getId();
+            control.seleccionarCliente(idClienteSeleccionado);    
+        }
+        
+        
+    }
+    
+    private void seleccionarAutomovil(){
+        AutomovilResumenDTO automovilSeleccionado = (AutomovilResumenDTO) cmbBoxAutomoviles.getSelectedItem();
+        
+        control.seleccionarAutomovil(automovilSeleccionado);
+    }
+    
+    private void continuar(){
+        
+        control.seleccionarClienteAutomovil();
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Añadir;
-    private javax.swing.JComboBox<String> cmbBoxAutomoviles;
+    private javax.swing.JButton btnContinuar;
+    private javax.swing.JButton btnVolver;
+    private javax.swing.JComboBox<AutomovilResumenDTO> cmbBoxAutomoviles;
     private javax.swing.JComboBox<ClienteResumenDTO> cmbBoxClientes;
     private javax.swing.JLabel imgAutomovil;
     private javax.swing.JLabel imgCliente;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -253,17 +299,41 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
     }
 
     @Override
-    public void cargarAutosCliente() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void cargarAutosCliente(List<AutomovilResumenDTO> automoviles) {
+        cmbBoxAutomoviles.removeAllItems();
+        automoviles.forEach(cmbBoxAutomoviles::addItem);
+    }
+    
+    @Override
+    public void cargarClientes(List<ClienteResumenDTO> clientes, Long idClienteSeleccionado) {
+        cmbBoxClientes.removeAllItems();
+        clientes.forEach(cmbBoxClientes::addItem);
+        
+        if (idClienteSeleccionado != null) {
+        clientes.stream()
+            .filter(c -> c.getId().equals(idClienteSeleccionado))
+            .findFirst()
+            .ifPresent(cmbBoxClientes::setSelectedItem);
+        }
+        
+    }
+
+    @Override
+    public void cargarAutosCliente(List<AutomovilResumenDTO> automoviles, Long idAutomovilSeleccionado) {
+        cmbBoxAutomoviles.removeAllItems();
+        automoviles.forEach(cmbBoxAutomoviles::addItem);
+        
+        if (idAutomovilSeleccionado != null) {
+        automoviles.stream()
+            .filter(a -> a.getId().equals(idAutomovilSeleccionado))
+            .findFirst()
+            .ifPresent(cmbBoxClientes::setSelectedItem);
+        }
     }
     
     @Override
     public void mostrarError(String mensajeError) {
-
-        javax.swing.JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-
-        
-
+        JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
@@ -273,7 +343,8 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
 
     @Override
     public void ocultar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        dispose();
     }
+
 
 }

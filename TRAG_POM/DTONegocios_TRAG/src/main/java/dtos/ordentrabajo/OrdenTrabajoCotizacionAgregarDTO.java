@@ -35,6 +35,15 @@ public class OrdenTrabajoCotizacionAgregarDTO {
         this.insumosCotizacion = insumosCotizacion;
     }
 
+    public OrdenTrabajoCotizacionAgregarDTO(Long idAutomovil, Long idServicio, BigDecimal precioManoObra, String diagnosticoGeneral, String estadoAutomovil, List<InsumoCotizacionAgregarDTO> insumosCotizacion) {
+        this.idAutomovil = idAutomovil;
+        this.idServicio = idServicio;
+        this.precioManoObra = precioManoObra;
+        this.diagnosticoGeneral = diagnosticoGeneral;
+        this.estadoAutomovil = estadoAutomovil;
+        this.insumosCotizacion = insumosCotizacion;
+    }
+
     public Long getIdAutomovil() {
         return idAutomovil;
     }
@@ -63,4 +72,8 @@ public class OrdenTrabajoCotizacionAgregarDTO {
         return insumosCotizacion;
     }
 
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    
 }

@@ -21,16 +21,18 @@ public class ServicioDetalleDTO {
     private String nombre;
     private String descripcion;
     private BigDecimal precioManoObraSugerido;
+    private String direccionIcono;
     private List<InsumoServicioDetalleDTO> insumosServicio;
 
     public ServicioDetalleDTO() {
     }
 
-    public ServicioDetalleDTO(Long id, String nombre, String descripcion, BigDecimal precioManoObraSugerido, List<InsumoServicioDetalleDTO> insumosServicio) {
+    public ServicioDetalleDTO(Long id, String nombre, String descripcion, BigDecimal precioManoObraSugerido, String direccionIcono, List<InsumoServicioDetalleDTO> insumosServicio) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioManoObraSugerido = precioManoObraSugerido;
+        this.direccionIcono = direccionIcono;
         this.insumosServicio = insumosServicio;
     }
 

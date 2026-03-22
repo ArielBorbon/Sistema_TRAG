@@ -47,6 +47,12 @@ public class AutomovilResumenDTO {
         return marca;
     }
 
+    @Override
+    public String toString() {
+        return marca + " " + modelo + ", " + anio + ", " + matricula;
+    }
+
+    
     
     
     

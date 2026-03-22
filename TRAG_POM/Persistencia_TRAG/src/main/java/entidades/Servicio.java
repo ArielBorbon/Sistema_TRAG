@@ -43,6 +43,9 @@ public class Servicio implements Serializable {
     
     @Column(nullable = false)
     private Boolean activo = true;
+
+    @Column(nullable = true, length = 255)
+    private String direccionIcono;
     
     @OneToMany (mappedBy = "servicio", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<InsumoServicio> insumosServicio;
@@ -86,6 +89,14 @@ public class Servicio implements Serializable {
         this.precioManoObraSugerido = precioManoObraSugerido;
     }
 
+    public String getDireccionIcono() {
+        return direccionIcono;
+    }
+
+    public void setDireccionIcono(String direccionIcono) {
+        this.direccionIcono = direccionIcono;
+    }
+    
     public List<InsumoServicio> getInsumosServicio() {
         return insumosServicio;
     }

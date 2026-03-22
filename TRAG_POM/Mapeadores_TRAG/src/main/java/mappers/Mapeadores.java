@@ -153,6 +153,7 @@ public class Mapeadores {
                 entidad.getNombre(), 
                 entidad.getDescripcion(), 
                 entidad.getPrecioManoObraSugerido(),
+                entidad.getDireccionIcono(),
                 entidad.getInsumosServicio().stream()
                     .map(Mapeadores::toDTODetalle)
                     .collect(Collectors.toList())
@@ -166,7 +167,8 @@ public class Mapeadores {
         }
         ServicioResumenDTO dto = new ServicioResumenDTO(
                 entidad.getId(), 
-                entidad.getNombre());
+                entidad.getNombre(),
+                entidad.getDireccionIcono());
         return dto;
     }
 
@@ -242,6 +244,7 @@ public class Mapeadores {
             return null;
         }
         InsumoResumenDTO dto = new InsumoResumenDTO(
+                entidad.getId(),
                 entidad.getNombre(),
                 entidad.getPrecioSugerido()
         );

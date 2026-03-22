@@ -16,10 +16,12 @@ public class ServicioResumenDTO {
     
     private Long id;
     private String nombre;
+    private String direccionIcono;
 
-    public ServicioResumenDTO(Long id, String nombre) {
+    public ServicioResumenDTO(Long id, String nombre, String direccionIcono) {
         this.id = id;
         this.nombre = nombre;
+        this.direccionIcono = direccionIcono;
     }
 
     public Long getId() {
@@ -28,6 +30,10 @@ public class ServicioResumenDTO {
 
     public String getNombre() {
         return nombre;
+    }
+
+    public String getDireccionIcono() {
+        return direccionIcono;
     }
     
 }

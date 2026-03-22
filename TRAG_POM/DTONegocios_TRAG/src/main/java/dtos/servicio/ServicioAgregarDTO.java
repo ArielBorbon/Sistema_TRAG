@@ -20,12 +20,14 @@ public class ServicioAgregarDTO {
     private String nombre;
     private String descripcion;
     private BigDecimal precioManoObraSugerido;
+    private String direccionIcono;
     private List<InsumoServicioAgregarDTO> insumosServicio;
 
-    public ServicioAgregarDTO(String nombre, String descripcion, BigDecimal precioManoObraSugerido, List<InsumoServicioAgregarDTO> insumosServicio) {
+    public ServicioAgregarDTO(String nombre, String descripcion, BigDecimal precioManoObraSugerido, String direccionIcono, List<InsumoServicioAgregarDTO> insumosServicio) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioManoObraSugerido = precioManoObraSugerido;
+        this.direccionIcono = direccionIcono;
         this.insumosServicio = insumosServicio;
     }
 
@@ -41,6 +43,10 @@ public class ServicioAgregarDTO {
         return precioManoObraSugerido;
     }
 
+    public String getDireccionIcono() {
+        return direccionIcono;
+    }
+    
     public List<InsumoServicioAgregarDTO> getInsumosServicio() {
         return insumosServicio;
     }

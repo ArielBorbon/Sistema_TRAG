@@ -1,20 +1,56 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package presentacion.vistas;
+
+import dtos.automovil.AutomovilResumenDTO;
+import dtos.servicio.ServicioResumenDTO;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
+import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import presentacion.interfaces.IControlAgregarCotizacion;
+import presentacion.interfaces.vistas.IVistaServicios;
 
 /**
  *
- * @author romom
+ * @author 
  */
-public class VistaServicios extends javax.swing.JFrame {
+public class VistaServicios extends JFrame implements IVistaServicios{
+
+    private IControlAgregarCotizacion control;
+    
+    private JPanel panelActivo;
+    private ServicioResumenDTO servicioSeleccionado;
+    
+    private final Border BORDE_PANEL_SERVICIO = BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true);
+    private final Border BORDE_PANEL_SERVICIO_SELECCIONADO = BorderFactory.createLineBorder(new Color(0, 120, 150), 2);
+    
+    private final Color COLOR_PANEL_SERVICIO_HOVER = new Color(245, 245, 245);
+    private final Color COLOR_PANEL_SERVICIO_SELECCIONADO = new Color(220, 240, 230);
+    
+    private final Border MARGEN_INTERNO_PANEL_SERVICIO = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 
     /**
-     * Creates new form VistaServicios
+     * Creates new form IVistaServicios
      */
-    public VistaServicios() {
+    public VistaServicios(IControlAgregarCotizacion control) {
         initComponents();
+        this.control = control;
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -25,58 +61,277 @@ public class VistaServicios extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        jButton1 = new javax.swing.JButton();
+        panelEncabezado1 = new presentacion.vistas.PanelEncabezado();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        panelServicios = new javax.swing.JPanel();
+        scrollServicios = new javax.swing.JScrollPane();
+        jPanel4 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
+        btnContinuar = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(1100, 700));
+        setPreferredSize(new java.awt.Dimension(1100, 700));
+        getContentPane().add(panelEncabezado1, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jPanel1.setBackground(new java.awt.Color(255, 255, 204));
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("Servicios");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 35, 0, 0);
+        jPanel2.add(jLabel1, gridBagConstraints);
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 30);
+        jPanel2.add(jTextField1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        jPanel1.add(jPanel2, gridBagConstraints);
+
+        panelServicios.setBackground(new java.awt.Color(102, 255, 204));
+        panelServicios.setLayout(new java.awt.GridBagLayout());
+
+        scrollServicios.setBackground(new java.awt.Color(242, 242, 242));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        panelServicios.add(scrollServicios, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel1.add(panelServicios, gridBagConstraints);
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 60, 20, 60));
+        jPanel4.setLayout(new java.awt.BorderLayout());
+
+        jButton2.setText("Volver");
+        jPanel4.add(jButton2, java.awt.BorderLayout.LINE_START);
+
+        btnContinuar.setText("Continuar");
+        btnContinuar.setEnabled(false);
+        btnContinuar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnContinuarActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnContinuar, java.awt.BorderLayout.LINE_END);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        jPanel1.add(jPanel4, gridBagConstraints);
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+    private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
+        
+        seleccionarServicio();
+        
+    }//GEN-LAST:event_btnContinuarActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnContinuar;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JTextField jTextField1;
+    private presentacion.vistas.PanelEncabezado panelEncabezado1;
+    private javax.swing.JPanel panelServicios;
+    private javax.swing.JScrollPane scrollServicios;
+    // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void cargarServicios(List<ServicioResumenDTO> servicios) {
+        
+        JPanel panelContenedor = new JPanel();
+        panelContenedor.setLayout(new GridBagLayout());
+        panelContenedor.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        // Configuración de márgenes
+        int margenServicio = 15;
+        gbc.insets = new Insets(margenServicio, margenServicio, margenServicio, margenServicio);
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+
+        int anchoDisponible = scrollServicios.getWidth() > 0 ? scrollServicios.getWidth() : 800;
+    
+        // Configuración de cuadrícula
+        int columnasMaximas = 5;
+        int columnaActual = 0;
+        int filaActual = 0;
+
+        int anchoServicio = (anchoDisponible - ((columnasMaximas + 1) * margenServicio)) / columnasMaximas - 20;
+        
+        // Se recorren los servicios
+        for(ServicioResumenDTO servicio : servicios) {
+
+            // Panel del servicio
+            JPanel panelServicio = new JPanel(new BorderLayout(0, 10));
+            panelServicio.setBackground(Color.WHITE);
+            panelServicio.setBorder(BorderFactory.createCompoundBorder(BORDE_PANEL_SERVICIO, MARGEN_INTERNO_PANEL_SERVICIO));
+            
+            panelServicio.setPreferredSize(new Dimension(anchoServicio, anchoServicio));
+            panelServicio.setMinimumSize(new Dimension(anchoServicio, anchoServicio));
+           
+            panelServicio.setCursor(new Cursor(java.awt.Cursor.HAND_CURSOR));
+            
+            configurarListenerPanelServicio(panelServicio, servicio);
+
+            // Nombre
+            String nombreServicio = "<html><div style='text-align: center; width: " + (anchoServicio - 50) + "px; font-size: 9px;'>" 
+                           + servicio.getNombre() 
+                           + "</div></html>";
+            JLabel labelNombre = new JLabel(nombreServicio, SwingConstants.CENTER);
+            panelServicio.add(labelNombre, BorderLayout.SOUTH);
+
+            int tamañoIcono = (int)(anchoServicio * 0.6);
+            ImageIcon iconoRedimensionado = redimensionarIcono(servicio.getDireccionIcono(), tamañoIcono, tamañoIcono);
+
+            if (iconoRedimensionado != null) {
+                JLabel labelIcono = new JLabel(iconoRedimensionado);
+                labelIcono.setHorizontalAlignment(SwingConstants.CENTER);
+                panelServicio.add(labelIcono, BorderLayout.CENTER);
+            }
+
+            // Coordenada del servicio
+            gbc.gridx = columnaActual;
+            gbc.gridy = filaActual;
+
+ 
+            panelContenedor.add(panelServicio, gbc);
+
+            columnaActual++;
+            if (columnaActual >= columnasMaximas) {
+                columnaActual = 0;
+                filaActual++;
+            }
+        }
+
+        scrollServicios.setOpaque(false);
+        scrollServicios.setViewportView(panelContenedor);
+        
+    }
+    
+    private void configurarListenerPanelServicio(JPanel panelServicio, ServicioResumenDTO servicio){
+        panelServicio.addMouseListener(new MouseAdapter() {
+    
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                if (panelActivo != null) {
+                    panelActivo.setBackground(Color.WHITE);
+                    panelActivo.setBorder(BorderFactory.createCompoundBorder(BORDE_PANEL_SERVICIO, MARGEN_INTERNO_PANEL_SERVICIO));
+                }
+
+                panelServicio.setBackground(COLOR_PANEL_SERVICIO_SELECCIONADO); 
+                panelServicio.setBorder(BorderFactory.createCompoundBorder(BORDE_PANEL_SERVICIO_SELECCIONADO, MARGEN_INTERNO_PANEL_SERVICIO));
+
+                panelActivo = panelServicio;
+                servicioSeleccionado = servicio;
+
+                btnContinuar.setEnabled(true);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+                if (panelServicio != panelActivo) {
+                    panelServicio.setBackground(COLOR_PANEL_SERVICIO_HOVER);
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VistaServicios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VistaServicios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VistaServicios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VistaServicios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VistaServicios().setVisible(true);
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+                if (panelServicio != panelActivo) {
+                    panelServicio.setBackground(Color.WHITE);
+                }
             }
         });
     }
+    
+    private ImageIcon redimensionarIcono(String direccionImagen, int ancho, int alto) {
+        URL imgURL = getClass().getResource("/" + direccionImagen);
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    // End of variables declaration//GEN-END:variables
+        if (imgURL != null) {
+            javax.swing.ImageIcon iconoOriginal = new javax.swing.ImageIcon(imgURL);
+            java.awt.Image imgEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, java.awt.Image.SCALE_SMOOTH);
+            return new javax.swing.ImageIcon(imgEscalada);
+        } else {
+            System.err.println("No se encontró la imagen en la ruta: /" + direccionImagen);
+            return null;
+        }
+    }
+    
+    private void seleccionarServicio(){
+        if(servicioSeleccionado != null){
+            
+            control.seleccionarServicio(servicioSeleccionado);
+            
+        }
+    }
+    
+    
+
+    @Override
+    public void mostrar() {
+        setVisible(true);
+    }
+
+    @Override
+    public void ocultar() {
+        dispose();
+    }
+
+    @Override
+    public void mostrarError(String mensajeError) {
+        JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+
+ 
 }

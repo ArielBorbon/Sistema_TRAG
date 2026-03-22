@@ -44,7 +44,7 @@ public class PanelEncabezado extends javax.swing.JPanel {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        setBackground(new java.awt.Color(204, 204, 204));
+        setBackground(new java.awt.Color(153, 153, 153));
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 30, 1, 30));
         setMaximumSize(new java.awt.Dimension(1000, 89));
         setMinimumSize(new java.awt.Dimension(1000, 89));
@@ -66,6 +66,7 @@ public class PanelEncabezado extends javax.swing.JPanel {
         add(jLabel1, java.awt.BorderLayout.LINE_START);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("SGISCA");
         add(jLabel2, java.awt.BorderLayout.LINE_END);
     }// </editor-fold>//GEN-END:initComponents

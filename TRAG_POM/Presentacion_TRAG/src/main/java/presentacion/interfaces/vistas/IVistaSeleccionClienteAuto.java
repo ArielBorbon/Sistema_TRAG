@@ -1,6 +1,7 @@
 
 package presentacion.interfaces.vistas;
 
+import dtos.automovil.AutomovilResumenDTO;
 import dtos.cliente.ClienteResumenDTO;
 import java.util.List;
 import presentacion.interfaces.IVista;
@@ -12,7 +13,8 @@ import presentacion.interfaces.IVista;
 public interface IVistaSeleccionClienteAuto extends IVista{
     
     public void cargarClientes(List<ClienteResumenDTO> clientes);
-    public void cargarAutosCliente();
-    public void mostrarError(String mensajeError);
+    public void cargarClientes(List<ClienteResumenDTO> clientes, Long idClienteSeleccionado);
+    public void cargarAutosCliente(List<AutomovilResumenDTO> automoviles);
+    public void cargarAutosCliente(List<AutomovilResumenDTO> automoviles, Long idAutomovilSeleccionado);
     
 }

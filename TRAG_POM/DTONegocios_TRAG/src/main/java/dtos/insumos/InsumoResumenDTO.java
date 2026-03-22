@@ -15,14 +15,20 @@ import java.math.BigDecimal;
  */
 public class InsumoResumenDTO {
 
+    private Long id;
     private String nombre;
     private BigDecimal precioSugerido;
 
-    public InsumoResumenDTO(String nombre, BigDecimal precioSugerido) {
+    public InsumoResumenDTO(Long id, String nombre, BigDecimal precioSugerido) {
+        this.id = id;
         this.nombre = nombre;
         this.precioSugerido = precioSugerido;
     }
 
+    public Long getId() {
+        return id;
+    }
+    
     public String getNombre() {
         return nombre;
     }

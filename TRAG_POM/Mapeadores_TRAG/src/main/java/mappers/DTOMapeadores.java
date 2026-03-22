@@ -139,6 +139,7 @@ public class DTOMapeadores {
         entidad.setNombre(dto.getNombre());
         entidad.setDescripcion(dto.getDescripcion());
         entidad.setPrecioManoObraSugerido(dto.getPrecioManoObraSugerido());
+        entidad.setDireccionIcono(dto.getDireccionIcono());
         entidad.setInsumosServicio(toEntityInsumosServicio(dto.getInsumosServicio()));
         return entidad;
     }

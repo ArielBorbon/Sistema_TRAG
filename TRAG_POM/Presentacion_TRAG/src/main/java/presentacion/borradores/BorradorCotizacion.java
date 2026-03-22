@@ -2,26 +2,41 @@
 
 package presentacion.borradores;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  *
  * @author romom
  */
 public class BorradorCotizacion {
     
-    private Integer numero;
-    private String texto;
+    private BigDecimal totalInsumos;
+    private BigDecimal costoManoObra;
+    private BigDecimal total;
+    private List<BorradorInsumoCotizacion> borradoresInsumoCotizacion;
 
-    public BorradorCotizacion(Integer numero, String texto) {
-        this.numero = numero;
-        this.texto = texto;
+    public BorradorCotizacion(BigDecimal totalInsumos, BigDecimal costoManoObra, BigDecimal total, List<BorradorInsumoCotizacion> borradoresInsumoCotizacion) {
+        this.totalInsumos = totalInsumos;
+        this.costoManoObra = costoManoObra;
+        this.total = total;
+        this.borradoresInsumoCotizacion = borradoresInsumoCotizacion;
     }
 
-    public Integer getNumero() {
-        return numero;
+    public BigDecimal getTotalInsumos() {
+        return totalInsumos;
     }
 
-    public String getTexto() {
-        return texto;
+    public BigDecimal getCostoManoObra() {
+        return costoManoObra;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
     }
     
+    public List<BorradorInsumoCotizacion> getBorradoresInsumoCotizacion() {
+        return borradoresInsumoCotizacion;
+    }
+
 }
