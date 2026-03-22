@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>AdministradorOrdenesTrabajo</artifactId>
+            <artifactId>AdministradorOrdenesTrabajo_TRAG</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
