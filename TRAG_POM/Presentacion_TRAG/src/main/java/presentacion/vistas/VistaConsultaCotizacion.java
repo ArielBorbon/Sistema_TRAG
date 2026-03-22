@@ -1,13 +1,20 @@
 package presentacion.vistas;
 
 import dtos.cotizacion.CotizacionResumenDTO;
+import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
-import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import presentacion.interfaces.IControlConsultaCotizacion;
 import presentacion.interfaces.vistas.IConsultaCotizacion;
 /**
@@ -19,6 +26,11 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
     
     private PanelEncabezado panelEncabezado;
     private JPanel panelFondo;
+    
+    private JTable tablaInsumos;
+    private DefaultTableModel modeloTabla;
+    
+    private JTextField txtBuscarInsumo;
 
     public VistaConsultaCotizacion(IControlConsultaCotizacion control) {
         this.control = control;
@@ -43,6 +55,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         // panel que solo pinta el fondo de color
         panelFondo = new JPanel();
         panelFondo.setBackground(new Color(243, 243, 243));
+        panelFondo.setLayout(null); 
         this.getContentPane().add(panelFondo, BorderLayout.CENTER);
         
         // poner el icono del cliente el label
@@ -54,6 +67,124 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         etqIconoAutomovil.setPreferredSize(new Dimension(80, 80));
         etqIconoAutomovil.setMinimumSize(new Dimension(80, 80));
         etqIconoAutomovil.setMaximumSize(new Dimension(80, 80));
+        
+        // generar el modelo de la tabla donde estarán todos los insumos de la cotización
+        modeloTabla = new DefaultTableModel(new Object[]{"No.", "Pieza", "Costo", "Cantidad Pendiente"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        // crear la tabla
+        tablaInsumos = new JTable(modeloTabla);
+        
+        // darle más formato a la tabla
+        tablaInsumos.setRowHeight(25);
+        tablaInsumos.getTableHeader().setReorderingAllowed(false);
+        // fuente de las filas (celdas)
+        tablaInsumos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        // altura de filas (ajústala según el tamaño de letra)
+        tablaInsumos.setRowHeight(30);
+        // cambiar fuente del encabezado
+        tablaInsumos.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 18));
+        
+        DefaultTableCellRenderer headerRenderer =
+            (DefaultTableCellRenderer) tablaInsumos.getTableHeader().getDefaultRenderer();
+        // centrar texto
+        headerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        // color de fondo
+        headerRenderer.setBackground(new Color(217, 217, 217));
+        // color del texto
+        headerRenderer.setForeground(Color.BLACK);
+        // necesario para que se pinte el fondo correctamente
+        headerRenderer.setOpaque(true);
+        // borde
+        tablaInsumos.setBorder(
+            BorderFactory.createLineBorder(Color.BLACK, 2)
+        );
+        scrollPiezas.setBorder(
+            BorderFactory.createLineBorder(Color.BLACK, 2)
+        );
+        
+        // esto sirve para ajustar el ancho de cada columna
+        tablaInsumos.getColumnModel().getColumn(0).setPreferredWidth(40);  // No.
+        tablaInsumos.getColumnModel().getColumn(1).setPreferredWidth(200); // Pieza
+        tablaInsumos.getColumnModel().getColumn(2).setPreferredWidth(150); // Costo
+        tablaInsumos.getColumnModel().getColumn(3).setPreferredWidth(205); // Cantidad
+        //tablaInsumos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        
+        // meter tabla en el scroll
+        scrollPiezas.setViewportView(tablaInsumos);
+        
+        // agregar action listener al botón para que ejecute la lógica de regresar a la pantalla anterior
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+        
+        // agregar action listener al botón para que muestre el buscador en tiempo real de insumos
+        btnAniadirInsumo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAniadirInsumoActionPerformed(evt);
+            }
+        });
+        
+        // inicializar el buscador de insumo
+        txtBuscarInsumo = new JTextField();
+        txtBuscarInsumo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtBuscarInsumo.setBounds(467, 495, 200, 30);
+        txtBuscarInsumo.setVisible(false);
+
+        panelFondo.add(txtBuscarInsumo);
+
+        // implementación de buscador de insumos en tiempo real
+        txtBuscarInsumo.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                filtrar();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                filtrar();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                filtrar();
+            }
+
+            private void filtrar() {
+                String texto = txtBuscarInsumo.getText().toLowerCase();
+
+                System.out.println("Buscando: " + texto);
+
+                // Aquí luego conectarás con tu control:
+                // control.buscarInsumos(texto);
+            }
+        });
+    }
+    
+    // método action performed para el botón de regresar
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        if (control != null) {
+            control.regresar();
+        }
+    }
+    
+    // método action performed para que se muestre el buscador de insumos cuando damos vlick en el botón añadir insumo
+    private void btnAniadirInsumoActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        boolean visible = txtBuscarInsumo.isVisible();
+
+        if (visible) {
+            txtBuscarInsumo.setText(""); // limpiar
+        }
+
+        txtBuscarInsumo.setVisible(!visible);
+
+        if (!visible) {
+            txtBuscarInsumo.requestFocus();
+        }
     }
     
     private ImageIcon cargarIcono(String ruta, int anchoMax, int altoMax) {
@@ -104,7 +235,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         etqIconoUsuario = new javax.swing.JLabel();
         etqNombreCliente = new javax.swing.JLabel();
         etqIconoAutomovil = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        scrollPiezas = new javax.swing.JScrollPane();
         btnEliminarInsumo = new javax.swing.JButton();
         btnAniadirInsumo = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
@@ -140,21 +271,11 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         btnEliminarInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnEliminarInsumo.setForeground(new java.awt.Color(0, 0, 0));
         btnEliminarInsumo.setText("Eliminar Insumo");
-        btnEliminarInsumo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarInsumoActionPerformed(evt);
-            }
-        });
 
         btnAniadirInsumo.setBackground(new java.awt.Color(188, 226, 255));
         btnAniadirInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAniadirInsumo.setForeground(new java.awt.Color(0, 0, 0));
         btnAniadirInsumo.setText("Añadir Insumo");
-        btnAniadirInsumo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAniadirInsumoActionPerformed(evt);
-            }
-        });
 
         btnVolver.setBackground(new java.awt.Color(186, 226, 255));
         btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -246,7 +367,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
                                     .addComponent(etqAnioAutomovil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(etqAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(etqCotización, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(scrollPiezas, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -303,7 +424,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPiezas, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(etqTotalPiezas)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -332,25 +453,109 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEliminarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInsumoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnEliminarInsumoActionPerformed
-
-    private void btnAniadirInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAniadirInsumoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAniadirInsumoActionPerformed
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        presentacion.interfaces.IControlConsultaCotizacion control = new presentacion.controles.ControlConsultaCotizacion();
-        control.iniciar();
-    }
+//    public static void main(String args[]) {
+//        presentacion.interfaces.IControlConsultaCotizacion control = new presentacion.controles.ControlConsultaCotizacion();
+//        control.iniciar();
+//    }
 
     @Override
-    public void mostrarDetalleCotizacion(List<CotizacionResumenDTO> cotizaciones) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void cargarDatosCotizacion(CotizacionResumenDTO cotizacion) {
+        if (cotizacion == null) return;
+
+        etqNombreCliente.setText(
+            cotizacion.getNombreCliente() != null ? cotizacion.getNombreCliente() : ""
+        );
+
+        etqApellido.setText(
+            cotizacion.getApellidoPaternoCliente() != null ? cotizacion.getApellidoPaternoCliente() : ""
+        );
+
+        etqAutomovil.setText(
+            (cotizacion.getMarcaAutomovil() != null ? cotizacion.getMarcaAutomovil() : "") +
+            " " +
+            (cotizacion.getModeloAutomovil() != null ? cotizacion.getModeloAutomovil() : "")
+        );
+
+        etqAnioAutomovil.setText(
+            cotizacion.getAnioAutomovil() != null 
+                ? String.valueOf(cotizacion.getAnioAutomovil()) 
+                : ""
+        );
+
+        String fecha = (cotizacion.getFechaCreacion() != null)
+                ? cotizacion.getFechaCreacion().toLocalDate().toString()
+                : "N/A";
+        etqFechaCotizacion.setText(fecha);
+        
+        // aquí se calcula el total sumado por todas las pieazas
+        java.math.BigDecimal totalInsumos = java.math.BigDecimal.ZERO;
+
+        if (cotizacion.getInsumosCotizacion() != null) {
+
+            for (InsumoCotizacionDetalleDTO insumo : cotizacion.getInsumosCotizacion()) {
+
+                int cantidad = insumo.getCantidadRequerida() != null 
+                        ? insumo.getCantidadRequerida() 
+                        : 0;
+
+                java.math.BigDecimal precio = insumo.getPrecio() != null 
+                        ? insumo.getPrecio() 
+                        : java.math.BigDecimal.ZERO;
+                
+                java.math.BigDecimal subtotal = precio.multiply(
+                        java.math.BigDecimal.valueOf(cantidad)
+                );
+
+                totalInsumos = totalInsumos.add(subtotal);
+            }
+        }
+
+        etqTotalPiezasCotizacion.setText("$" + totalInsumos);
+
+        java.math.BigDecimal manoObra = cotizacion.getPrecioManoObra() != null
+                ? cotizacion.getPrecioManoObra()
+                : java.math.BigDecimal.ZERO;
+        etqTotalManoObra.setText("$" + manoObra);
+        
+        java.math.BigDecimal totalFinal = totalInsumos.add(manoObra);
+        etqTotalCotizacion.setText("$" + totalFinal);
+        
+        // En esta parte se cargan los datos de la tabla de insumos
+        modeloTabla.setRowCount(0);
+
+        if (cotizacion.getInsumosCotizacion() != null) {
+
+            int contador = 1;
+
+            for (InsumoCotizacionDetalleDTO insumo : cotizacion.getInsumosCotizacion()) {
+
+                String nombrePieza = (insumo.getInsumo() != null 
+                        && insumo.getInsumo().getNombre() != null)
+                        ? insumo.getInsumo().getNombre()
+                        : "N/A";
+
+                java.math.BigDecimal costo = insumo.getPrecio() != null
+                        ? insumo.getPrecio()
+                        : java.math.BigDecimal.ZERO;
+
+                Integer cantidad = insumo.getCantidadRequerida() != null
+                        ? insumo.getCantidadRequerida()
+                        : 0;
+
+                // Agregar fila
+                modeloTabla.addRow(new Object[]{
+                    contador,
+                    nombrePieza,
+                    "$" + costo,
+                    cantidad
+                });
+
+                contador++;
+            }
+        }
     }
 
     @Override
@@ -394,6 +599,6 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
     private javax.swing.JLabel etqTotalManoObra;
     private javax.swing.JLabel etqTotalPiezas;
     private javax.swing.JLabel etqTotalPiezasCotizacion;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane scrollPiezas;
     // End of variables declaration//GEN-END:variables
 }

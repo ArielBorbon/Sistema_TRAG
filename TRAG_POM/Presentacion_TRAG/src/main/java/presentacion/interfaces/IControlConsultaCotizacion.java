@@ -6,9 +6,7 @@ import dtos.cotizacion.CotizacionResumenDTO;
  */
 public interface IControlConsultaCotizacion {
     
-    public abstract void iniciar();
-    
-    public abstract void detalleCotizacion(CotizacionResumenDTO cotizacionSeleccionada);
+    public abstract void iniciar(CotizacionResumenDTO cotizacionSeleccionada);
     
     public abstract void aniadirInsumo(String nombreInsumo);
     

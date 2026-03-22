@@ -98,9 +98,9 @@ public class ControlHistorialCotizaciones implements IControlHistorialCotizacion
     public void verDetalleCotizacion(CotizacionResumenDTO cotizacionSeleccionada) {
         // Aquí eventualmente se instanciará el controlador de la pantalla de "Detalles"
         // Por ahora, solo mandamos un mensaje para comprobar que el botón de la card funcione
-        vista.mostrarMensajeRapido("Abriendo detalles de la cotización de: " + 
-                cotizacionSeleccionada.getNombreCliente() + " " + 
-                cotizacionSeleccionada.getApellidoPaternoCliente());
+        this.vista.ocultar();
+        ControlConsultaCotizacion controlCotizacion = new ControlConsultaCotizacion();
+        controlCotizacion.iniciar(cotizacionSeleccionada);
     }
 
     @Override

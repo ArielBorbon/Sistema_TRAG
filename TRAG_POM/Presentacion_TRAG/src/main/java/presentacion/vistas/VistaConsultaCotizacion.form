@@ -56,7 +56,7 @@
                               </Group>
                           </Group>
                           <Component id="etqCotización" alignment="0" min="-2" pref="143" max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" min="-2" pref="599" max="-2" attributes="0"/>
+                          <Component id="scrollPiezas" min="-2" pref="599" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="34" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -133,7 +133,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" min="-2" pref="329" max="-2" attributes="0"/>
+                  <Component id="scrollPiezas" min="-2" pref="329" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="etqTotalPiezas" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -194,7 +194,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="etqIconoAutomovil">
     </Component>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+    <Container class="javax.swing.JScrollPane" name="scrollPiezas">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
     </Container>
@@ -211,9 +211,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Eliminar Insumo"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEliminarInsumoActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnAniadirInsumo">
       <Properties>
@@ -228,9 +225,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="A&#xf1;adir Insumo"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAniadirInsumoActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnVolver">
       <Properties>

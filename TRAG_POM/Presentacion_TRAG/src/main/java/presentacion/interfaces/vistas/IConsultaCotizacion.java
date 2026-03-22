@@ -8,7 +8,7 @@ import presentacion.interfaces.IVista;
  */
 public interface IConsultaCotizacion extends IVista{
     
-    public abstract void mostrarDetalleCotizacion(List<CotizacionResumenDTO> cotizaciones);
+    public abstract void cargarDatosCotizacion(CotizacionResumenDTO cotizacion);
     
     public abstract void mostrarMensajeRapido(String mensaje);
     

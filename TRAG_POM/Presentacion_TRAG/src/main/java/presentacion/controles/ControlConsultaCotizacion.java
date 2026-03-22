@@ -18,14 +18,11 @@ public class ControlConsultaCotizacion implements IControlConsultaCotizacion {
     }
     
     @Override
-    public void iniciar() {
+    public void iniciar(CotizacionResumenDTO cotizacionSeleccionada) {
         this.vista = FabricaVistas.getVistaConsultarCotizacion(this);
         this.vista.mostrar();
-    }
-
-    @Override
-    public void detalleCotizacion(CotizacionResumenDTO cotizacionSeleccionada) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // cargar los datos de la cotización seleciconada
+        this.vista.cargarDatosCotizacion(cotizacionSeleccionada);
     }
 
     @Override
@@ -46,6 +43,7 @@ public class ControlConsultaCotizacion implements IControlConsultaCotizacion {
     @Override
     public void regresar() {
         this.vista.ocultar();
+        new ControlHistorialCotizaciones().iniciar();
     }
     
 }
