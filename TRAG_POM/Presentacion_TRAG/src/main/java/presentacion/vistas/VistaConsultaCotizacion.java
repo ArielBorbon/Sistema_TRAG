@@ -2,14 +2,20 @@ package presentacion.vistas;
 
 import dtos.cotizacion.CotizacionResumenDTO;
 import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
+import dtos.insumos.InsumoDetalleDTO;
+import dtos.insumos.InsumoResumenDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -31,6 +37,9 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
     private DefaultTableModel modeloTabla;
     
     private JTextField txtBuscarInsumo;
+    
+    private JPanel contenedorInsumosBuscados;
+    private JScrollPane scrollInsumosBuscados;
 
     public VistaConsultaCotizacion(IControlConsultaCotizacion control) {
         this.control = control;
@@ -124,43 +133,61 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
             }
         });
         
-        // agregar action listener al botón para que muestre el buscador en tiempo real de insumos
-        btnAniadirInsumo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAniadirInsumoActionPerformed(evt);
+        btnAniadirInsumo.addActionListener(evt -> {
+            boolean visible = txtBuscarInsumo.isVisible();
+            if (visible) {
+                txtBuscarInsumo.setText("");
+                contenedorInsumosBuscados.setVisible(false);
+                scrollInsumosBuscados.setVisible(false);
+            }
+            txtBuscarInsumo.setVisible(!visible);
+            if (!visible) {
+                txtBuscarInsumo.requestFocus();
             }
         });
-        
-        // inicializar el buscador de insumo
+
+        // buscador de insumos
         txtBuscarInsumo = new JTextField();
         txtBuscarInsumo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtBuscarInsumo.setBounds(467, 495, 200, 30);
         txtBuscarInsumo.setVisible(false);
-
         panelFondo.add(txtBuscarInsumo);
 
-        // implementación de buscador de insumos en tiempo real
+        // contenedor para resultados de los insumos buscados
+        contenedorInsumosBuscados = new JPanel();
+        contenedorInsumosBuscados.setLayout(new BoxLayout(contenedorInsumosBuscados, BoxLayout.Y_AXIS));
+        contenedorInsumosBuscados.setBackground(new Color(245, 245, 245));
+        contenedorInsumosBuscados.setVisible(false);
+
+        scrollInsumosBuscados = new JScrollPane(contenedorInsumosBuscados);
+        scrollInsumosBuscados.setBounds(467, 535, 400, 150);
+        scrollInsumosBuscados.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        scrollInsumosBuscados.setVisible(false);
+
+        panelFondo.add(scrollInsumosBuscados);
+
+        // este documentListener sirve para realizar la búsqueda en tiempo real de los insumos
         txtBuscarInsumo.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-
+            @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                filtrar();
+                buscarYMostrar();
             }
 
+            @Override
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                filtrar();
+                buscarYMostrar();
             }
 
+            @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                filtrar();
+                buscarYMostrar();
             }
 
-            private void filtrar() {
-                String texto = txtBuscarInsumo.getText().toLowerCase();
-
-                System.out.println("Buscando: " + texto);
-
-                // Aquí luego conectarás con tu control:
-                // control.buscarInsumos(texto);
+            private void buscarYMostrar() {
+                String texto = txtBuscarInsumo.getText().trim().toLowerCase();
+                if (control != null) {
+                    control.buscarInsumos(texto);
+                }
             }
         });
     }
@@ -172,19 +199,39 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         }
     }
     
-    // método action performed para que se muestre el buscador de insumos cuando damos vlick en el botón añadir insumo
-    private void btnAniadirInsumoActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        boolean visible = txtBuscarInsumo.isVisible();
+    // método que ayuda a crear un card donde se acomodarán todos los insumos
+    private JPanel crearCardInsumo(InsumoResumenDTO insumo) {
+        JPanel card = new JPanel(new BorderLayout());
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        card.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        if (visible) {
-            txtBuscarInsumo.setText(""); // limpiar
-        }
+        JLabel lblNombre = new JLabel(insumo.getNombre() != null ? insumo.getNombre() : "N/A");
+        lblNombre.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblNombre.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-        txtBuscarInsumo.setVisible(!visible);
+        JLabel lblPrecio = new JLabel("$" + insumo.getPrecioSugerido());
+        lblPrecio.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblPrecio.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        lblPrecio.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        if (!visible) {
-            txtBuscarInsumo.requestFocus();
-        }
+        card.add(lblNombre, BorderLayout.WEST);
+        card.add(lblPrecio, BorderLayout.EAST);
+
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (control != null) {
+                    control.seleccionarInsumo(insumo); // agrega insumo a la cotización
+                    txtBuscarInsumo.setText("");
+                    contenedorInsumosBuscados.setVisible(false);
+                    scrollInsumosBuscados.setVisible(false);
+                }
+            }
+        });
+
+        return card;
     }
     
     private ImageIcon cargarIcono(String ruta, int anchoMax, int altoMax) {
@@ -255,9 +302,8 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(243, 243, 243));
-        setMaximumSize(new java.awt.Dimension(1000, 720));
+        setMaximumSize(new java.awt.Dimension(1200, 920));
         setMinimumSize(new java.awt.Dimension(1000, 720));
-        setPreferredSize(new java.awt.Dimension(1000, 720));
 
         etqCotización.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         etqCotización.setText("Cotización");
@@ -505,7 +551,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         java.math.BigDecimal totalFinal = totalInsumos.add(manoObra);
         etqTotalCotizacion.setText("$" + totalFinal);
         
-        // En esta parte se cargan los datos de la tabla de insumos
+        // aquí se supone que se cargan los datos de la tabla de insumos
         modeloTabla.setRowCount(0);
 
         if (cotizacion.getInsumosCotizacion() != null) {
@@ -582,5 +628,36 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
     @Override
     public void mostrarError(String mensajeError) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    public void mostrarInsumosBuscados(List<InsumoResumenDTO> insumos) {
+        contenedorInsumosBuscados.removeAll();
+
+        if (insumos == null || insumos.isEmpty()) {
+            contenedorInsumosBuscados.setVisible(false);
+            scrollInsumosBuscados.setVisible(false);
+            return;
+        }
+
+        for (InsumoResumenDTO insumo : insumos) {
+            contenedorInsumosBuscados.add(crearCardInsumo(insumo));
+        }
+
+        contenedorInsumosBuscados.revalidate();
+        contenedorInsumosBuscados.repaint();
+
+        contenedorInsumosBuscados.setVisible(true);
+        scrollInsumosBuscados.setVisible(true);
+    }
+
+    @Override
+    public void aniadirInsumo(InsumoResumenDTO insumo) {
+        int rowCount = modeloTabla.getRowCount();
+        modeloTabla.addRow(new Object[]{
+            rowCount + 1,
+            insumo.getNombre(),
+            "$" + insumo.getPrecioSugerido(),
+            1 // cantidad pendiente inicial
+        });
     }
 }

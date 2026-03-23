@@ -1,7 +1,11 @@
 package presentacion.controles;
 import com.mycompany.administradorcotizaciones_trag.IAdministradorCotizaciones;
+import com.mycompany.administradorinsumos_trag.IAdministradorInsumos;
 import com.mycompany.negocios_trag.FabricaNegocios;
 import dtos.cotizacion.CotizacionResumenDTO;
+import dtos.insumos.InsumoDetalleDTO;
+import dtos.insumos.InsumoResumenDTO;
+import java.util.List;
 import presentacion.fabrica.FabricaVistas;
 import presentacion.interfaces.IControlConsultaCotizacion;
 import presentacion.interfaces.vistas.IConsultaCotizacion;
@@ -11,10 +15,12 @@ import presentacion.interfaces.vistas.IConsultaCotizacion;
 public class ControlConsultaCotizacion implements IControlConsultaCotizacion {
 
     private IAdministradorCotizaciones administradorCotizaciones;
+    private IAdministradorInsumos administradorInsumos;
     private IConsultaCotizacion vista;
 
     public ControlConsultaCotizacion() {
         this.administradorCotizaciones = FabricaNegocios.obtenerAdministradorCotizaciones();
+        this.administradorInsumos = FabricaNegocios.obtenerAdministadorInsumos();
     }
     
     @Override
@@ -23,6 +29,34 @@ public class ControlConsultaCotizacion implements IControlConsultaCotizacion {
         this.vista.mostrar();
         // cargar los datos de la cotización seleciconada
         this.vista.cargarDatosCotizacion(cotizacionSeleccionada);
+    }
+    
+    @Override
+    public void buscarInsumos(String texto) {
+        if (texto == null) texto = "";
+
+        try {
+            // obtener lista de insumos que contengan el texto que agregamos
+            List<InsumoResumenDTO> insumos = administradorInsumos.obtenerInsumosNombre(texto);
+
+            if (vista != null) {
+                vista.mostrarInsumosBuscados(insumos);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void seleccionarInsumo(InsumoResumenDTO insumo) {
+        if (insumo == null) return;
+
+        try {
+            // añadir insumo a la vista mostrando solo nombre y precio
+            vista.aniadirInsumo(insumo);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
