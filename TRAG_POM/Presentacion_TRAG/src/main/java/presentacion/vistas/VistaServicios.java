@@ -230,13 +230,13 @@ public class VistaServicios extends JFrame implements IVistaServicios{
             panelServicio.add(labelNombre, BorderLayout.SOUTH);
 
             int tamañoIcono = (int)(anchoServicio * 0.6);
-            ImageIcon iconoRedimensionado = redimensionarIcono(servicio.getDireccionIcono(), tamañoIcono, tamañoIcono);
+            //ImageIcon iconoRedimensionado = redimensionarIcono(servicio.getDireccionIcono(), tamañoIcono, tamañoIcono);
 
-            if (iconoRedimensionado != null) {
-                JLabel labelIcono = new JLabel(iconoRedimensionado);
-                labelIcono.setHorizontalAlignment(SwingConstants.CENTER);
-                panelServicio.add(labelIcono, BorderLayout.CENTER);
-            }
+//            if (iconoRedimensionado != null) {
+//                JLabel labelIcono = new JLabel(iconoRedimensionado);
+//                labelIcono.setHorizontalAlignment(SwingConstants.CENTER);
+//                panelServicio.add(labelIcono, BorderLayout.CENTER);
+//            }
 
             // Coordenada del servicio
             gbc.gridx = columnaActual;
