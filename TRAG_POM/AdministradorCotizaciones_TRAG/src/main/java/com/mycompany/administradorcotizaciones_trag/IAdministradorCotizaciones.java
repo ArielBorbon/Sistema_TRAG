@@ -25,10 +25,11 @@ public interface IAdministradorCotizaciones {
     
     public abstract CotizacionDetalleDTO crearCotizacion(CotizacionAgregarDTO dto) throws NegocioException;
     public abstract CotizacionDetalleDTO obtenerCotizacion(Long idCotizacion) throws NegocioException;
+    public abstract CotizacionResumenDTO obtenerResumenCotizacion(Long idCotizacion) throws NegocioException;
     public abstract List<CotizacionResumenDTO> obtenerTodasCotizaciones() throws NegocioException;
     public abstract List<CotizacionResumenDTO> obtenerCotizacionesNombre(String nombre) throws NegocioException;
     public abstract List<CotizacionResumenDTO> obtenerCotizacionesFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin) throws NegocioException;
     public abstract CotizacionDetalleDTO actualizarCotizacion(CotizacionActualizarDTO dto) throws NegocioException;
     public abstract CotizacionDetalleDTO eliminarCotizacion(Long idCotizacion) throws NegocioException;
-    
+    public abstract CotizacionDetalleDTO habilitarCotizacion(Long idCotizacion) throws NegocioException;
 }

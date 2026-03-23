@@ -1,27 +1,32 @@
 package presentacion.fabrica;
 
 import presentacion.interfaces.IControlAgregarCotizacion;
-import presentacion.interfaces.IControlHistorialCotizaciones;
-import presentacion.interfaces.vistas.IConsultaCotizacion;
-import presentacion.interfaces.vistas.IHistorialCotizaciones;
 import presentacion.interfaces.vistas.IVistaSeleccionClienteAuto;
 import presentacion.vistas.VistaHistorialCotizaciones;
 import presentacion.vistas.VistaSeleccionClienteAuto;
-import presentacion.interfaces.IControlConsultaCotizacion;
 import presentacion.interfaces.IControlCotizaciones;
 import presentacion.interfaces.IVistaPrincipal;
+import presentacion.interfaces.vistas.IVistaConsultaCotizacion;
 import presentacion.interfaces.vistas.IVistaCrearCotizacion;
 import presentacion.interfaces.vistas.IVistaDiagnosticoEstado;
 import presentacion.interfaces.vistas.IVistaServicios;
-import presentacion.vistas.VistaConsultaCotizacion;
 import presentacion.vistas.VistaCrearCotizacion;
 import presentacion.vistas.VistaDiagnosticoEstado;
 import presentacion.vistas.VistaPrincipal;
 import presentacion.vistas.VistaServicios;
+import presentacion.interfaces.vistas.IVistaHistorialCotizaciones;
+import presentacion.vistas.VistaConsultaCotizacion;
+import presentacion.interfaces.IControlConsultarCotizaciones;
 
 /**
  *
- * @author
+ * Archivo: FabricaVistas.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class FabricaVistas {
 
@@ -56,16 +61,17 @@ public class FabricaVistas {
         
     }
 
-    public static IHistorialCotizaciones getVistaHistorialCotizaciones(IControlHistorialCotizaciones control) {
+    public static IVistaHistorialCotizaciones obtenerVistaHistorialCotizaciones(IControlConsultarCotizaciones control) {
 
-        IHistorialCotizaciones historialCotizaciones = new VistaHistorialCotizaciones(control);
+        IVistaHistorialCotizaciones historialCotizaciones = new VistaHistorialCotizaciones(control);
 
         return historialCotizaciones;
     }
 
-    public static IConsultaCotizacion getVistaConsultarCotizacion(IControlConsultaCotizacion control) {
+    public static IVistaConsultaCotizacion obtenerVistaConsultarCotizacion(IControlConsultarCotizaciones control) {
 
-        return new VistaConsultaCotizacion(control);
+        IVistaConsultaCotizacion vistaConsultaCotizacion = new VistaConsultaCotizacion(control);
+        return vistaConsultaCotizacion;
 
     }
 

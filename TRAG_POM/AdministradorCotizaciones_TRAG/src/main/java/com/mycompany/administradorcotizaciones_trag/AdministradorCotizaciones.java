@@ -14,6 +14,8 @@ import interfaces.ICotizacionesDAO;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mappers.DTOMapeadores;
 import mappers.Mapeadores;
 
@@ -75,7 +77,7 @@ public class AdministradorCotizaciones {
             CotizacionDetalleDTO cotizacionDetalle = Mapeadores.toDTODetalle(cotizacionesDAO.obtenerCotizacion(idCotizacion));
             List<InsumoCotizacionDetalleDTO> insumosCotizacion = cotizacionDetalle.getInsumosCotizacion();
 
-            for (InsumoCotizacionDetalleDTO dto : insumosCotizacion) {
+            for (InsumoCotizacionDetalleDTO dto: insumosCotizacion) {
                 dto.setSubtotal(BigDecimal.valueOf(dto.getCantidadRequerida()).multiply(dto.getPrecio()));
             }
 
@@ -84,6 +86,25 @@ public class AdministradorCotizaciones {
             throw new NegocioException(MENSAJE_ERROR_OBTENER_COTIZACION, e);
         }
 
+    }
+    
+    public CotizacionResumenDTO obtenerResumenCotizacion(Long idCotizacion) throws NegocioException {
+        if (idCotizacion == null) {
+            throw new NegocioException(MENSAJE_ID_COTIZACION_AUSENTE_OBTENER);
+        }
+
+        try {
+            CotizacionResumenDTO cotizacionResumen = Mapeadores.toDTOResumen(cotizacionesDAO.obtenerCotizacion(idCotizacion));
+            List<InsumoCotizacionDetalleDTO> insumosCotizacion = cotizacionResumen.getInsumosCotizacion();
+
+            for (InsumoCotizacionDetalleDTO dto: insumosCotizacion) {
+                dto.setSubtotal(BigDecimal.valueOf(dto.getCantidadRequerida()).multiply(dto.getPrecio()));
+            }
+
+            return cotizacionResumen;
+        } catch (PersistenciaException e) {
+            throw new NegocioException(MENSAJE_ERROR_OBTENER_COTIZACION, e);
+        } 
     }
 
     public List<CotizacionResumenDTO> obtenerTodasCotizaciones() throws NegocioException {
@@ -190,6 +211,21 @@ public class AdministradorCotizaciones {
             throw new NegocioException(MENSAJE_ERROR_ELIMINAR_COTIZACION, e);
         }
 
+    }
+
+    public CotizacionDetalleDTO habilitarCotizacion(Long idCotizacion) throws NegocioException {
+        
+        if(idCotizacion == null){
+            throw new NegocioException("El id de la cotización no puede ser nulo.");
+        }
+        
+        try {
+            return Mapeadores.toDTODetalle(cotizacionesDAO.habilitarCotizacion(idCotizacion));
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al habilitar la cotización", e);
+        }
+        
+        
     }
 
     private void validarCotizacionAgregar(CotizacionAgregarDTO dto) throws NegocioException {

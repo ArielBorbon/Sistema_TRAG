@@ -4,18 +4,34 @@ package presentacion.utils;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
 import java.io.FileOutputStream;
-import java.net.URL;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import presentacion.borradores.BorradorInsumoCotizacion;
+import java.util.Locale;
 
 /**
  *
- * @author 
+ * Archivo: GeneradorPDF.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class GeneradorPDF {
 
-    public static void crearDocumentoPDF(String rutaDestino) {
+    public static void crearDocumentoPDF(
+            String rutaDestino,
+            LocalDateTime fecha, 
+            String nombreCompletoCliente,
+            BigDecimal costoManoObra,
+            String automovil,
+            List<InsumoCotizacionDetalleDTO> insumosCotizacion) {
+        
         Document documento = new Document(PageSize.LETTER, 40, 40, 40, 40);
 
         try {
@@ -99,12 +115,15 @@ public class GeneradorPDF {
             tablaDatos.setWidthPercentage(100);
             tablaDatos.setWidths(new float[]{15f, 85f});
             
+            DateTimeFormatter formateador = DateTimeFormatter.ofPattern("d 'de' MMMM yyyy", Locale.forLanguageTag("es-ES"));
+            String fechaFormateada = fecha.format(formateador);
+
             agregarCelda(tablaDatos, "FECHA", fuenteNegrita, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatos, "17 de febrero 2026", fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
+            agregarCelda(tablaDatos, fechaFormateada, fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
             agregarCelda(tablaDatos, "CLIENTE", fuenteNegrita, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatos, "Ariel Eduardo Borbón Izaguirre", fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
+            agregarCelda(tablaDatos, nombreCompletoCliente, fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
             agregarCelda(tablaDatos, "UNIDAD", fuenteNegrita, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatos, "Jeep Sahara 2016, ABC-27-FJ", fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
+            agregarCelda(tablaDatos, automovil, fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
             agregarCelda(tablaDatos, "REVISÓ", fuenteNegrita, Element.ALIGN_LEFT, BaseColor.WHITE);
             agregarCelda(tablaDatos, "Roberto Granados Bravo", fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
             
@@ -131,17 +150,31 @@ public class GeneradorPDF {
             tablaInsumos.addCell(hPre);
 
             // Filas
-            agregarFilaInsumo(tablaInsumos, "Compresor", "1", "2,500.00", "2,500.00", fuenteNegrita);
-            agregarFilaInsumo(tablaInsumos, "Condensador", "1", "1,100.00", "1,100.00", fuenteNegrita);
-            agregarFilaInsumo(tablaInsumos, "Evaporador", "1", "1,000.00", "1,000.00", fuenteNegrita);
-            agregarFilaInsumo(tablaInsumos, "Manguera", "2", "250.00", "500.00", fuenteNegrita);
-            agregarFilaInsumo(tablaInsumos, "Mano de obra", "", "700.00", "700.00", fuenteNegrita);
+            for(InsumoCotizacionDetalleDTO insumoCotizacion: insumosCotizacion){
+                agregarFilaInsumo(
+                        tablaInsumos,
+                        insumoCotizacion.getInsumo().getNombre(),
+                        insumoCotizacion.getCantidadRequerida().toString(), 
+                        insumoCotizacion.getPrecio().toString(), 
+                        insumoCotizacion.getSubtotal().toString(),
+                        fuenteNegrita);
+            }
+            
+            BigDecimal subtotal = insumosCotizacion.stream()
+                .map(InsumoCotizacionDetalleDTO::getSubtotal)
+                .filter(s -> s != null)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .add(costoManoObra);
+            
+            BigDecimal iva = subtotal.multiply(new BigDecimal("0.16"));
+            
+            BigDecimal total = subtotal.add(iva);
 
             // Totales
             BaseColor grisClaro = new BaseColor(230, 230, 230);
-            agregarFilaTotales(tablaInsumos, "Subtotal", "5,800.00", fuenteNegrita, grisClaro);
-            agregarFilaTotales(tablaInsumos, "IVA", "928.00", fuenteNegrita, grisClaro);
-            agregarFilaTotales(tablaInsumos, "Total", "6,728.00", fuenteNegrita, grisClaro);
+            agregarFilaTotales(tablaInsumos, "Subtotal", subtotal.toString(), fuenteNegrita, grisClaro);
+            agregarFilaTotales(tablaInsumos, "IVA", iva.toString(), fuenteNegrita, grisClaro);
+            agregarFilaTotales(tablaInsumos, "Total", total.toString(), fuenteNegrita, grisClaro);
 
             documento.add(tablaInsumos);
             documento.add(new Paragraph("\n"));

@@ -8,7 +8,13 @@ import presentacion.interfaces.IVista;
 
 /**
  *
- * @author romom
+ * Archivo: IVistaSeleccionClienteAuto.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public interface IVistaSeleccionClienteAuto extends IVista{
     

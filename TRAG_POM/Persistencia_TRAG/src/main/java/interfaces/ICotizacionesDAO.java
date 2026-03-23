@@ -25,5 +25,6 @@ public interface ICotizacionesDAO {
     public abstract List<Cotizacion> obtenerCotizacionesFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin) throws PersistenciaException;
     public abstract Cotizacion actualizarCotizacion(Cotizacion cotizacion) throws PersistenciaException;
     public abstract Cotizacion eliminarCotizacion(Long idCotizacion) throws PersistenciaException;
+    public abstract Cotizacion habilitarCotizacion(Long idCotizacion) throws PersistenciaException;
     
 }

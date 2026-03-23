@@ -168,78 +168,60 @@ public class Pruebas_TRAG {
 
         // Servicio 1
         try {
+
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Evaporador",
-                            new BigDecimal("1800.00")
-                    )
+                    new InsumoAgregarDTO("Evaporador", new BigDecimal("1800.00"))
             );
-            
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Válvula de Expansión",
-                            new BigDecimal("450.00")
-                    )
+                    new InsumoAgregarDTO("Válvula de Expansión", new BigDecimal("450.00"))
             );
-            
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Kit de O-Rings (Sellos)",
-                            new BigDecimal("15.00")
-                    )
+                    new InsumoAgregarDTO("Kit de O-Rings (Sellos)", new BigDecimal("15.00"))
             );
-            
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Gas Refrigerante R134a 500gr",
-                            new BigDecimal("300.00")
-                    )
+                    new InsumoAgregarDTO("Lata Gas Refrigerante R134a 500gr", new BigDecimal("300.00"))
             );
-            
-            // Servicio 2
-            
+
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Aceite PAG 46/100",
-                            new BigDecimal("280.00")
-                    )
+                    new InsumoAgregarDTO("Bote Aceite PAG 46/100 250ml", new BigDecimal("280.00"))
             );
-            
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Sello de Flecha (Mecánico)",
-                            new BigDecimal("350.00")
-                    )
+                    new InsumoAgregarDTO("Sello de Flecha (Mecánico)", new BigDecimal("350.00"))
             );
-            
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Rodamiento de Polea",
-                            new BigDecimal("220.00")
-                    )
+                    new InsumoAgregarDTO("Rodamiento de Polea", new BigDecimal("220.00"))
             );
-            
-            // Servicio 3
-            
+
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Manguera de Barrera #8 o #10, 1m",
-                            new BigDecimal("240.00")
-                    )
+                    new InsumoAgregarDTO("Tramo Manguera de Barrera #8 o #10 (1m)", new BigDecimal("240.00"))
             );
-            
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Férulas (Casquillos de aluminio)",
-                            new BigDecimal("45.00")
-                    )
+                    new InsumoAgregarDTO("Férulas (Casquillos de aluminio)", new BigDecimal("45.00"))
             );
-            
             administradorInsumos.crearInsumo(
-                    new InsumoAgregarDTO(
-                            "Limpiador de Tubería (Flush)",
-                            new BigDecimal("190.00")
-                    )
+                    new InsumoAgregarDTO("Bote Limpiador de Tubería Flush", new BigDecimal("190.00"))
+            );
+
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO("Filtro Deshidratador", new BigDecimal("550.00"))
+            );
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO("Filtro de Cabina (Habitáculo)", new BigDecimal("250.00"))
+            );
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO("Ampolleta de Tinte Detector UV", new BigDecimal("80.00"))
+            );
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO("Bote Solvente Flush Especializado 1L", new BigDecimal("210.00"))
+            );
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO("Relevador Automotriz A/C de 4/5 pines", new BigDecimal("120.00"))
+            );
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO("Fusible Automotriz (varios amperajes)", new BigDecimal("10.00"))
+            );
+            administradorInsumos.crearInsumo(
+                    new InsumoAgregarDTO("Lata de Espuma Sanitizante / Ozono", new BigDecimal("180.00"))
             );
             
             
@@ -310,180 +292,97 @@ public class Pruebas_TRAG {
                             )
                     )
             );
+            
+            administradorServicios.crearServicio(
+                    new ServicioAgregarDTO(
+                    "Servicio General",
+                    "Mantenimiento preventivo completo del sistema frigorífico. Consiste en la inspección de líneas, "
+                            + "limpieza de condensador, revisión de presiones, reemplazo del filtro deshidratador y sustitución "
+                            + "de empaques esenciales. Su objetivo es preservar la vida útil del sistema y evitar fallas críticas.",
+                    new BigDecimal("1500.00"),
+                    "servicio_general_icono.png",
+                    List.of(
+                            new InsumoServicioAgregarDTO(1, 4L, 11L), // 1 Filtro Deshidratador
+                            new InsumoServicioAgregarDTO(3, 4L, 3L)   // 3 O-Rings
+                    )
+            ));
+
+
+            administradorServicios.crearServicio(
+                    new ServicioAgregarDTO(
+                    "Recarga de Gas Refrigerante",
+                    "Servicio enfocado a recuperar la eficiencia térmica inyectando el fluido refrigerante exacto "
+                            + "según las especificaciones técnicas del fabricante. Incluye estabilización de aceite del sistema.",
+                    new BigDecimal("600.00"),
+                    "servicio_recarga_gas_refrigerante_icono.png",
+                    List.of(
+                            new InsumoServicioAgregarDTO(2, 5L, 4L),  // 2 Latas de Gas de 500gr
+                            new InsumoServicioAgregarDTO(1, 5L, 5L)   // 1 Bote de Aceite PAG
+                    )
+            ));
+
+            administradorServicios.crearServicio(
+                    new ServicioAgregarDTO(
+                    "Cambio de Filtro de Cabina",
+                    "Reemplazo del elemento filtrante interior, vital para mantener el flujo de aire libre de "
+                            + "partículas, polen, polvo y evitar obstrucciones mecánicas en el flujo hacia el evaporador.",
+                    new BigDecimal("350.00"),
+                    "servicio_cambio_filtro_cabina_icono.png",
+                    List.of(
+                            new InsumoServicioAgregarDTO(1, 6L, 12L)  // 1 Filtro de Cabina
+                    )
+            ));
+
+
+            administradorServicios.crearServicio(
+                    new ServicioAgregarDTO(
+                    "Detección de Fugas (Nitrógeno y UV)",
+                    "Diagnóstico especializado para localizar microporosidades. Se presuriza el circuito con nitrógeno "
+                            + "y se utiliza una ampolleta de tinte trazador UV para revelar fugas bajo luz ultravioleta.",
+                    new BigDecimal("450.00"),
+                    "servicio_deteccion_fugas_nitrogeno_uv_icono.png",
+                    List.of(
+                            new InsumoServicioAgregarDTO(1, 7L, 13L)  // 1 Ampolleta UV
+                    )
+            ));
+
+            administradorServicios.crearServicio(
+                    new ServicioAgregarDTO(
+                    "Lavado Interno del Sistema",
+                    "Remoción de humedad, virutas metálicas y aceite degradado tras una falla catastrófica de componentes. "
+                            + "Utiliza solventes a presión para garantizar que el nuevo compresor no se contamine.",
+                    new BigDecimal("950.00"),
+                    "servicio_lavado_interno_sistema_icono.png",
+                    List.of(
+                            new InsumoServicioAgregarDTO(2, 8L, 14L), // 2 Botes Solvente Flush
+                            new InsumoServicioAgregarDTO(4, 8L, 3L)   // 4 O-Rings nuevos
+                    )
+            ));
+
+            // 9. Diagnóstico Eléctrico del A/C
             administradorServicios.crearServicio(new ServicioAgregarDTO(
-                            "Cambio de evaporador",
-                            "Esta es la intervención de mayor impacto en el cronograma del taller debido al tiempo de desarme"
-                                    + " y armado del tablero de instrumentos. El servicio implica la sustitución de la unidad "
-                                    + "de enfriamiento interna por pérdida de estanqueidad o saturación térmica irreversible."
-                                    + " Operativamente, requiere una gestión de tiempos crítica para no bloquear la bahía de servicio,"
-                                    + " asegurando que el reensamble de la consola mantenga los estándares de ajuste originales para "
-                                    + "evitar reclamaciones por ruidos o fallos en los controles de ventilación.",
-                            new BigDecimal("3500.00"),
-                            "servicio_cambio_evaporador_icono.png",
-                            List.of(
-                                    new InsumoServicioAgregarDTO(1, 1L, 1L),
-                                     new InsumoServicioAgregarDTO(1, 1L, 2L),
-                                      new InsumoServicioAgregarDTO(4, 1L, 3L),
-                                       new InsumoServicioAgregarDTO(1, 1l, 4L)
-                            )
+                    "Diagnóstico Eléctrico del A/C",
+                    "Evaluación de la red de control: sensores de presión, termistores, cableado, relevadores "
+                            + "y actuadores. Ideal para fallas donde el sistema está cargado pero no realiza el acoplamiento.",
+                    new BigDecimal("500.00"),
+                    "servicio_diagnostico_electrico_ac_icono.png",
+                    List.of(
+                            new InsumoServicioAgregarDTO(1, 9L, 15L), // 1 Relevador (por si necesita cambio)
+                            new InsumoServicioAgregarDTO(2, 9L, 16L)  // 2 Fusibles
                     )
-            );
+            ));
 
-            administradorServicios.crearServicio(
-                    new ServicioAgregarDTO(
-                            "Reparación y Servicio de Compresor",
-                            "Este servicio se centra en la recuperación mecánica de la unidad de potencia cuando el daño no ha comprometido"
-                                    + " la integridad estructural del cilindro o pistones. La labor consiste en la apertura del componente "
-                                    + "para corregir problemas de compresión, ruidos en rodamientos o fallos en el embrague, permitiendo una "
-                                    + "solución de costo intermedio frente al reemplazo total. Es una tarea que demanda precisión en el banco"
-                                    + " de trabajo y una verificación rigurosa de la limpieza interna para garantizar que la reparación sea "
-                                    + "duradera y no contamine el resto del ciclo.",
-                            new BigDecimal("1200.00"),
-                            "servicio_reparacion_servicio_compresor_icono.png",
-                            List.of(
-                                    new InsumoServicioAgregarDTO(1, 2L, 5L),
-                                    new InsumoServicioAgregarDTO(1, 2L, 6L),
-                                    new InsumoServicioAgregarDTO(1, 2L, 7L),
-                                    new InsumoServicioAgregarDTO(2, 2L, 3L)
-                            )
-                    
-                    )
-            );
-
-            administradorServicios.crearServicio(
-                    new ServicioAgregarDTO(
-                            "Reconstrucción de Mangueras y Tuberías",
-                            "Este proceso permite la resolución inmediata de fugas en las líneas de conducción de alta y baja presión sin depender "
-                                    + "de la disponibilidad de refacciones de agencia. El servicio consiste en el reemplazo de los tramos de caucho "
-                                    + "degradados o la reparación de secciones de aluminio impactadas, manteniendo las conexiones y puertos originales. "
-                                    + "Para la administración del taller, es una capacidad estratégica que acelera la salida de vehículos con piezas "
-                                    + "descontinuadas o de importación lenta, manteniendo el flujo de trabajo constante en el área de carga.",
-                            new BigDecimal("800.00"),
-                            "servicio_recontruccion_tuberias_mangueras_icono.png",
-                            List.of(
-                                    new InsumoServicioAgregarDTO(1, 3L, 8L),
-                                    new InsumoServicioAgregarDTO(2, 3L, 9L),
-                                    new InsumoServicioAgregarDTO(1, 3L, 10L),
-                                    new InsumoServicioAgregarDTO(2, 3L, 3L)
-                            )
-                    )
-            );
+            // 10. Sanitización de Ductos y Tratamiento de Ozono
             administradorServicios.crearServicio(new ServicioAgregarDTO(
-                            "Cambio de evaporador",
-                            "Esta es la intervención de mayor impacto en el cronograma del taller debido al tiempo de desarme"
-                                    + " y armado del tablero de instrumentos. El servicio implica la sustitución de la unidad "
-                                    + "de enfriamiento interna por pérdida de estanqueidad o saturación térmica irreversible."
-                                    + " Operativamente, requiere una gestión de tiempos crítica para no bloquear la bahía de servicio,"
-                                    + " asegurando que el reensamble de la consola mantenga los estándares de ajuste originales para "
-                                    + "evitar reclamaciones por ruidos o fallos en los controles de ventilación.",
-                            new BigDecimal("3500.00"),
-                            "servicio_cambio_evaporador_icono.png",
-                            List.of(
-                                    new InsumoServicioAgregarDTO(1, 1L, 1L),
-                                     new InsumoServicioAgregarDTO(1, 1L, 2L),
-                                      new InsumoServicioAgregarDTO(4, 1L, 3L),
-                                       new InsumoServicioAgregarDTO(1, 1l, 4L)
-                            )
+                    "Sanitización de Ductos y Tratamiento de Ozono",
+                    "Erradicación de bacterias, esporas y malos olores en el circuito de ventilación interior "
+                            + "utilizando una combinación de espuma activa y tratamiento con gas ozono.",
+                    new BigDecimal("400.00"),
+                    "servicio_sanitizacion_ductos_tratamiento_ozon_icono.png",
+                    List.of(
+                            new InsumoServicioAgregarDTO(1, 10L, 17L) // 1 Lata Sanitizante
                     )
-            );
-
-            administradorServicios.crearServicio(
-                    new ServicioAgregarDTO(
-                            "Reparación y Servicio de Compresor",
-                            "Este servicio se centra en la recuperación mecánica de la unidad de potencia cuando el daño no ha comprometido"
-                                    + " la integridad estructural del cilindro o pistones. La labor consiste en la apertura del componente "
-                                    + "para corregir problemas de compresión, ruidos en rodamientos o fallos en el embrague, permitiendo una "
-                                    + "solución de costo intermedio frente al reemplazo total. Es una tarea que demanda precisión en el banco"
-                                    + " de trabajo y una verificación rigurosa de la limpieza interna para garantizar que la reparación sea "
-                                    + "duradera y no contamine el resto del ciclo.",
-                            new BigDecimal("1200.00"),
-                            "servicio_reparacion_servicio_compresor_icono.png",
-                            List.of(
-                                    new InsumoServicioAgregarDTO(1, 2L, 5L),
-                                    new InsumoServicioAgregarDTO(1, 2L, 6L),
-                                    new InsumoServicioAgregarDTO(1, 2L, 7L),
-                                    new InsumoServicioAgregarDTO(2, 2L, 3L)
-                            )
-                    
-                    )
-            );
-
-            administradorServicios.crearServicio(
-                    new ServicioAgregarDTO(
-                            "Reconstrucción de Mangueras y Tuberías",
-                            "Este proceso permite la resolución inmediata de fugas en las líneas de conducción de alta y baja presión sin depender "
-                                    + "de la disponibilidad de refacciones de agencia. El servicio consiste en el reemplazo de los tramos de caucho "
-                                    + "degradados o la reparación de secciones de aluminio impactadas, manteniendo las conexiones y puertos originales. "
-                                    + "Para la administración del taller, es una capacidad estratégica que acelera la salida de vehículos con piezas "
-                                    + "descontinuadas o de importación lenta, manteniendo el flujo de trabajo constante en el área de carga.",
-                            new BigDecimal("800.00"),
-                            "servicio_recontruccion_tuberias_mangueras_icono.png",
-                            List.of(
-                                    new InsumoServicioAgregarDTO(1, 3L, 8L),
-                                    new InsumoServicioAgregarDTO(2, 3L, 9L),
-                                    new InsumoServicioAgregarDTO(1, 3L, 10L),
-                                    new InsumoServicioAgregarDTO(2, 3L, 3L)
-                            )
-                    )
-            );
-            administradorServicios.crearServicio(new ServicioAgregarDTO(
-                            "Cambio de evaporador",
-                            "Esta es la intervención de mayor impacto en el cronograma del taller debido al tiempo de desarme"
-                                    + " y armado del tablero de instrumentos. El servicio implica la sustitución de la unidad "
-                                    + "de enfriamiento interna por pérdida de estanqueidad o saturación térmica irreversible."
-                                    + " Operativamente, requiere una gestión de tiempos crítica para no bloquear la bahía de servicio,"
-                                    + " asegurando que el reensamble de la consola mantenga los estándares de ajuste originales para "
-                                    + "evitar reclamaciones por ruidos o fallos en los controles de ventilación.",
-                            new BigDecimal("3500.00"),
-                            "servicio_cambio_evaporador_icono.png",
-                            List.of(
-                                    new InsumoServicioAgregarDTO(1, 1L, 1L),
-                                     new InsumoServicioAgregarDTO(1, 1L, 2L),
-                                      new InsumoServicioAgregarDTO(4, 1L, 3L),
-                                       new InsumoServicioAgregarDTO(1, 1l, 4L)
-                            )
-                    )
-            );
-
-            administradorServicios.crearServicio(
-                    new ServicioAgregarDTO(
-                            "Reparación y Servicio de Compresor",
-                            "Este servicio se centra en la recuperación mecánica de la unidad de potencia cuando el daño no ha comprometido"
-                                    + " la integridad estructural del cilindro o pistones. La labor consiste en la apertura del componente "
-                                    + "para corregir problemas de compresión, ruidos en rodamientos o fallos en el embrague, permitiendo una "
-                                    + "solución de costo intermedio frente al reemplazo total. Es una tarea que demanda precisión en el banco"
-                                    + " de trabajo y una verificación rigurosa de la limpieza interna para garantizar que la reparación sea "
-                                    + "duradera y no contamine el resto del ciclo.",
-                            new BigDecimal("1200.00"),
-                            "servicio_reparacion_servicio_compresor_icono.png",
-                            List.of(
-                                    new InsumoServicioAgregarDTO(1, 2L, 5L),
-                                    new InsumoServicioAgregarDTO(1, 2L, 6L),
-                                    new InsumoServicioAgregarDTO(1, 2L, 7L),
-                                    new InsumoServicioAgregarDTO(2, 2L, 3L)
-                            )
-                    
-                    )
-            );
-
-            administradorServicios.crearServicio(
-                    new ServicioAgregarDTO(
-                            "Reconstrucción de Mangueras y Tuberías",
-                            "Este proceso permite la resolución inmediata de fugas en las líneas de conducción de alta y baja presión sin depender "
-                                    + "de la disponibilidad de refacciones de agencia. El servicio consiste en el reemplazo de los tramos de caucho "
-                                    + "degradados o la reparación de secciones de aluminio impactadas, manteniendo las conexiones y puertos originales. "
-                                    + "Para la administración del taller, es una capacidad estratégica que acelera la salida de vehículos con piezas "
-                                    + "descontinuadas o de importación lenta, manteniendo el flujo de trabajo constante en el área de carga.",
-                            new BigDecimal("800.00"),
-                            "servicio_recontruccion_tuberias_mangueras_icono.png",
-                            List.of(
-                                    new InsumoServicioAgregarDTO(1, 3L, 8L),
-                                    new InsumoServicioAgregarDTO(2, 3L, 9L),
-                                    new InsumoServicioAgregarDTO(1, 3L, 10L),
-                                    new InsumoServicioAgregarDTO(2, 3L, 3L)
-                            )
-                    )
-            );
+            ));
             
         } catch(NegocioException e){
             System.out.println(e.getMessage());
@@ -711,9 +610,9 @@ public class Pruebas_TRAG {
                                     + "condensador. La carrocería presenta los soportes de las líneas de aire íntegros, aunque falta una tolva protectora inferior, lo"
                                     + " que deja las tuberías expuestas a impactos de piedras o desechos del camino, factor que probablemente contribuyó al daño actual.",
                             List.of(
-                                    new InsumoCotizacionActualizarDTO(9L, 1, new BigDecimal("400.00"), 3L, 8L),
-                                    new InsumoCotizacionActualizarDTO(11L, 3, new BigDecimal("210.00"), 3L, 10L),
-                                    new InsumoCotizacionActualizarDTO(12L, 2, new BigDecimal("20.00"), 3L, 3L)
+                                    new InsumoCotizacionActualizarDTO(1, new BigDecimal("400.00"), 3L, 8L),
+                                    new InsumoCotizacionActualizarDTO(3, new BigDecimal("210.00"), 3L, 10L),
+                                    new InsumoCotizacionActualizarDTO(2, new BigDecimal("20.00"), 3L, 3L)
                             )
                     )
             );

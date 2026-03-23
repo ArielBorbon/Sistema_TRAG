@@ -8,7 +8,13 @@ import presentacion.interfaces.vistas.IVistaDiagnosticoEstado;
 
 /**
  *
- * @author romom
+ * Archivo: VistaDiagnosticoEstado.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoEstado{
 
@@ -19,6 +25,7 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
     public VistaDiagnosticoEstado(IControlAgregarCotizacion control) {
         initComponents();
         this.control = control;
+        btnContinuar.setEnabled(false);
         setLocationRelativeTo(null);
     }
 
@@ -46,7 +53,7 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
         jButton1 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnContinuar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1100, 700));
@@ -92,7 +99,18 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
         jPanel3.add(jLabel3, gridBagConstraints);
 
         areaTxtDiagnostico.setColumns(20);
+        areaTxtDiagnostico.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         areaTxtDiagnostico.setRows(5);
+        areaTxtDiagnostico.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                areaTxtDiagnosticoComponentAdded(evt);
+            }
+        });
+        areaTxtDiagnostico.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                areaTxtDiagnosticoKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(areaTxtDiagnostico);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -106,7 +124,13 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
         jPanel3.add(jScrollPane1, gridBagConstraints);
 
         areaTxtEstado.setColumns(20);
+        areaTxtEstado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         areaTxtEstado.setRows(5);
+        areaTxtEstado.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                areaTxtEstadoKeyReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(areaTxtEstado);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -119,6 +143,8 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 40);
         jPanel3.add(jScrollPane2, gridBagConstraints);
 
+        jButton1.setBackground(new java.awt.Color(211, 233, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton1.setText("Consultar Diagnósticos Anteriores");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,9 +168,11 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
         gridBagConstraints.weighty = 1.0;
         jPanel1.add(jPanel3, gridBagConstraints);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 60, 20, 60));
+        jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 40, 20, 40));
         jPanel4.setLayout(new java.awt.BorderLayout());
 
+        jButton2.setBackground(new java.awt.Color(255, 255, 204));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setText("Volver");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,13 +181,15 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
         });
         jPanel4.add(jButton2, java.awt.BorderLayout.LINE_START);
 
-        jButton3.setText("Continuar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnContinuar.setBackground(new java.awt.Color(204, 255, 204));
+        btnContinuar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnContinuar.setText("Continuar");
+        btnContinuar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnContinuarActionPerformed(evt);
             }
         });
-        jPanel4.add(jButton3, java.awt.BorderLayout.LINE_END);
+        jPanel4.add(btnContinuar, java.awt.BorderLayout.LINE_END);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -177,19 +207,55 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
         guardarDiagnosticoEstado();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnContinuarActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         volver();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void areaTxtDiagnosticoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_areaTxtDiagnosticoKeyReleased
+        verificarContinuar();
+    }//GEN-LAST:event_areaTxtDiagnosticoKeyReleased
+
+    private void areaTxtDiagnosticoComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_areaTxtDiagnosticoComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_areaTxtDiagnosticoComponentAdded
+
+    private void areaTxtEstadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_areaTxtEstadoKeyReleased
+        verificarContinuar();
+    }//GEN-LAST:event_areaTxtEstadoKeyReleased
+
     private void guardarDiagnosticoEstado(){
         String diagnostico = areaTxtDiagnostico.getText();
         String estado = areaTxtEstado.getText();
         
-        control.guardarDiagnosticoEstado(diagnostico, estado);
+        if(diagnostico.trim().isEmpty() || estado.trim().isEmpty()){
+            
+            JOptionPane.showMessageDialog(
+                    this, 
+                    "Debe ingresar el Diagnóstico inicial y el Estado actual del vehículo", 
+                    "Datos faltantes", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } else{
+            control.guardarDiagnosticoEstado(diagnostico, estado);
+        }
+
+    }
+    
+    private void verificarContinuar(){
+        
+        String diagnostico = areaTxtDiagnostico.getText();
+        String estado = areaTxtEstado.getText();
+        
+        if(!diagnostico.trim().isEmpty() && !estado.trim().isEmpty()){       
+            btnContinuar.setEnabled(true);
+        } else{
+            btnContinuar.setEnabled(false);
+        }
+        
     }
     
     private void volver(){   
@@ -199,9 +265,9 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaTxtDiagnostico;
     private javax.swing.JTextArea areaTxtEstado;
+    private javax.swing.JButton btnContinuar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -215,6 +281,12 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
     // End of variables declaration//GEN-END:variables
 
     @Override
+    public void cargarDiagnosticoEstado(String diagnostico, String estado) {
+        areaTxtDiagnostico.setText(diagnostico);
+        areaTxtEstado.setText(estado);
+    }
+    
+    @Override
     public void mostrar() {
         setVisible(true);
     }
@@ -225,7 +297,7 @@ public class VistaDiagnosticoEstado extends JFrame implements IVistaDiagnosticoE
     }
 
     @Override
-    public void mostrarError(String mensajeError) {
+    public void mostrarMensaje(String mensajeError) {
         JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
 }

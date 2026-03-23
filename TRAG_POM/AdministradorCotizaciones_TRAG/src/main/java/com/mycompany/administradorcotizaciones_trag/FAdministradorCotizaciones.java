@@ -44,6 +44,11 @@ public class FAdministradorCotizaciones implements IAdministradorCotizaciones{
     }
     
     @Override
+    public CotizacionResumenDTO obtenerResumenCotizacion(Long idCotizacion) throws NegocioException {
+        return administradorCotizaciones.obtenerResumenCotizacion(idCotizacion);
+    }
+    
+    @Override
     public List<CotizacionResumenDTO> obtenerTodasCotizaciones() throws NegocioException {
         return administradorCotizaciones.obtenerTodasCotizaciones();
     }
@@ -66,6 +71,11 @@ public class FAdministradorCotizaciones implements IAdministradorCotizaciones{
     @Override
     public CotizacionDetalleDTO eliminarCotizacion(Long idCotizacion) throws NegocioException {
         return administradorCotizaciones.eliminarCotizacion(idCotizacion);
+    }
+
+    @Override
+    public CotizacionDetalleDTO habilitarCotizacion(Long idCotizacion) throws NegocioException {
+        return administradorCotizaciones.habilitarCotizacion(idCotizacion);
     }
 
 

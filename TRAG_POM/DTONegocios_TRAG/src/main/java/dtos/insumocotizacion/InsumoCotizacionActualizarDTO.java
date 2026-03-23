@@ -14,28 +14,17 @@ import java.math.BigDecimal;
  * 
  */
 public class InsumoCotizacionActualizarDTO {
-    private Long id;
     private Integer cantidadRequerida;
     private BigDecimal precio;
     private Long idCotizacion;
     private Long idInsumo;
 
 
-    public InsumoCotizacionActualizarDTO(Long id, Integer cantidadRequerida, BigDecimal precio, Long idCotizacion, Long idInsumo) {
-        this.id = id;
+    public InsumoCotizacionActualizarDTO(Integer cantidadRequerida, BigDecimal precio, Long idCotizacion, Long idInsumo) {
         this.cantidadRequerida = cantidadRequerida;
         this.precio = precio;
         this.idCotizacion = idCotizacion;
         this.idInsumo = idInsumo;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Integer getCantidadRequerida() {

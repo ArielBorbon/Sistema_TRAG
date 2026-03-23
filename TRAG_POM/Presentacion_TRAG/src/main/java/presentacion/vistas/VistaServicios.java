@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -27,7 +28,13 @@ import presentacion.interfaces.vistas.IVistaServicios;
 
 /**
  *
- * @author 
+ * Archivo: VistaServicios.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class VistaServicios extends JFrame implements IVistaServicios{
 
@@ -64,11 +71,13 @@ public class VistaServicios extends JFrame implements IVistaServicios{
         java.awt.GridBagConstraints gridBagConstraints;
 
         jButton1 = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
         panelEncabezado1 = new presentacion.vistas.PanelEncabezado();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        cmpTxtNombreServicioBuscar = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         panelServicios = new javax.swing.JPanel();
         scrollServicios = new javax.swing.JScrollPane();
         jPanel4 = new javax.swing.JPanel();
@@ -77,9 +86,10 @@ public class VistaServicios extends JFrame implements IVistaServicios{
 
         jButton1.setText("jButton1");
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1100, 700));
-        setPreferredSize(new java.awt.Dimension(1100, 700));
         getContentPane().add(panelEncabezado1, java.awt.BorderLayout.PAGE_START);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 204));
@@ -98,17 +108,32 @@ public class VistaServicios extends JFrame implements IVistaServicios{
         gridBagConstraints.insets = new java.awt.Insets(0, 35, 0, 0);
         jPanel2.add(jLabel1, gridBagConstraints);
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        cmpTxtNombreServicioBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cmpTxtNombreServicioBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                cmpTxtNombreServicioBuscarActionPerformed(evt);
+            }
+        });
+        cmpTxtNombreServicioBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cmpTxtNombreServicioBuscarKeyReleased(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 30);
-        jPanel2.add(jTextField1, gridBagConstraints);
+        jPanel2.add(cmpTxtNombreServicioBuscar, gridBagConstraints);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Buscar: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        jPanel2.add(jLabel2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -136,11 +161,19 @@ public class VistaServicios extends JFrame implements IVistaServicios{
         jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 60, 20, 60));
         jPanel4.setLayout(new java.awt.BorderLayout());
 
+        jButton2.setBackground(new java.awt.Color(255, 255, 204));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setText("Volver");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jPanel4.add(jButton2, java.awt.BorderLayout.LINE_START);
 
+        btnContinuar.setBackground(new java.awt.Color(204, 255, 204));
+        btnContinuar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnContinuar.setText("Continuar");
-        btnContinuar.setEnabled(false);
         btnContinuar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnContinuarActionPerformed(evt);
@@ -166,20 +199,35 @@ public class VistaServicios extends JFrame implements IVistaServicios{
         
     }//GEN-LAST:event_btnContinuarActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private void cmpTxtNombreServicioBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmpTxtNombreServicioBuscarActionPerformed
 
+        buscarServicio();
+        
+    }//GEN-LAST:event_cmpTxtNombreServicioBuscarActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        atras();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void cmpTxtNombreServicioBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmpTxtNombreServicioBuscarKeyReleased
+        buscarServicio();
+    }//GEN-LAST:event_cmpTxtNombreServicioBuscarKeyReleased
+
+    private void atras(){
+        control.atrasSeleccionarServicio();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnContinuar;
+    private javax.swing.JTextField cmpTxtNombreServicioBuscar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JTextField jTextField1;
     private presentacion.vistas.PanelEncabezado panelEncabezado1;
     private javax.swing.JPanel panelServicios;
     private javax.swing.JScrollPane scrollServicios;
@@ -193,68 +241,83 @@ public class VistaServicios extends JFrame implements IVistaServicios{
         panelContenedor.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
 
-        // Configuración de márgenes
-        int margenServicio = 15;
-        gbc.insets = new Insets(margenServicio, margenServicio, margenServicio, margenServicio);
-        gbc.anchor = GridBagConstraints.NORTHWEST;
 
-        int anchoDisponible = scrollServicios.getWidth() > 0 ? scrollServicios.getWidth() : 800;
-    
-        // Configuración de cuadrícula
-        int columnasMaximas = 5;
-        int columnaActual = 0;
-        int filaActual = 0;
+        if (servicios == null || servicios.isEmpty()) {
 
-        int anchoServicio = (anchoDisponible - ((columnasMaximas + 1) * margenServicio)) / columnasMaximas - 20;
+            JLabel lblSinResultados = new JLabel("No se encontraron servicios.");
+            lblSinResultados.setFont(new Font("Segoe UI", java.awt.Font.BOLD, 18));
+            lblSinResultados.setForeground(Color.GRAY);
+            
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.weightx = 1.0;
+            gbc.weighty = 1.0;
+            gbc.anchor = GridBagConstraints.CENTER;
+            
+            panelContenedor.add(lblSinResultados, gbc);
+            
+        } else {
+
+            int margenServicio = 15;
+            gbc.insets = new Insets(margenServicio, margenServicio, margenServicio, margenServicio);
+            gbc.anchor = GridBagConstraints.NORTHWEST;
+
+            int anchoDisponible = scrollServicios.getWidth() > 0 ? scrollServicios.getWidth() : 800;
         
-        // Se recorren los servicios
-        for(ServicioResumenDTO servicio : servicios) {
+            int columnasMaximas = 5;
+            int columnaActual = 0;
+            int filaActual = 0;
 
-            // Panel del servicio
-            JPanel panelServicio = new JPanel(new BorderLayout(0, 10));
-            panelServicio.setBackground(Color.WHITE);
-            panelServicio.setBorder(BorderFactory.createCompoundBorder(BORDE_PANEL_SERVICIO, MARGEN_INTERNO_PANEL_SERVICIO));
+            int anchoServicio = (anchoDisponible - ((columnasMaximas + 1) * margenServicio)) / columnasMaximas - 20;
             
-            panelServicio.setPreferredSize(new Dimension(anchoServicio, anchoServicio));
-            panelServicio.setMinimumSize(new Dimension(anchoServicio, anchoServicio));
-           
-            panelServicio.setCursor(new Cursor(java.awt.Cursor.HAND_CURSOR));
-            
-            configurarListenerPanelServicio(panelServicio, servicio);
+            for(ServicioResumenDTO servicio : servicios) {
 
-            // Nombre
-            String nombreServicio = "<html><div style='text-align: center; width: " + (anchoServicio - 50) + "px; font-size: 9px;'>" 
-                           + servicio.getNombre() 
-                           + "</div></html>";
-            JLabel labelNombre = new JLabel(nombreServicio, SwingConstants.CENTER);
-            panelServicio.add(labelNombre, BorderLayout.SOUTH);
+                JPanel panelServicio = new JPanel(new BorderLayout(0, 10));
+                panelServicio.setBackground(Color.WHITE);
+                panelServicio.setBorder(BorderFactory.createCompoundBorder(BORDE_PANEL_SERVICIO, MARGEN_INTERNO_PANEL_SERVICIO));
+                
+                panelServicio.setPreferredSize(new Dimension(anchoServicio, anchoServicio));
+                panelServicio.setMinimumSize(new Dimension(anchoServicio, anchoServicio));
+               
+                panelServicio.setCursor(new Cursor(java.awt.Cursor.HAND_CURSOR));
+                
+                configurarListenerPanelServicio(panelServicio, servicio);
 
-            int tamañoIcono = (int)(anchoServicio * 0.6);
-            ImageIcon iconoRedimensionado = redimensionarIcono(servicio.getDireccionIcono(), tamañoIcono, tamañoIcono);
+                String nombreServicio = "<html><div style='text-align: center; width: " + (anchoServicio - 50) + "px; font-size: 9px;'>" 
+                               + servicio.getNombre() 
+                               + "</div></html>";
+                JLabel labelNombre = new JLabel(nombreServicio, SwingConstants.CENTER);
+                panelServicio.add(labelNombre, BorderLayout.SOUTH);
 
-            if (iconoRedimensionado != null) {
-                JLabel labelIcono = new JLabel(iconoRedimensionado);
-                labelIcono.setHorizontalAlignment(SwingConstants.CENTER);
-                panelServicio.add(labelIcono, BorderLayout.CENTER);
-            }
+                int tamañoIcono = (int)(anchoServicio * 0.6);
+                ImageIcon iconoRedimensionado = redimensionarIcono(servicio.getDireccionIcono(), tamañoIcono, tamañoIcono);
 
-            // Coordenada del servicio
-            gbc.gridx = columnaActual;
-            gbc.gridy = filaActual;
+                if (iconoRedimensionado != null) {
+                    JLabel labelIcono = new JLabel(iconoRedimensionado);
+                    labelIcono.setHorizontalAlignment(SwingConstants.CENTER);
+                    panelServicio.add(labelIcono, BorderLayout.CENTER);
+                }
 
- 
-            panelContenedor.add(panelServicio, gbc);
+                gbc.gridx = columnaActual;
+                gbc.gridy = filaActual;
 
-            columnaActual++;
-            if (columnaActual >= columnasMaximas) {
-                columnaActual = 0;
-                filaActual++;
+                panelContenedor.add(panelServicio, gbc);
+
+                columnaActual++;
+                if (columnaActual >= columnasMaximas) {
+                    columnaActual = 0;
+                    filaActual++;
+                }
             }
         }
 
         scrollServicios.setOpaque(false);
         scrollServicios.setViewportView(panelContenedor);
         
+        // 3. Limpiar variables de selección por seguridad al recargar
+        btnContinuar.setEnabled(false);
+        panelActivo = null;
+        servicioSeleccionado = null;
     }
     
     private void configurarListenerPanelServicio(JPanel panelServicio, ServicioResumenDTO servicio){
@@ -316,6 +379,13 @@ public class VistaServicios extends JFrame implements IVistaServicios{
         }
     }
     
+    private void buscarServicio(){
+        
+        String nombreServicio = cmpTxtNombreServicioBuscar.getText();
+        control.buscarServicio(nombreServicio);
+        
+    }
+    
     
 
     @Override
@@ -329,7 +399,7 @@ public class VistaServicios extends JFrame implements IVistaServicios{
     }
 
     @Override
-    public void mostrarError(String mensajeError) {
+    public void mostrarMensaje(String mensajeError) {
         JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
 

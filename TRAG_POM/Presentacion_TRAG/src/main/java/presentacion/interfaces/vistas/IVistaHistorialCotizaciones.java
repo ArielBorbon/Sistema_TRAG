@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
+
 package presentacion.interfaces.vistas;
 
 import dtos.cotizacion.CotizacionResumenDTO;
@@ -10,9 +7,15 @@ import presentacion.interfaces.IVista;
 
 /**
  *
- * @author sonic
+ * Archivo: IVistaHistorialCotizaciones.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
-public interface IHistorialCotizaciones extends IVista{
+public interface IVistaHistorialCotizaciones extends IVista{
     
     // Actualiza el listado de cotrizaciones
     public abstract void mostrarCotizaciones(List<CotizacionResumenDTO> cotizaciones);

@@ -23,14 +23,16 @@ public class InsumoCotizacionDetalleDTO {
     private Long idCotizacion;
     private InsumoResumenDTO insumo;
     private BigDecimal subtotal;
+    private boolean activo;
 
 
-    public InsumoCotizacionDetalleDTO(Long id, Integer cantidadRequerida, BigDecimal precio, Long idCotizacion, InsumoResumenDTO insumo) {
+    public InsumoCotizacionDetalleDTO(Long id, Integer cantidadRequerida, BigDecimal precio, Long idCotizacion, InsumoResumenDTO insumo, boolean activo) {
         this.id = id;
         this.cantidadRequerida = cantidadRequerida;
         this.precio = precio;
         this.idCotizacion = idCotizacion;
         this.insumo = insumo;
+        this.activo = activo;
     }
 
     public InsumoCotizacionDetalleDTO(Long id, Integer cantidadRequerida, BigDecimal precio) {
@@ -63,6 +65,10 @@ public class InsumoCotizacionDetalleDTO {
         return subtotal;
     }
 
+    public boolean isActivo() {
+        return activo;
+    }
+    
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
     }

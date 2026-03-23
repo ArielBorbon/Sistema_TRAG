@@ -55,6 +55,9 @@ public class ServicioDetalleDTO {
     public List<InsumoServicioDetalleDTO> getInsumosServicio() {
         return insumosServicio;
     }
-    
+
+    public void setInsumosServicio(List<InsumoServicioDetalleDTO> insumosServicio) {
+        this.insumosServicio = insumosServicio;
+    }
     
 }

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
+
 package presentacion.vistas;
 
 import java.awt.Dimension;
@@ -9,7 +6,13 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author romom
+ * Archivo: PanelEncabezado.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class PanelEncabezado extends javax.swing.JPanel {
 

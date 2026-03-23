@@ -41,6 +41,8 @@ import entidades.Trabajo;
 import entidades.Usuario;
 import enums.EstadoClienteNegocios;
 import enums.EstadoCotizacionNegocios;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -191,8 +193,9 @@ public class Mapeadores {
                 entidad.getEstadoAutomovil(), 
                 entidad.getDiagnosticoGeneral(),
                 entidad.getFechaCreacion(),
-                Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion())
-        );
+                Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion()),
+                entidad.getServicio().getNombre(),
+                EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name()));
         
         return dto;
     }
@@ -201,17 +204,40 @@ public class Mapeadores {
         if (entidad == null) {
             return null;
         }
-        CotizacionResumenDTO dto = new CotizacionResumenDTO(
+        
+        CotizacionResumenDTO dto;
+        
+        if(entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoMaterno() != null){
+
+            dto = new CotizacionResumenDTO(
+                entidad.getId(),
                 entidad.getOrdenTrabajo().getAutomovil().getCliente().getNombre(),
                 entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoPaterno(),
+                entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoMaterno(),
                 entidad.getOrdenTrabajo().getAutomovil().getMarca(),
                 entidad.getOrdenTrabajo().getAutomovil().getModelo(),
+                entidad.getOrdenTrabajo().getAutomovil().getMatricula(),
                 entidad.getOrdenTrabajo().getAutomovil().getAnio(),
                 entidad.getFechaCreacion(),
                 entidad.getPrecioManoObra(),
                 Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion()),
                 EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name())
-        );
+            );
+        } else{
+            dto = new CotizacionResumenDTO(
+                entidad.getId(),
+                entidad.getOrdenTrabajo().getAutomovil().getCliente().getNombre(),
+                entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoPaterno(),
+                entidad.getOrdenTrabajo().getAutomovil().getMarca(),
+                entidad.getOrdenTrabajo().getAutomovil().getModelo(),
+                entidad.getOrdenTrabajo().getAutomovil().getMatricula(),
+                entidad.getOrdenTrabajo().getAutomovil().getAnio(),
+                entidad.getFechaCreacion(),
+                entidad.getPrecioManoObra(),
+                Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion()),
+                EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name())
+            );
+        }
         
         return dto;
     }
@@ -354,8 +380,8 @@ public class Mapeadores {
                 entidad.getCantidadRequerida(),
                 entidad.getPrecio(),
                 entidad.getCotizacion().getId(), 
-                Mapeadores.toDTOResumen(entidad.getInsumo())
-        );
+                Mapeadores.toDTOResumen(entidad.getInsumo()),
+                entidad.getActivo());
         return dto;
     }
 

@@ -5,25 +5,23 @@ package presentacion.controles;
 import com.mycompany.administradorautomoviles_trag.IAdministradorAutomoviles;
 import com.mycompany.administradorclientes_trag.IAdministradorClientes;
 import com.mycompany.administradorcotizaciones_trag.IAdministradorCotizaciones;
+import com.mycompany.administradorinsumos_trag.IAdministradorInsumos;
 import com.mycompany.administradorordenestrabajo.IAdministradorOrdenesTrabajo;
 import com.mycompany.administradorservicios_trag.IAdministradorServicios;
 import com.mycompany.negocios_trag.FabricaNegocios;
 import dtos.automovil.AutomovilResumenDTO;
 import dtos.cliente.ClienteDetalleDTO;
 import dtos.cliente.ClienteResumenDTO;
+import dtos.cotizacion.CotizacionResumenDTO;
 import dtos.insumocotizacion.InsumoCotizacionAgregarDTO;
-import dtos.ordentrabajo.OrdenTrabajoAgregarDTO;
+import dtos.insumos.InsumoResumenDTO;
 import dtos.ordentrabajo.OrdenTrabajoCotizacionAgregarDTO;
 import dtos.ordentrabajo.OrdenTrabajoDetalleDTO;
 import dtos.servicio.ServicioDetalleDTO;
 import dtos.servicio.ServicioResumenDTO;
 import excepciones.NegocioException;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import presentacion.borradores.BorradorAutomovil;
 import presentacion.borradores.BorradorCliente;
 import presentacion.borradores.BorradorCotizacion;
@@ -31,15 +29,21 @@ import presentacion.borradores.BorradorInsumoCotizacion;
 import presentacion.borradores.BorradorServicio;
 import presentacion.fabrica.FabricaVistas;
 import presentacion.interfaces.IControlAgregarCotizacion;
+import presentacion.interfaces.IControlCotizaciones;
 import presentacion.interfaces.vistas.IVistaServicios;
-import presentacion.interfaces.vistas.IPruebaAgregarCotizacion;
 import presentacion.interfaces.vistas.IVistaCrearCotizacion;
 import presentacion.interfaces.vistas.IVistaDiagnosticoEstado;
 import presentacion.interfaces.vistas.IVistaSeleccionClienteAuto;
 
 /**
  *
- * @author 
+ * Archivo: ControlAgregarCotizacion.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
 
@@ -48,8 +52,8 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
     private IAdministradorServicios administradorSerivicios;
     private IAdministradorCotizaciones administradorCotizaciones;
     private IAdministradorOrdenesTrabajo administradorOrdenesTrabajo;
+    private IAdministradorInsumos administradorInsumos;
     
-    private IPruebaAgregarCotizacion vistaPruebaAgregarCotizacion;
     private IVistaSeleccionClienteAuto vistaSeleccionClienteAuto;
     private IVistaDiagnosticoEstado vistaDiagnosticoEstado;
     private IVistaServicios vistaServicios;
@@ -62,12 +66,19 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
     private BorradorServicio borradorServicio;
     private BorradorCotizacion borradorCotizacion;
     
+    private IControlCotizaciones controlCotizaciones;
+    
     public ControlAgregarCotizacion(){
         administradorClientes = FabricaNegocios.obtenerAdministradorClientes();
         administradorAutomoviles = FabricaNegocios.obtenerAdministradorAutomoviles();
         administradorSerivicios = FabricaNegocios.obtenerAdministradorServicios();
         administradorCotizaciones = FabricaNegocios.obtenerAdministradorCotizaciones();
         administradorOrdenesTrabajo = FabricaNegocios.obtenerAdministradorOrdenesTrabajo();
+        administradorInsumos = FabricaNegocios.obtenerAdministadorInsumos();
+    }
+
+    public void setControlCotizaciones(IControlCotizaciones controlCotizaciones) {
+        this.controlCotizaciones = controlCotizaciones;
     }
     
     @Override
@@ -78,8 +89,16 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
             vistaSeleccionClienteAuto.cargarClientes(clientes);
             vistaSeleccionClienteAuto.mostrar();
         } catch (NegocioException e) {
-            vistaSeleccionClienteAuto.mostrarError(e.getMessage());
+            vistaSeleccionClienteAuto.mostrarMensaje(e.getMessage());
         }
+    }
+    
+    @Override
+    public void atrasPrincipal() {
+        borradorDiagnostico = null;
+        borradorEstado = null;
+        vistaSeleccionClienteAuto.ocultar();
+        controlCotizaciones.administrarCotizaciones();
     }
 
     @Override
@@ -97,7 +116,7 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
             
             vistaSeleccionClienteAuto.cargarAutosCliente(automovilesCliente);
         } catch (NegocioException e) {
-            vistaSeleccionClienteAuto.mostrarError(e.getMessage());
+            vistaSeleccionClienteAuto.mostrarMensaje(e.getMessage());
         }
         
     }
@@ -122,6 +141,11 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
         
         vistaSeleccionClienteAuto.ocultar();
         vistaDiagnosticoEstado = FabricaVistas.obtenerVistaDiagnosticoEstado(this);
+        
+        if(borradorDiagnostico != null || borradorEstado != null){
+            vistaDiagnosticoEstado.cargarDiagnosticoEstado(borradorDiagnostico, borradorEstado);
+        }
+        
         vistaDiagnosticoEstado.mostrar();
         
     }
@@ -143,7 +167,7 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
             vistaServicios.mostrar();
             
         } catch (NegocioException e) {
-            vistaDiagnosticoEstado.mostrarError(e.getMessage());
+            vistaDiagnosticoEstado.mostrarMensaje(e.getMessage());
         }
         
         
@@ -163,6 +187,8 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
                 ClienteDetalleDTO clienteSeleccionado = administradorClientes.obtenerCliente(borradorCliente.getId());
                 List<AutomovilResumenDTO> automovilesCliente = clienteSeleccionado.getAutomoviles();
                 
+                vistaDiagnosticoEstado.ocultar();
+                
                 if(borradorAutomovil != null){
                     vistaSeleccionClienteAuto.cargarAutosCliente(automovilesCliente, borradorAutomovil.getId());
                 } else{
@@ -176,7 +202,7 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
             vistaSeleccionClienteAuto.mostrar();
             
         } catch (NegocioException e) {
-            vistaSeleccionClienteAuto.mostrarError(e.getMessage());
+            vistaSeleccionClienteAuto.mostrarMensaje(e.getMessage());
         }
         
     }
@@ -193,18 +219,77 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
         try {
             servicioSeleccionado = administradorSerivicios.obtenerServicio(servicio.getId());
             vistaCrearCotizacion.cargarServicioSeleccionado(servicioSeleccionado);
+            vistaServicios.ocultar();
             vistaCrearCotizacion.mostrar();
             
         } catch (NegocioException e) {
-            vistaCrearCotizacion.mostrarError(e.getMessage());
+            vistaServicios.mostrarMensaje(e.getMessage());
         }
         
         
     }
     
     @Override
+    public void buscarServicio(String nombreServicio) {
+        
+        try {
+            List<ServicioResumenDTO> servicios = administradorSerivicios.obtenerServiciosNombre(nombreServicio);
+            vistaServicios.cargarServicios(servicios);
+            
+        } catch (NegocioException e) {
+            vistaServicios.mostrarMensaje(e.getMessage());
+        }
+        
+    }
+    
+    @Override
+    public void atrasSeleccionarServicio() {
+        
+        if(borradorDiagnostico != null &&  borradorEstado != null){
+            
+            vistaDiagnosticoEstado.cargarDiagnosticoEstado(borradorDiagnostico, borradorEstado);
+            vistaServicios.ocultar();
+            vistaDiagnosticoEstado.mostrar();
+            
+        }
+        
+    }
+    
+    @Override
     public void guardarCambioCotizacion(BorradorCotizacion cotizacion) {
         borradorCotizacion = cotizacion;   
+    }
+    
+    @Override
+    public void buscarInsumosNombre(String nombreInsumo) {
+        
+        try {
+            List<InsumoResumenDTO> insumos = administradorInsumos.obtenerInsumosNombre(nombreInsumo);
+            
+            vistaCrearCotizacion.actualizarSugerencias(insumos);
+            
+        } catch (NegocioException e) {
+            vistaCrearCotizacion.mostrarMensaje(e.getMessage());
+        }
+        
+    }
+    
+    @Override
+    public void agregarInsumo(String nombre) {
+        
+        try {
+            List<InsumoResumenDTO> insumos = administradorInsumos.obtenerInsumosNombre(nombre);
+            
+            for(InsumoResumenDTO insumo: insumos){
+                if(insumo.getNombre().equals(nombre)){
+                    vistaCrearCotizacion.agregarInsumoTabla(insumo);
+                }
+            }
+            
+        } catch (NegocioException e) {
+            vistaCrearCotizacion.mostrarMensaje(e.getMessage());
+        }
+        
     }
     
     @Override
@@ -238,25 +323,35 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion{
             
             if(ordenTrabajo != null){
                 
-                vistaCrearCotizacion.mostrarGuardadoPdf();
+                CotizacionResumenDTO cotizacionGuardada = administradorCotizaciones.obtenerResumenCotizacion(ordenTrabajo.getIdCotizacion());
+                
+                vistaCrearCotizacion.mostrarGuardadoPdf(cotizacionGuardada);
                 
             }
             
         } catch (NegocioException e) {
-            vistaCrearCotizacion.mostrarError(e.getMessage());
+            vistaCrearCotizacion.mostrarMensaje(e.getMessage());
         }
         
     }
     
+    
     @Override
-    public void atrasSeleccionarServicio() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void atrasCrearCotizacion() {
+        
+        vistaCrearCotizacion.ocultar();
+        vistaServicios.mostrar();
+        
     }
     
     @Override
     public void cancelarAgregar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        borradorDiagnostico = null;
+        borradorEstado = null;
+        vistaCrearCotizacion.ocultar();
+        controlCotizaciones.administrarCotizaciones();
     }
-    
-    
+
+ 
 }

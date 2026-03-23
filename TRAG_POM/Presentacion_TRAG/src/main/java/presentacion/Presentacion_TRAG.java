@@ -5,10 +5,17 @@ import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
 import presentacion.controles.ControlAgregarCotizacion;
 import presentacion.controles.ControlCotizaciones;
+import presentacion.controles.ControlConsultarCotizaciones;
 
 /**
  *
- * @author 
+ * Archivo: Presentacion_TRAG.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class Presentacion_TRAG {
 
@@ -21,9 +28,12 @@ public class Presentacion_TRAG {
         }
         
         ControlAgregarCotizacion controlAgregarCotizacion = new ControlAgregarCotizacion();
+        ControlConsultarCotizaciones controlHistorialCotizaciones = new ControlConsultarCotizaciones();
         
+        ControlCotizaciones controlCotizaciones = new ControlCotizaciones(controlAgregarCotizacion, controlHistorialCotizaciones);
         
-        ControlCotizaciones controlCotizaciones = new ControlCotizaciones(controlAgregarCotizacion);
+        controlAgregarCotizacion.setControlCotizaciones(controlCotizaciones);
+        controlHistorialCotizaciones.setControlCotizaciones(controlCotizaciones);
         
         controlCotizaciones.administrarCotizaciones();
     }

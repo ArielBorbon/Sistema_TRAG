@@ -46,7 +46,9 @@ public class AdministradorOrdenesTrabajo {
             throw new NegocioException(MENSAJE_ERROR_CREAR_ORDEN_TRABAJO);
         }
         
-        dto.setFechaCreacion(LocalDateTime.now());
+        if(dto.getFechaCreacion() == null){
+            dto.setFechaCreacion(LocalDateTime.now());
+        }
         
         CotizacionDetalleDTO cotizacionCreadaDTO = null;
         try {

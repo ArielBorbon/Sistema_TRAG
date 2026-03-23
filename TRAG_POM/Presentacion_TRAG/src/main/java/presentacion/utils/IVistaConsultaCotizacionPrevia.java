@@ -1,4 +1,4 @@
-package presentacion.interfaces.vistas;
+package presentacion.utils;
 
 import dtos.cotizacion.CotizacionResumenDTO;
 import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
@@ -9,7 +9,7 @@ import presentacion.interfaces.IVista;
 /**
  * @author Yuri Germán García López - 252583
  */
-public interface IConsultaCotizacion extends IVista{
+public interface IVistaConsultaCotizacionPrevia extends IVista{
     
     public abstract void cargarDatosCotizacion(CotizacionResumenDTO cotizacion);
     

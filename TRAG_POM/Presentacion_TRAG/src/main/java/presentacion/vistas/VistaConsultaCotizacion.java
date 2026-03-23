@@ -1,293 +1,273 @@
+
 package presentacion.vistas;
 
-import dtos.cotizacion.CotizacionResumenDTO;
+import dtos.cotizacion.CotizacionDetalleDTO;
 import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
-import dtos.insumos.InsumoDetalleDTO;
 import dtos.insumos.InsumoResumenDTO;
-import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import presentacion.interfaces.IControlConsultaCotizacion;
-import presentacion.interfaces.vistas.IConsultaCotizacion;
+import javax.swing.table.TableColumnModel;
+import presentacion.borradores.BorradorCotizacion;
+import presentacion.borradores.BorradorInsumoCotizacion;
+import presentacion.interfaces.vistas.IVistaConsultaCotizacion;
+import presentacion.interfaces.IControlConsultarCotizaciones;
+
 /**
- * @author Yuri Germán Garcí López - 252583
+ *
+ * Archivo: VistaConsultaCotizacion.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
-public class VistaConsultaCotizacion extends javax.swing.JFrame implements IConsultaCotizacion {
+public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCotizacion{
 
-    private IControlConsultaCotizacion control;
+    private IControlConsultarCotizaciones control;
     
-    private PanelEncabezado panelEncabezado;
-    private JPanel panelFondo;
+    private Long idCotizacion;
     
-    private JTable tablaInsumos;
-    private DefaultTableModel modeloTabla;
-    
-    private JTextField txtBuscarInsumo;
-    
-    private JPanel contenedorInsumosBuscados;
-    private JScrollPane scrollInsumosBuscados;
-
-    public VistaConsultaCotizacion(IControlConsultaCotizacion control) {
-        this.control = control;
+    private boolean esCancelada = false;
+    /**
+     * Creates new form VistaCrearCotizacion
+     */
+    public VistaConsultaCotizacion(IControlConsultarCotizaciones control) {
         initComponents();
-        configurarLayout();
+        configurarTablaInsumos();
+        configurarBuscardorInsumos();
+        
+        this.control = control;
+        
         setLocationRelativeTo(null);
     }
     
-    private void configurarLayout(){
-        this.getContentPane().setLayout(new BorderLayout());
+    private void configurarBuscardorInsumos() {
 
-        // importar el encabezado
-        panelEncabezado = new PanelEncabezado();
-        this.getContentPane().add(panelEncabezado, BorderLayout.NORTH);
-        
-        // panel que solo pinta el fondo de color
-        panelFondo = new JPanel();
-        panelFondo.setBackground(new Color(243, 243, 243));
-        panelFondo.setLayout(null);
-        this.getContentPane().add(panelFondo, BorderLayout.CENTER);
-        
-        // poner el icono del cliente el label
-        etqIconoUsuario.setIcon(cargarIcono("/cliente.png", 55, 55));
-        etqIconoUsuario.setPreferredSize(new Dimension(55, 55));
-        
-        // poner icono del automovil en el label
-        etqIconoAutomovil.setIcon(cargarIcono("/automovil.png", 80, 80));
-        etqIconoAutomovil.setPreferredSize(new Dimension(80, 80));
-        etqIconoAutomovil.setMinimumSize(new Dimension(80, 80));
-        etqIconoAutomovil.setMaximumSize(new Dimension(80, 80));
-        
-        // generar el modelo de la tabla donde estarán todos los insumos de la cotización
-        modeloTabla = new DefaultTableModel(new Object[]{"No.", "Pieza", "Costo", "Cantidad Pendiente"}, 0) {
+        popMenuBuscarInsumos.add(scrollPaneBuscarInsumos);
+
+        cmpTxtBuscarInsumos.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-
-        // crear la tabla
-        tablaInsumos = new JTable(modeloTabla);
-        
-        // darle más formato a la tabla
-        tablaInsumos.setRowHeight(25);
-        tablaInsumos.getTableHeader().setReorderingAllowed(false);
-        // fuente de las filas (celdas)
-        tablaInsumos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        // altura de filas (ajústala según el tamaño de letra)
-        tablaInsumos.setRowHeight(30);
-        // cambiar fuente del encabezado
-        tablaInsumos.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 18));
-        
-        DefaultTableCellRenderer headerRenderer =
-            (DefaultTableCellRenderer) tablaInsumos.getTableHeader().getDefaultRenderer();
-        // centrar texto
-        headerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        // color de fondo
-        headerRenderer.setBackground(new Color(217, 217, 217));
-        // color del texto
-        headerRenderer.setForeground(Color.BLACK);
-        // necesario para que se pinte el fondo correctamente
-        headerRenderer.setOpaque(true);
-        // borde
-        tablaInsumos.setBorder(
-            BorderFactory.createLineBorder(Color.BLACK, 2)
-        );
-        scrollPiezas.setBorder(
-            BorderFactory.createLineBorder(Color.BLACK, 2)
-        );
-        
-        // esto sirve para ajustar el ancho de cada columna
-        tablaInsumos.getColumnModel().getColumn(0).setPreferredWidth(40);  // No.
-        tablaInsumos.getColumnModel().getColumn(1).setPreferredWidth(200); // Pieza
-        tablaInsumos.getColumnModel().getColumn(2).setPreferredWidth(150); // Costo
-        tablaInsumos.getColumnModel().getColumn(3).setPreferredWidth(205); // Cantidad
-        
-        // meter tabla en el scroll
-        scrollPiezas.setViewportView(tablaInsumos);
-        
-        // agregar action listener al botón para que ejecute la lógica de regresar a la pantalla anterior
-        btnVolver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVolverActionPerformed(evt);
-            }
-        });
-        
-        btnAniadirInsumo.addActionListener(evt -> {
-            boolean visible = txtBuscarInsumo.isVisible();
-            if (visible) {
-                txtBuscarInsumo.setText("");
-                contenedorInsumosBuscados.setVisible(false);
-                scrollInsumosBuscados.setVisible(false);
-            }
-            txtBuscarInsumo.setVisible(!visible);
-            if (!visible) {
-                txtBuscarInsumo.requestFocus();
-            }
-        });
-        
-        btnEliminarInsumo.addActionListener(evt -> {
-            eliminarInsumo(null);
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { buscarSugerencias(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { buscarSugerencias(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { buscarSugerencias(); }
         });
 
-        btnGuardar.addActionListener(evt -> {
-            if (control != null) {
-                control.guardar();
+        listBuscarInsumos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 1) { 
+                    String seleccion = listBuscarInsumos.getSelectedValue();
+                    if (seleccion != null) {
+                        cmpTxtBuscarInsumos.setText(seleccion);
+                        popMenuBuscarInsumos.setVisible(false);
+                        cmpTxtBuscarInsumos.requestFocus();
+                    }
+                }
             }
         });
-        
-        // buscador de insumos
-        txtBuscarInsumo = new JTextField();
-        txtBuscarInsumo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        txtBuscarInsumo.setBounds(467, 495, 200, 30);
-        txtBuscarInsumo.setVisible(false);
-        panelFondo.add(txtBuscarInsumo);
 
-        // contenedor para resultados de los insumos buscados
-        contenedorInsumosBuscados = new JPanel();
-        contenedorInsumosBuscados.setLayout(new BoxLayout(contenedorInsumosBuscados, BoxLayout.Y_AXIS));
-        contenedorInsumosBuscados.setBackground(new Color(245, 245, 245));
-        contenedorInsumosBuscados.setVisible(false);
-
-        scrollInsumosBuscados = new JScrollPane(contenedorInsumosBuscados);
-        scrollInsumosBuscados.setBounds(267, 535, 400, 90);
-        scrollInsumosBuscados.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        scrollInsumosBuscados.setVisible(false);
-
-        panelFondo.add(scrollInsumosBuscados);
-
-        // este documentListener sirve para realizar la búsqueda en tiempo real de los insumos
-        txtBuscarInsumo.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        cmpTxtBuscarInsumos.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                buscarYMostrar();
-            }
-
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                buscarYMostrar();
-            }
-
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                buscarYMostrar();
-            }
-
-            private void buscarYMostrar() {
-                String texto = txtBuscarInsumo.getText().trim().toLowerCase();
-                if (control != null) {
-                    control.buscarInsumos(texto);
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                    String textoBuscador = cmpTxtBuscarInsumos.getText();
+                    
+                    if (!textoBuscador.trim().isEmpty()) {
+                        seleccionInsumoAgregarInsumoATabla(textoBuscador);
+                        
+                        cmpTxtBuscarInsumos.setText("");
+                        popMenuBuscarInsumos.setVisible(false);
+                    }
                 }
             }
         });
     }
     
-    // método action performed para el botón de regresar
-    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        if (control != null) {
-            control.regresar();
+    private void buscarSugerencias() {
+        String texto = cmpTxtBuscarInsumos.getText().trim();
+        if (!texto.isEmpty()) {
+            control.buscarInsumosNombre(texto);
+        } else {
+            popMenuBuscarInsumos.setVisible(false);
         }
     }
     
-    // método que ayuda a crear un card donde se acomodarán todos los insumos
-    private JPanel crearCardInsumo(InsumoResumenDTO insumo) {
+    @Override
+    public void actualizarSugerencias(List<InsumoResumenDTO> insumos) {
+        DefaultListModel<String> modelo = new DefaultListModel<>();
+        
+        insumos.stream()
+                .map(InsumoResumenDTO::getNombre)
+                .forEach(modelo::addElement);
+                
+        boolean tieneCoincidencias = !modelo.isEmpty();
 
-        JPanel card = new JPanel(new BorderLayout());
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        if (tieneCoincidencias) {
+            listBuscarInsumos.setModel(modelo);
+            scrollPaneBuscarInsumos.setPreferredSize(new Dimension(cmpTxtBuscarInsumos.getWidth(), 150));
+            popMenuBuscarInsumos.pack();
+            popMenuBuscarInsumos.show(cmpTxtBuscarInsumos, 0, cmpTxtBuscarInsumos.getHeight());
+            cmpTxtBuscarInsumos.requestFocus(); 
+        } else {
+            popMenuBuscarInsumos.setVisible(false);
+        }
+    }
+    
+    private void seleccionInsumoAgregarInsumoATabla(String nombreInsumo) {
+        control.agregarInsumo(nombreInsumo);
+    }
+    
+    @Override
+    public void agregarInsumoTabla(InsumoResumenDTO insumoResumen) {
+        DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
+        Long idNuevo = insumoResumen.getId();
 
-        JLabel nombre = new JLabel(insumo.getNombre());
-        nombre.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            Long idExistente = (Long) modelo.getValueAt(i, 6);
 
-        JLabel precio = new JLabel("$" + insumo.getPrecioSugerido());
-        precio.setHorizontalAlignment(SwingConstants.RIGHT);
-        precio.setBorder(BorderFactory.createEmptyBorder(0,0,0,30));
-
-        card.add(nombre, BorderLayout.WEST);
-        card.add(precio, BorderLayout.EAST);
-
-        card.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                control.seleccionarInsumo(insumo);
-
-                txtBuscarInsumo.setText("");
-                scrollInsumosBuscados.setVisible(false);
+            if (idExistente != null && idExistente.equals(idNuevo)) {
+                return; 
             }
+        }
+
+        int numeroInsumo = modelo.getRowCount() + 1;
+        String nombreInsumo = insumoResumen.getNombre();
+        BigDecimal costoSugerido = insumoResumen.getPrecioSugerido();
+        int cantidad = 1;
+        BigDecimal subtotal = insumoResumen.getPrecioSugerido(); 
+
+        modelo.addRow(new Object[]{
+            numeroInsumo,
+            nombreInsumo,
+            costoSugerido,
+            cantidad,
+            subtotal,
+            "Eliminar",
+            idNuevo
         });
 
-        return card;
+        recalcularTotales();
+        crearBorradorCotizacion();
     }
     
-    private ImageIcon cargarIcono(String ruta, int anchoMax, int altoMax) {
+    private void configurarTablaInsumos() {
+
+        String[] columnas = {"No.", "Insumo", "Costo", "Cantidad", "Subtotal", "Acción", "ID_INSUMO"};
+        DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (esCancelada) {
+                    return false;
+                }
+                return column == 2 || column == 3 || column == 5;
+            }
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                switch (columnIndex) {
+                    case 0: case 3: return Integer.class;
+                    case 2: case 4: return java.math.BigDecimal.class;
+                    case 6: return Long.class;
+                    default: return String.class;
+                }
+            }
+        };
+        
+        tblInsumosCotizacion.setModel(modeloTabla);
+
+        if (tblInsumosCotizacion.getColumnCount() > 6) {
+            tblInsumosCotizacion.removeColumn(tblInsumosCotizacion.getColumnModel().getColumn(6));
+        }
+
+        DefaultTableCellRenderer rendererAzul = new DefaultTableCellRenderer() {
+            Color colorAzulClaro = new Color(218, 235, 255);
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                if (column == 5) return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                
+                Component celda = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!isSelected) {
+                    celda.setBackground((row % 2 == 0) ? colorAzulClaro : Color.WHITE);
+                }
+                ((javax.swing.JComponent) celda).setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK),
+                        BorderFactory.createEmptyBorder(0, 10, 0, 0)
+                ));
+                return celda;
+            }
+        };
+
+        for (int i = 0; i <= 4; i++) {
+            tblInsumosCotizacion.getColumnModel().getColumn(i).setCellRenderer(rendererAzul);
+        }
+
+        tblInsumosCotizacion.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+        tblInsumosCotizacion.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new javax.swing.JCheckBox()));
+
+        tblInsumosCotizacion.setRowHeight(35);
+        tblInsumosCotizacion.getTableHeader().setReorderingAllowed(false);
+        tblInsumosCotizacion.getTableHeader().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+
+        tblInsumosCotizacion.getModel().addTableModelListener(e -> {
+            if (e.getType() == javax.swing.event.TableModelEvent.UPDATE) {
+                int col = e.getColumn();
+                if (col == 2 || col == 3) {
+                    javax.swing.SwingUtilities.invokeLater(() -> actualizarSubtotal(e.getFirstRow()));
+                }
+            }
+        });
+        
+        tblInsumosCotizacion.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tblInsumosCotizacion.getColumnModel().getColumn(0).setMaxWidth(60);
+
+        tblInsumosCotizacion.getColumnModel().getColumn(1).setPreferredWidth(300);
+
+        tblInsumosCotizacion.getColumnModel().getColumn(2).setPreferredWidth(100);
+
+        tblInsumosCotizacion.getColumnModel().getColumn(3).setPreferredWidth(100);
+
+        tblInsumosCotizacion.getColumnModel().getColumn(4).setPreferredWidth(100);
+
+        tblInsumosCotizacion.getColumnModel().getColumn(5).setPreferredWidth(120);
+        tblInsumosCotizacion.getColumnModel().getColumn(5).setMinWidth(100);
+        
+        tblInsumosCotizacion.getColumnModel().getColumn(3).setCellEditor(new SpinnerEditor());
+        
+    }
+    
+    private void actualizarSubtotal(int fila) {
+        DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
+        
         try {
-            java.net.URL url = getClass().getResource(ruta);
+            Object valorCosto = modelo.getValueAt(fila, 2);
+            Object valorCantidad = modelo.getValueAt(fila, 3);
 
-            if (url == null) {
-                System.err.println("No se encontró la imagen: " + ruta);
-                return new ImageIcon();
-            }
+            BigDecimal costo = new BigDecimal(valorCosto.toString());
+            int cantidad = Integer.parseInt(valorCantidad.toString());
 
-            ImageIcon icono = new ImageIcon(url);
-            Image img = icono.getImage();
+            BigDecimal subtotal = costo.multiply(new BigDecimal(cantidad));
 
-            int anchoOriginal = img.getWidth(null);
-            int altoOriginal = img.getHeight(null);
-
-            if (anchoOriginal <= 0 || altoOriginal <= 0) {
-                return new ImageIcon();
-            }
-
-            double escala = Math.min(
-                    (double) anchoMax / anchoOriginal,
-                    (double) altoMax / altoOriginal
-            );
-
-            int nuevoAncho = (int) (anchoOriginal * escala);
-            int nuevoAlto = (int) (altoOriginal * escala);
-
-            Image imgEscalada = img.getScaledInstance(nuevoAncho, nuevoAlto, Image.SCALE_SMOOTH);
-            return new ImageIcon(imgEscalada);
-
-        } catch (Exception e) {
-            return new ImageIcon();
+            modelo.setValueAt(subtotal, fila, 4);
+            
+            recalcularTotales();
+            
+        } catch (NumberFormatException e) {
+            modelo.setValueAt(BigDecimal.ZERO, fila, 4);
+            recalcularTotales();
         }
-    }
-    
-    private void recalcularTotales() {
-        java.math.BigDecimal totalInsumos = java.math.BigDecimal.ZERO;
-
-        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-            String precioStr = modeloTabla.getValueAt(i, 2).toString().replace("$", "");
-            int cantidad = Integer.parseInt(modeloTabla.getValueAt(i, 3).toString());
-
-            java.math.BigDecimal precio = new java.math.BigDecimal(precioStr);
-            java.math.BigDecimal subtotal = precio.multiply(java.math.BigDecimal.valueOf(cantidad));
-
-            totalInsumos = totalInsumos.add(subtotal);
-        }
-
-        etqTotalPiezasCotizacion.setText("$" + totalInsumos);
-
-        // Mano de obra actual (ya mostrada)
-        String manoObraStr = etqTotalManoObra.getText().replace("$", "");
-        java.math.BigDecimal manoObra = new java.math.BigDecimal(manoObraStr);
-
-        java.math.BigDecimal totalFinal = totalInsumos.add(manoObra);
-        etqTotalCotizacion.setText("$" + totalFinal);
     }
 
     /**
@@ -298,455 +278,736 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        etqCotización = new javax.swing.JLabel();
-        etqIconoUsuario = new javax.swing.JLabel();
-        etqNombreCliente = new javax.swing.JLabel();
-        etqIconoAutomovil = new javax.swing.JLabel();
-        scrollPiezas = new javax.swing.JScrollPane();
-        btnEliminarInsumo = new javax.swing.JButton();
-        btnAniadirInsumo = new javax.swing.JButton();
+        jPanel8 = new javax.swing.JPanel();
+        popMenuBuscarInsumos = new javax.swing.JPopupMenu();
+        scrollPaneBuscarInsumos = new javax.swing.JScrollPane();
+        listBuscarInsumos = new javax.swing.JList<>();
+        panelEncabezado1 = new presentacion.vistas.PanelEncabezado();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        lblNombreServicio = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblInsumosCotizacion = new javax.swing.JTable();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        cmpTxtTotalInsumos = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        cmpTxtCostoManoObra = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel10 = new javax.swing.JPanel();
+        btnAgregarInsumo = new javax.swing.JButton();
+        cmpTxtBuscarInsumos = new javax.swing.JTextField();
+        lblBuscarInsumo = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        btnActualizar = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
         btnVolver = new javax.swing.JButton();
-        etqAutomovil = new javax.swing.JLabel();
-        etqAnioAutomovil = new javax.swing.JLabel();
-        etqFecha = new javax.swing.JLabel();
-        etqFechaCotizacion = new javax.swing.JLabel();
-        etqTotalPiezas = new javax.swing.JLabel();
-        etqTotalPiezasCotizacion = new javax.swing.JLabel();
-        etqManoObra = new javax.swing.JLabel();
-        etqTotalManoObra = new javax.swing.JLabel();
-        etqTotal = new javax.swing.JLabel();
-        etqTotalCotizacion = new javax.swing.JLabel();
-        btnGuardar = new javax.swing.JButton();
-        btnIniciarTrabajo = new javax.swing.JButton();
-        etqApellido = new javax.swing.JLabel();
+        btnCancelar = new javax.swing.JButton();
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        listBuscarInsumos.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        scrollPaneBuscarInsumos.setViewportView(listBuscarInsumos);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(243, 243, 243));
-        setMaximumSize(new java.awt.Dimension(1200, 920));
-        setMinimumSize(new java.awt.Dimension(1000, 720));
+        setMinimumSize(new java.awt.Dimension(1100, 700));
+        getContentPane().add(panelEncabezado1, java.awt.BorderLayout.PAGE_START);
 
-        etqCotización.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqCotización.setText("Cotización");
+        jPanel1.setBackground(new java.awt.Color(204, 255, 51));
+        jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        etqNombreCliente.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqNombreCliente.setText("cliente");
+        jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        btnEliminarInsumo.setBackground(new java.awt.Color(255, 243, 177));
-        btnEliminarInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnEliminarInsumo.setText("Eliminar Insumo");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("Nueva Cotización");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(25, 25, 0, 0);
+        jPanel2.add(jLabel1, gridBagConstraints);
 
-        btnAniadirInsumo.setBackground(new java.awt.Color(188, 226, 255));
-        btnAniadirInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnAniadirInsumo.setText("Añadir Insumo");
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setText(" - ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LAST_LINE_START;
+        jPanel2.add(jLabel2, gridBagConstraints);
 
-        btnVolver.setBackground(new java.awt.Color(186, 226, 255));
-        btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblNombreServicio.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        lblNombreServicio.setText("jLabel3");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LAST_LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        jPanel2.add(lblNombreServicio, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        jPanel1.add(jPanel2, gridBagConstraints);
+
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        jPanel6.setBackground(new java.awt.Color(255, 255, 204));
+        jPanel6.setLayout(new java.awt.BorderLayout());
+
+        tblInsumosCotizacion.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "No.", "Insumo", "Costo", "Cantidad", "Subtotal"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblInsumosCotizacion);
+        if (tblInsumosCotizacion.getColumnModel().getColumnCount() > 0) {
+            tblInsumosCotizacion.getColumnModel().getColumn(0).setHeaderValue("No.");
+            tblInsumosCotizacion.getColumnModel().getColumn(1).setHeaderValue("Insumo");
+            tblInsumosCotizacion.getColumnModel().getColumn(2).setHeaderValue("Costo");
+            tblInsumosCotizacion.getColumnModel().getColumn(3).setHeaderValue("Cantidad");
+            tblInsumosCotizacion.getColumnModel().getColumn(4).setHeaderValue("Subtotal");
+        }
+
+        jPanel6.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 2.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(25, 25, 25, 25);
+        jPanel3.add(jPanel6, gridBagConstraints);
+
+        jPanel7.setLayout(new java.awt.GridBagLayout());
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setText("Total insumos:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 111;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 25, 0, 0);
+        jPanel7.add(jLabel3, gridBagConstraints);
+
+        cmpTxtTotalInsumos.setEditable(false);
+        cmpTxtTotalInsumos.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        cmpTxtTotalInsumos.setText("jTextField1");
+        cmpTxtTotalInsumos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmpTxtTotalInsumosActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 25, 0, 55);
+        jPanel7.add(cmpTxtTotalInsumos, gridBagConstraints);
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel4.setText("Mano de obra:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 21, 0, 25);
+        jPanel7.add(jLabel4, gridBagConstraints);
+
+        cmpTxtCostoManoObra.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        cmpTxtCostoManoObra.setText("jTextField2");
+        cmpTxtCostoManoObra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmpTxtCostoManoObraActionPerformed(evt);
+            }
+        });
+        cmpTxtCostoManoObra.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cmpTxtCostoManoObraKeyReleased(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 25, 0, 55);
+        jPanel7.add(cmpTxtCostoManoObra, gridBagConstraints);
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel5.setText("TOTAL: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 25, 0, 0);
+        jPanel7.add(jLabel5, gridBagConstraints);
+
+        lblTotal.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblTotal.setText(" jLabel6");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        jPanel7.add(lblTotal, gridBagConstraints);
+
+        jLabel6.setText("Cantidades en pesos MXN.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 53);
+        jPanel7.add(jLabel6, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        jPanel3.add(jPanel7, gridBagConstraints);
+
+        jPanel10.setLayout(new java.awt.GridBagLayout());
+
+        btnAgregarInsumo.setBackground(new java.awt.Color(203, 229, 255));
+        btnAgregarInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAgregarInsumo.setText("Agregar Insumo");
+        btnAgregarInsumo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarInsumoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 15, 0);
+        jPanel10.add(btnAgregarInsumo, gridBagConstraints);
+
+        cmpTxtBuscarInsumos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cmpTxtBuscarInsumos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmpTxtBuscarInsumosActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 15, 10);
+        jPanel10.add(cmpTxtBuscarInsumos, gridBagConstraints);
+
+        lblBuscarInsumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblBuscarInsumo.setText("Buscar insumo: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        jPanel10.add(lblBuscarInsumo, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 25, 0, 30);
+        jPanel3.add(jPanel10, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel1.add(jPanel3, gridBagConstraints);
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        jPanel4.setLayout(new java.awt.BorderLayout());
+
+        btnActualizar.setBackground(new java.awt.Color(204, 255, 204));
+        btnActualizar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnActualizar.setText("Guardar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnActualizar, java.awt.BorderLayout.LINE_END);
+
+        jPanel5.setLayout(new java.awt.GridBagLayout());
+
+        btnVolver.setBackground(new java.awt.Color(255, 255, 204));
+        btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel5.add(btnVolver, gridBagConstraints);
 
-        etqAutomovil.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqAutomovil.setText("auto");
+        btnCancelar.setBackground(new java.awt.Color(255, 204, 204));
+        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 55, 0, 0);
+        jPanel5.add(btnCancelar, gridBagConstraints);
 
-        etqAnioAutomovil.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqAnioAutomovil.setText("anio");
+        jPanel4.add(jPanel5, java.awt.BorderLayout.LINE_START);
 
-        etqFecha.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqFecha.setText("Fecha:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        jPanel1.add(jPanel4, gridBagConstraints);
 
-        etqFechaCotizacion.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqFechaCotizacion.setText("fecha");
-
-        etqTotalPiezas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqTotalPiezas.setText("Total Piezas");
-
-        etqTotalPiezasCotizacion.setBackground(new java.awt.Color(255, 255, 255));
-        etqTotalPiezasCotizacion.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqTotalPiezasCotizacion.setText("total");
-
-        etqManoObra.setBackground(new java.awt.Color(255, 255, 255));
-        etqManoObra.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqManoObra.setText("Mano de obra (Intermedio)");
-
-        etqTotalManoObra.setBackground(new java.awt.Color(255, 255, 255));
-        etqTotalManoObra.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqTotalManoObra.setText("total");
-
-        etqTotal.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqTotal.setText("Total:");
-
-        etqTotalCotizacion.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        etqTotalCotizacion.setText("total");
-
-        btnGuardar.setBackground(new java.awt.Color(177, 255, 186));
-        btnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.setMaximumSize(new java.awt.Dimension(85, 32));
-        btnGuardar.setMinimumSize(new java.awt.Dimension(85, 32));
-        btnGuardar.setPreferredSize(new java.awt.Dimension(85, 32));
-
-        btnIniciarTrabajo.setBackground(new java.awt.Color(255, 243, 177));
-        btnIniciarTrabajo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnIniciarTrabajo.setText("Iniciar Trabajo");
-        btnIniciarTrabajo.setMaximumSize(new java.awt.Dimension(85, 32));
-        btnIniciarTrabajo.setMinimumSize(new java.awt.Dimension(85, 32));
-        btnIniciarTrabajo.setPreferredSize(new java.awt.Dimension(85, 32));
-
-        etqApellido.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        etqApellido.setText("apellido");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(etqIconoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(etqApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(etqNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(etqIconoAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(etqAnioAutomovil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(etqAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(etqCotización, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(scrollPiezas, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(etqFecha)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(etqFechaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(etqTotalPiezas)
-                            .addComponent(etqTotalPiezasCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(etqManoObra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(etqTotalManoObra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(etqTotal)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(etqTotalCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnVolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEliminarInsumo, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAniadirInsumo, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnIniciarTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(38, 38, 38)
-                                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(66, 66, 66))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(114, 114, 114)
-                .addComponent(etqCotización)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(etqAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(etqFechaCotizacion)
-                                .addComponent(etqFecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(etqAnioAutomovil))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(etqNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(etqApellido))
-                            .addComponent(etqIconoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(etqIconoAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPiezas, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(etqTotalPiezas)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(etqTotalPiezasCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(etqManoObra)
-                        .addGap(9, 9, 9)
-                        .addComponent(etqTotalManoObra)
-                        .addGap(57, 57, 57)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(etqTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(etqTotalCotizacion))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEliminarInsumo)
-                    .addComponent(btnAniadirInsumo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnIniciarTrabajo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(66, 66, 66))
-        );
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        presentacion.interfaces.IControlConsultaCotizacion control = new presentacion.controles.ControlConsultaCotizacion();
-//        control.iniciar();
-//    }
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        actualizarCotizacion();
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        cancelarConsultarCotizacion();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void cmpTxtTotalInsumosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmpTxtTotalInsumosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmpTxtTotalInsumosActionPerformed
+
+    private void cmpTxtCostoManoObraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmpTxtCostoManoObraActionPerformed
+        actualizarCostoManoObra();
+    }//GEN-LAST:event_cmpTxtCostoManoObraActionPerformed
+
+    private void cmpTxtCostoManoObraKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmpTxtCostoManoObraKeyReleased
+        actualizarCostoManoObra();
+    }//GEN-LAST:event_cmpTxtCostoManoObraKeyReleased
+
+    private void btnAgregarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarInsumoActionPerformed
+        agregarInsumo();
+    }//GEN-LAST:event_btnAgregarInsumoActionPerformed
+
+    private void cmpTxtBuscarInsumosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmpTxtBuscarInsumosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmpTxtBuscarInsumosActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        volverConsultaCotizacion();
+    }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void agregarInsumo(){
+        String textoBuscador = cmpTxtBuscarInsumos.getText().trim();
+        
+        if (!textoBuscador.isEmpty()) {
+            seleccionInsumoAgregarInsumoATabla(textoBuscador);
+            
+            cmpTxtBuscarInsumos.setText("");
+            popMenuBuscarInsumos.setVisible(false);
+            cmpTxtBuscarInsumos.requestFocus();
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor seleccione un insumo antes de agregar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+    
+    private void volverConsultaCotizacion(){
+        control.volverConsultarCotizacion();
+    }
+    
+    private void cancelarConsultarCotizacion(){
+        control.cancelarConsultarCotizacion();
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnAgregarInsumo;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnVolver;
+    private javax.swing.JTextField cmpTxtBuscarInsumos;
+    private javax.swing.JTextField cmpTxtCostoManoObra;
+    private javax.swing.JTextField cmpTxtTotalInsumos;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblBuscarInsumo;
+    private javax.swing.JLabel lblNombreServicio;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JList<String> listBuscarInsumos;
+    private presentacion.vistas.PanelEncabezado panelEncabezado1;
+    private javax.swing.JPopupMenu popMenuBuscarInsumos;
+    private javax.swing.JScrollPane scrollPaneBuscarInsumos;
+    private javax.swing.JTable tblInsumosCotizacion;
+    // End of variables declaration//GEN-END:variables
 
     @Override
-    public void cargarDatosCotizacion(CotizacionResumenDTO cotizacion) {
-        if (cotizacion == null) return;
-
-        etqNombreCliente.setText(
-            cotizacion.getNombreCliente() != null ? cotizacion.getNombreCliente() : ""
-        );
-
-        etqApellido.setText(
-            cotizacion.getApellidoPaternoCliente() != null ? cotizacion.getApellidoPaternoCliente() : ""
-        );
-
-        etqAutomovil.setText(
-            (cotizacion.getMarcaAutomovil() != null ? cotizacion.getMarcaAutomovil() : "") +
-            " " +
-            (cotizacion.getModeloAutomovil() != null ? cotizacion.getModeloAutomovil() : "")
-        );
-
-        etqAnioAutomovil.setText(
-            cotizacion.getAnioAutomovil() != null 
-                ? String.valueOf(cotizacion.getAnioAutomovil()) 
-                : ""
-        );
-
-        String fecha = (cotizacion.getFechaCreacion() != null)
-                ? cotizacion.getFechaCreacion().toLocalDate().toString()
-                : "N/A";
-        etqFechaCotizacion.setText(fecha);
+    public void cargarCotizacionSeleccionada(CotizacionDetalleDTO cotizacion) {
+        idCotizacion = cotizacion.getId();
+        lblNombreServicio.setText(cotizacion.getNombreServicio());
+        cmpTxtCostoManoObra.setText(cotizacion.getPrecioManoObra().toString());
         
-        // aquí se calcula el total sumado por todas las pieazas
-        java.math.BigDecimal totalInsumos = java.math.BigDecimal.ZERO;
 
-        if (cotizacion.getInsumosCotizacion() != null) {
+        esCancelada = cotizacion.getEstado() != null && 
+                      cotizacion.getEstado().name().equals("CANCELADA");
 
-            for (InsumoCotizacionDetalleDTO insumo : cotizacion.getInsumosCotizacion()) {
-
-                int cantidad = insumo.getCantidadRequerida() != null 
-                        ? insumo.getCantidadRequerida() 
-                        : 0;
-
-                java.math.BigDecimal precio = insumo.getPrecio() != null 
-                        ? insumo.getPrecio() 
-                        : java.math.BigDecimal.ZERO;
-                
-                java.math.BigDecimal subtotal = precio.multiply(
-                        java.math.BigDecimal.valueOf(cantidad)
-                );
-
-                totalInsumos = totalInsumos.add(subtotal);
-            }
-        }
-
-        etqTotalPiezasCotizacion.setText("$" + totalInsumos);
-
-        java.math.BigDecimal manoObra = cotizacion.getPrecioManoObra() != null
-                ? cotizacion.getPrecioManoObra()
-                : java.math.BigDecimal.ZERO;
-        etqTotalManoObra.setText("$" + manoObra);
+        cmpTxtCostoManoObra.setEditable(!esCancelada);
         
-        java.math.BigDecimal totalFinal = totalInsumos.add(manoObra);
-        etqTotalCotizacion.setText("$" + totalFinal);
+        lblBuscarInsumo.setVisible(!esCancelada);
+        cmpTxtBuscarInsumos.setVisible(!esCancelada);
+        btnAgregarInsumo.setVisible(!esCancelada);
         
-        // aquí se supone que se cargan los datos de la tabla de insumos
-        modeloTabla.setRowCount(0);
-
-        if (cotizacion.getInsumosCotizacion() != null) {
-
-            int contador = 1;
-
-            for (InsumoCotizacionDetalleDTO insumo : cotizacion.getInsumosCotizacion()) {
-
-                String nombrePieza = (insumo.getInsumo() != null 
-                        && insumo.getInsumo().getNombre() != null)
-                        ? insumo.getInsumo().getNombre()
-                        : "N/A";
-
-                java.math.BigDecimal costo = insumo.getPrecio() != null
-                        ? insumo.getPrecio()
-                        : java.math.BigDecimal.ZERO;
-
-                Integer cantidad = insumo.getCantidadRequerida() != null
-                        ? insumo.getCantidadRequerida()
-                        : 0;
-
-                // Agregar fila
-                modeloTabla.addRow(new Object[]{
-                    contador,
-                    nombrePieza,
-                    "$" + costo,
-                    cantidad
-                });
-
-                contador++;
-            }
-        }
+        btnActualizar.setVisible(!esCancelada); 
+        
+        llenarTablaInsumos(cotizacion);
+        
+        gestionarColumnaAccion();
         
         recalcularTotales();
     }
+    
+    private void llenarTablaInsumos(CotizacionDetalleDTO cotizacion) {
+        
+        DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
+        
+        modelo.setRowCount(0);
 
-    @Override
-    public void mostrarMensajeRapido(String mensaje) {
-        javax.swing.JOptionPane.showMessageDialog(this, mensaje);
+        if (cotizacion != null && cotizacion.getInsumosCotizacion() != null) {
+            int i = 1;
+            for (InsumoCotizacionDetalleDTO insumoCotizacion : cotizacion.getInsumosCotizacion()) {
+                modelo.addRow(new Object[]{
+                    i++,
+                    insumoCotizacion.getInsumo().getNombre(),
+                    insumoCotizacion.getPrecio(),
+                    insumoCotizacion.getCantidadRequerida(),
+                    insumoCotizacion.getSubtotal(),
+                    "Eliminar",
+                    insumoCotizacion.getInsumo().getId()
+                });
+            }
+        }
+    }
+    
+    private void gestionarColumnaAccion() {
+
+        TableColumnModel modeloColumnas = tblInsumosCotizacion.getColumnModel();
+
+        int indiceColumna = -1;
+        for (int i = 0; i < modeloColumnas.getColumnCount(); i++) {
+            if (modeloColumnas.getColumn(i).getHeaderValue().toString().equalsIgnoreCase("Acción")) {
+                indiceColumna = i;
+                break;
+            }
+        }
+
+        if (esCancelada && indiceColumna != -1) {
+            modeloColumnas.removeColumn(modeloColumnas.getColumn(indiceColumna));
+        }
+    }
+    
+    private void recalcularTotales() {
+
+        DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
+        BigDecimal sumaInsumos = BigDecimal.ZERO;
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            Object valorSubtotal = modelo.getValueAt(i, 4);
+            if (valorSubtotal != null) {
+                BigDecimal subtotalFila = new BigDecimal(valorSubtotal.toString());
+                sumaInsumos = sumaInsumos.add(subtotalFila);
+            }
+        }
+
+        cmpTxtTotalInsumos.setText(sumaInsumos.setScale(2, java.math.RoundingMode.HALF_UP).toString());
+
+        BigDecimal costoManoObra = BigDecimal.ZERO;
+        try {
+            String textoManoObra = cmpTxtCostoManoObra.getText();
+            if (!textoManoObra.trim().isEmpty()) {
+                costoManoObra = new BigDecimal(textoManoObra);
+            }
+        } catch (NumberFormatException e) {}
+
+        BigDecimal totalGeneral = sumaInsumos.add(costoManoObra);
+
+        lblTotal.setText(totalGeneral.setScale(2, java.math.RoundingMode.HALF_UP).toString());
+    }
+    
+    private void actualizarCostoManoObra(){
+        recalcularTotales();
+        crearBorradorCotizacion();
+    }
+    
+    private void crearBorradorCotizacion(){
+        
+        String totalInsumosS = cmpTxtTotalInsumos.getText();
+        String costoManoObraS = cmpTxtCostoManoObra.getText();
+        String totalS = lblTotal.getText();
+        
+        Double totalInsumosD = null;
+        Double costoManoObraD = null;
+        Double totalD = null;
+        try{
+            totalInsumosD = Double.valueOf(totalInsumosS);
+            costoManoObraD = Double.valueOf(costoManoObraS);
+            totalD = Double.valueOf(totalS);
+            
+        } catch(NumberFormatException e){}
+        
+        if(totalInsumosD != null && costoManoObraD != null && totalD != null){
+            
+            BigDecimal totalInsumos = BigDecimal.valueOf(totalInsumosD);
+            BigDecimal costoManoObra = BigDecimal.valueOf(costoManoObraD);
+            BigDecimal total = BigDecimal.valueOf(totalD);
+            
+            List<BorradorInsumoCotizacion> borradoresInsumoCotizacion = obtenerInsumosCotizacion();
+            
+            BorradorCotizacion borradorCotizacion = new BorradorCotizacion(idCotizacion, totalInsumos, costoManoObra, total, borradoresInsumoCotizacion);
+         
+            control.guardarCambioCotizacion(borradorCotizacion);
+            
+        }
+
+    }
+    
+    private List<BorradorInsumoCotizacion> obtenerInsumosCotizacion(){
+        
+        List<BorradorInsumoCotizacion> borradoresInsumoCotizacion = new ArrayList<>();
+
+        DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+
+            String nombre = modelo.getValueAt(i, 1).toString();
+
+            BigDecimal costo = new BigDecimal(modelo.getValueAt(i, 2).toString());
+            Integer cantidad = Integer.valueOf(modelo.getValueAt(i, 3).toString());
+            BigDecimal subtotal = new BigDecimal(modelo.getValueAt(i, 4).toString());
+            Long idInsumo = Long.valueOf(modelo.getValueAt(i, 6).toString());
+
+            BorradorInsumoCotizacion borrador = new BorradorInsumoCotizacion(nombre, cantidad, costo, subtotal, idInsumo);
+
+            borradoresInsumoCotizacion.add(borrador);
+        }
+        
+        return borradoresInsumoCotizacion;
+    }
+    
+    
+    private void actualizarCotizacion(){
+        crearBorradorCotizacion();
+        control.actualizarCotizacion();
     }
 
     @Override
     public void mostrar() {
-        this.setVisible(true);
+        setVisible(true);
     }
 
     @Override
     public void ocultar() {
-        this.setVisible(false);
+        dispose();
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAniadirInsumo;
-    private javax.swing.JButton btnEliminarInsumo;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnIniciarTrabajo;
-    private javax.swing.JButton btnVolver;
-    private javax.swing.JLabel etqAnioAutomovil;
-    private javax.swing.JLabel etqApellido;
-    private javax.swing.JLabel etqAutomovil;
-    private javax.swing.JLabel etqCotización;
-    private javax.swing.JLabel etqFecha;
-    private javax.swing.JLabel etqFechaCotizacion;
-    private javax.swing.JLabel etqIconoAutomovil;
-    private javax.swing.JLabel etqIconoUsuario;
-    private javax.swing.JLabel etqManoObra;
-    private javax.swing.JLabel etqNombreCliente;
-    private javax.swing.JLabel etqTotal;
-    private javax.swing.JLabel etqTotalCotizacion;
-    private javax.swing.JLabel etqTotalManoObra;
-    private javax.swing.JLabel etqTotalPiezas;
-    private javax.swing.JLabel etqTotalPiezasCotizacion;
-    private javax.swing.JScrollPane scrollPiezas;
-    // End of variables declaration//GEN-END:variables
-
     @Override
-    public void mostrarError(String mensajeError) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void mostrarMensaje(String mensajeError) {
+        JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
     
     @Override
-    public void mostrarInsumosBuscados(List<InsumoResumenDTO> insumos) {
-        contenedorInsumosBuscados.removeAll();
-
-        if (insumos == null || insumos.isEmpty()) {
-            contenedorInsumosBuscados.setVisible(false);
-            scrollInsumosBuscados.setVisible(false);
-            return;
-        }
-
-        for (InsumoResumenDTO insumo : insumos) {
-            contenedorInsumosBuscados.add(crearCardInsumo(insumo));
-        }
-
-        contenedorInsumosBuscados.revalidate();
-        contenedorInsumosBuscados.repaint();
-
-        contenedorInsumosBuscados.setPreferredSize(
-            new Dimension(scrollInsumosBuscados.getWidth(), insumos.size() * 55)
-        );
-
-        contenedorInsumosBuscados.setVisible(true);
-        scrollInsumosBuscados.setVisible(true);
-    }
-
-    @Override
-    public void aniadirInsumo(InsumoResumenDTO insumo) {
-        int rowCount = modeloTabla.getRowCount();
-        modeloTabla.addRow(new Object[]{
-            rowCount + 1,
-            insumo,
-            "$" + insumo.getPrecioSugerido(),
-            1
-        });
-        recalcularTotales();
+    public void mostrarMensajeExito() {
+        JOptionPane.showMessageDialog(this, "La cotización se ha actualizado.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        control.aceptarExitoActualizacionCotizacion();
     }
     
-    @Override
-    public void eliminarInsumo(InsumoResumenDTO insumo) {
-        int filaSeleccionada = tablaInsumos.getSelectedRow();
+    // Clases para botón de eliminar
+    private void reordenarNumerosTabla() {
+        DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            modelo.setValueAt(i + 1, i, 0);
+        }
+    }
 
-        if (filaSeleccionada == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Selecciona un insumo primero");
-            return;
+    class ButtonRenderer extends javax.swing.JButton implements javax.swing.table.TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+            setBackground(new Color(255, 102, 102)); // Rojo suave
+            setForeground(Color.WHITE);
+            setFont(new Font("Segoe UI", Font.BOLD, 12));
         }
 
-        String nombre = modeloTabla.getValueAt(filaSeleccionada, 1).toString();
-        int cantidad = Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 3).toString());
-        
-        int confirmacion = javax.swing.JOptionPane.showConfirmDialog(
-            this,
-            "¿Desea eliminar " + cantidad + " unidades de \"" + nombre + "\"?",
-            "Confirmar eliminación",
-            javax.swing.JOptionPane.YES_NO_OPTION
-        );
-
-        if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
-            modeloTabla.removeRow(filaSeleccionada);
-            for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-                modeloTabla.setValueAt(i + 1, i, 0);
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            
+            if (esCancelada) {
+                return new javax.swing.JLabel(""); 
             }
-            recalcularTotales();
+            
+            setText((value == null) ? "Eliminar" : value.toString());
+            return this;
+        }
+    }
+
+    class ButtonEditor extends javax.swing.DefaultCellEditor {
+        protected javax.swing.JButton button;
+        private boolean isPushed;
+        private JTable table;
+        private int currentRow;
+
+        public ButtonEditor(javax.swing.JCheckBox checkBox) {
+            super(checkBox);
+            button = new javax.swing.JButton();
+            button.setOpaque(true);
+            button.setBackground(new Color(250, 226, 95));
+            button.setForeground(Color.WHITE);
+            button.setFont(new Font("Segoe UI", Font.BOLD, 12));
+            
+            button.addActionListener(e -> fireEditingStopped());
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            this.table = table;
+            this.currentRow = row;
+            button.setText("Eliminar");
+            isPushed = true;
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                isPushed = false; 
+                
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+                    
+                    if (currentRow >= 0 && currentRow < model.getRowCount()) {
+                        
+                        if (table.isEditing()) {
+                            table.getCellEditor().cancelCellEditing();
+                        }
+                        
+                        model.removeRow(currentRow);
+                        reordenarNumerosTabla();
+                        recalcularTotales();
+                        crearBorradorCotizacion();
+                    }
+                });
+            }
+            return "Eliminar";
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
         }
     }
     
-    @Override
-    public void guardarInsumo(InsumoResumenDTO insumo) {
-        // TODO
-    }
-    
-    @Override
-    public List<InsumoCotizacionDetalleDTO> obtenerInsumosActuales() {
-        List<InsumoCotizacionDetalleDTO> lista = new java.util.ArrayList<>();
+    class SpinnerEditor extends javax.swing.DefaultCellEditor {
+        private javax.swing.JSpinner spinner;
 
-        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+        public SpinnerEditor() {
+            super(new javax.swing.JTextField());
 
-            InsumoResumenDTO insumo =
-                (InsumoResumenDTO) modeloTabla.getValueAt(i, 1);
-
-            String precioStr = modeloTabla.getValueAt(i, 2).toString().replace("$", "");
-            int cantidad = Integer.parseInt(modeloTabla.getValueAt(i, 3).toString());
-
-            java.math.BigDecimal precio = new java.math.BigDecimal(precioStr);
-
-            InsumoCotizacionDetalleDTO dto =
-                new InsumoCotizacionDetalleDTO(
-                    null,
-                    cantidad,
-                    precio
-                );
-
-            lista.add(dto);
+            javax.swing.SpinnerNumberModel model = new javax.swing.SpinnerNumberModel(1, 1, 9999, 1);
+            spinner = new javax.swing.JSpinner(model);
+            spinner.setBorder(null);
         }
 
-        return lista;
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            spinner.setValue(value);
+            return spinner;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return spinner.getValue();
+        }
     }
+
 }

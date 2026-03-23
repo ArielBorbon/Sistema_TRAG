@@ -5,7 +5,13 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author 
+ * Archivo: BorradorInsumoCotizacion.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class BorradorInsumoCotizacion {
 
@@ -15,6 +21,7 @@ public class BorradorInsumoCotizacion {
     private BigDecimal subtotal;
     private Long idInsumo;
 
+    
     public BorradorInsumoCotizacion(String nombreInsumo, int cantidad, BigDecimal costo, BigDecimal subtotal, Long idInsumo) {
         this.nombreInsumo = nombreInsumo;
         this.cantidad = cantidad;
@@ -42,7 +49,6 @@ public class BorradorInsumoCotizacion {
     public Long getIdInsumo() {
         return idInsumo;
     }
+    
 
-    
-    
 }

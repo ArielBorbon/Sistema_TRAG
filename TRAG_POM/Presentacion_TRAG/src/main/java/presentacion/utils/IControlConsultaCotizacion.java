@@ -1,8 +1,8 @@
-package presentacion.interfaces;
+package presentacion.utils;
 
 import dtos.cotizacion.CotizacionResumenDTO;
-import dtos.insumos.InsumoDetalleDTO;
 import dtos.insumos.InsumoResumenDTO;
+
 /**
  * @author Yuri Germán García López - 252583
  */

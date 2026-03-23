@@ -31,7 +31,7 @@ import org.eclipse.persistence.config.QueryHints;
  * @author Manuel Romo López - 253080
  * 
  */
-public class CotizacionesDAO implements ICotizacionesDAO{
+public class CotizacionesDAO implements ICotizacionesDAO {
 
     private final String MENSAJE_ERROR_AGREGAR = "Error al agregar la cotización";
     private final String MENSAJE_ERROR_CONSULTA = "Error al consultar la cotización";
@@ -84,15 +84,13 @@ public class CotizacionesDAO implements ICotizacionesDAO{
     public Cotizacion obtenerCotizacion(Long idCotizacion) throws PersistenciaException{
         EntityManager em = Conexion.crearConexion();
         try {
+            // CORRECCIÓN: Quitamos los filtros de estado para poder "Ver" cotizaciones canceladas desde el historial
             String jpql = "SELECT DISTINCT c FROM Cotizacion c " +
                           "LEFT JOIN FETCH c.insumosCotizacion i " +
-                          "WHERE c.id = :id AND c.estadoCotizacion != :estadoCotizacion " +
-                          "AND (i.id IS NULL OR i.activo = :activoInsumo)";
+                          "WHERE c.id = :id";
 
             return em.createQuery(jpql, Cotizacion.class)
                      .setParameter("id", idCotizacion)
-                     .setParameter("estadoCotizacion", EstadoCotizacion.CANCELADA)
-                     .setParameter("activoInsumo", true)
                      .setHint(QueryHints.REFRESH, HintValues.TRUE)
                      .getSingleResult();
 
@@ -109,12 +107,11 @@ public class CotizacionesDAO implements ICotizacionesDAO{
     public List<Cotizacion> obtenerTodasCotizaciones() throws PersistenciaException{
         EntityManager em = Conexion.crearConexion();
         try {
+
             String jpql = "SELECT DISTINCT c FROM Cotizacion c " +
-              "LEFT JOIN FETCH c.insumosCotizacion i " + 
-              "WHERE (i.id IS NULL OR i.activo = :activoInsumo)";
+                          "LEFT JOIN FETCH c.insumosCotizacion i";
 
             List<Cotizacion> cotizaciones = em.createQuery(jpql, Cotizacion.class)
-                     .setParameter("activoInsumo", true)
                      .setHint(QueryHints.REFRESH, HintValues.TRUE)
                      .getResultList();
 
@@ -131,20 +128,16 @@ public class CotizacionesDAO implements ICotizacionesDAO{
     public List<Cotizacion> obtenerCotizacionesNombreCliente(String nombreCliente) throws PersistenciaException {
         EntityManager em = Conexion.crearConexion();
         try {
-            // Se prepara el término para buscar en minúsculas y con comodines
             String terminoBusqueda = "%" + nombreCliente.trim().toLowerCase() + "%";
 
-            // Se crea la consulta
             String jpql = "SELECT DISTINCT c FROM Cotizacion c " +
                           "LEFT JOIN FETCH c.insumosCotizacion i " +
                           "JOIN c.ordenTrabajo ot " +
                           "JOIN ot.automovil a " +
                           "JOIN a.cliente cl " +
-                          "WHERE (i.id IS NULL OR i.activo = :activoInsumo) " +
-                          "AND LOWER(CONCAT(cl.nombre, ' ', cl.apellidoPaterno, ' ', COALESCE(cl.apellidoMaterno, ''))) LIKE :nombreCliente";
+                          "WHERE LOWER(CONCAT(cl.nombre, ' ', cl.apellidoPaterno, ' ', COALESCE(cl.apellidoMaterno, ''))) LIKE :nombreCliente";
 
             List<Cotizacion> cotizaciones = em.createQuery(jpql, Cotizacion.class)
-                     .setParameter("activoInsumo", true)
                      .setParameter("nombreCliente", terminoBusqueda)
                      .setHint(QueryHints.REFRESH, HintValues.TRUE)
                      .getResultList();
@@ -162,14 +155,12 @@ public class CotizacionesDAO implements ICotizacionesDAO{
     public List<Cotizacion> obtenerCotizacionesFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin) throws PersistenciaException {
         EntityManager em = Conexion.crearConexion();
         try {
-            
+
             String jpql = "SELECT DISTINCT c FROM Cotizacion c " +
                           "LEFT JOIN FETCH c.insumosCotizacion i " +
-                          "WHERE (i.id IS NULL OR i.activo = :activoInsumo) " +
-                          "AND c.fechaCreacion BETWEEN :fechaInicio AND :fechaFin";
+                          "WHERE c.fechaCreacion BETWEEN :fechaInicio AND :fechaFin";
 
             List<Cotizacion> cotizaciones = em.createQuery(jpql, Cotizacion.class)
-                     .setParameter("activoInsumo", true)
                      .setParameter("fechaInicio", fechaInicio)
                      .setParameter("fechaFin", fechaFin)
                      .setHint(QueryHints.REFRESH, HintValues.TRUE)
@@ -178,8 +169,7 @@ public class CotizacionesDAO implements ICotizacionesDAO{
             return cotizaciones;
 
         } catch (Exception e) {
-            
-            throw new PersistenciaException("Error al consultar las cotizaciones por rango de fechas.", e); 
+            throw new PersistenciaException(MENSAJE_ERROR_CONSULTA_FECHAS, e); 
         } finally {
             em.close();
         }
@@ -214,7 +204,6 @@ public class CotizacionesDAO implements ICotizacionesDAO{
                     for (InsumoCotizacion existente : cotizacionExistente.getInsumosCotizacion()) {
                         mapaExistentes.put(existente.getInsumo().getId(), existente);
                     }
-
 
                     List<InsumoCotizacion> insumosNuevos = new ArrayList<>();
 
@@ -274,7 +263,15 @@ public class CotizacionesDAO implements ICotizacionesDAO{
             Cotizacion cotizacion = em.find(Cotizacion.class, idCotizacion);
 
             if (cotizacion != null) {
+                // Cambiamos el estado a Cancelada
                 cotizacion.setEstadoCotizacion(EstadoCotizacion.CANCELADA); 
+                
+                // Se desactivan los insumos asociados al cancelar
+                if (cotizacion.getInsumosCotizacion() != null) {
+                    for (InsumoCotizacion insumo : cotizacion.getInsumosCotizacion()) {
+                        insumo.setActivo(false);
+                    }
+                }
             }
 
             em.getTransaction().commit();
@@ -285,6 +282,39 @@ public class CotizacionesDAO implements ICotizacionesDAO{
                 em.getTransaction().rollback();
             }
             throw new PersistenciaException(MENSAJE_ERROR_CANCELAR, e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public Cotizacion habilitarCotizacion(Long idCotizacion) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            em.getTransaction().begin();
+            
+            Cotizacion cotizacion = em.find(Cotizacion.class, idCotizacion);
+
+            if (cotizacion != null) {
+                // Se habilita la cotización principal
+                cotizacion.setEstadoCotizacion(EstadoCotizacion.ACTIVA);
+                
+                // Se activans todos sus insumos asociados
+                if (cotizacion.getInsumosCotizacion() != null) {
+                    for (InsumoCotizacion insumo : cotizacion.getInsumosCotizacion()) {
+                        insumo.setActivo(true);
+                    }
+                }
+            }
+
+            em.getTransaction().commit();
+            return cotizacion;
+
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new PersistenciaException("Error al habilitar la cotización", e);
         } finally {
             em.close();
         }

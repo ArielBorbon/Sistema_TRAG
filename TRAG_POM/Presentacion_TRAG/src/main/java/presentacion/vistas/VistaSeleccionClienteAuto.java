@@ -14,7 +14,13 @@ import presentacion.interfaces.vistas.IVistaSeleccionClienteAuto;
 
 /**
  *
- * @author romom
+ * Archivo: VistaSeleccionClienteAuto.java
+ * 
+ * @author Ariel Eduardo Borbón Izaguirre - 253080
+ * @author Sebastián Bórquez Huerta - 253080
+ * @author Yuri Germán García López - 253080
+ * @author Manuel Romo López - 253080
+ * 
  */
 public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccionClienteAuto{
 
@@ -28,6 +34,7 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
     public VistaSeleccionClienteAuto(IControlAgregarCotizacion control) {
         initComponents();
         this.control = control;
+        btnContinuar.setEnabled(false);
         
         setLocationRelativeTo(null);
         
@@ -102,7 +109,7 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
-        gridBagConstraints.insets = new java.awt.Insets(0, 91, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 61, 0, 32);
         jPanel1.add(jLabel2, gridBagConstraints);
 
         jLabel3.setText("Automóvil");
@@ -111,7 +118,7 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
-        gridBagConstraints.insets = new java.awt.Insets(0, 39, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 29, 0, 20);
         jPanel1.add(jLabel3, gridBagConstraints);
 
         ImageIcon iconoOriginalCliente = new javax.swing.ImageIcon(getClass().getResource("/cliente.png"));
@@ -143,6 +150,8 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LAST_LINE_END;
         jPanel1.add(imgAutomovil, gridBagConstraints);
 
+        Añadir.setBackground(new java.awt.Color(211, 233, 255));
+        Añadir.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         Añadir.setText("Añadir");
         Añadir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,15 +162,20 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 15);
         jPanel1.add(Añadir, gridBagConstraints);
 
+        jButton1.setBackground(new java.awt.Color(204, 229, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton1.setText("Añadir");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 15);
         jPanel1.add(jButton1, gridBagConstraints);
 
+        cmbBoxClientes.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cmbBoxClientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbBoxClientesActionPerformed(evt);
@@ -172,10 +186,12 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 31);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 11);
         jPanel1.add(cmbBoxClientes, gridBagConstraints);
 
+        cmbBoxAutomoviles.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cmbBoxAutomoviles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbBoxAutomovilesActionPerformed(evt);
@@ -186,6 +202,7 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 39);
         jPanel1.add(cmbBoxAutomoviles, gridBagConstraints);
@@ -200,6 +217,8 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 60, 20, 60));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
+        btnContinuar.setBackground(new java.awt.Color(204, 255, 204));
+        btnContinuar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnContinuar.setText("Continuar");
         btnContinuar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -208,6 +227,8 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         });
         jPanel3.add(btnContinuar, java.awt.BorderLayout.LINE_END);
 
+        btnVolver.setBackground(new java.awt.Color(255, 255, 204));
+        btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnVolver.setText("Volver");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -232,7 +253,7 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
     }//GEN-LAST:event_AñadirActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        // TODO add your handling code here:
+        regresarSeleccionClienteAutomovil();
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void cmbBoxClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxClientesActionPerformed
@@ -253,15 +274,25 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
         if(clienteSeleccionado != null){
             Long idClienteSeleccionado = clienteSeleccionado.getId();
             control.seleccionarCliente(idClienteSeleccionado);    
-        }
+        }    
+    }
+    
+    private void regresarSeleccionClienteAutomovil(){
         
+        control.atrasPrincipal();
         
     }
     
     private void seleccionarAutomovil(){
         AutomovilResumenDTO automovilSeleccionado = (AutomovilResumenDTO) cmbBoxAutomoviles.getSelectedItem();
         
-        control.seleccionarAutomovil(automovilSeleccionado);
+        if(automovilSeleccionado != null){
+            control.seleccionarAutomovil(automovilSeleccionado);
+            btnContinuar.setEnabled(true);
+        } else{
+            btnContinuar.setEnabled(false);
+        }
+        
     }
     
     private void continuar(){
@@ -320,6 +351,7 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
 
     @Override
     public void cargarAutosCliente(List<AutomovilResumenDTO> automoviles, Long idAutomovilSeleccionado) {
+        
         cmbBoxAutomoviles.removeAllItems();
         automoviles.forEach(cmbBoxAutomoviles::addItem);
         
@@ -332,7 +364,7 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
     }
     
     @Override
-    public void mostrarError(String mensajeError) {
+    public void mostrarMensaje(String mensajeError) {
         JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
 

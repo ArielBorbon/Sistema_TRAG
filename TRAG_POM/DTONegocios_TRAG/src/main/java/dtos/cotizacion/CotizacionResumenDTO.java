@@ -20,10 +20,13 @@ import java.util.List;
 public class CotizacionResumenDTO {
     
     // Mostrar auto, precio y fecha.
+    private Long id;
     private String nombreCliente;
     private String apellidoPaternoCliente;
+    public String apellidoMaternoCliente;
     private String marcaAutomovil;
     private String modeloAutomovil;
+    private String matriculaAutomovil;
     private Integer anioAutomovil;
     private LocalDateTime fechaCreacion;
     private BigDecimal precioManoObra;
@@ -31,11 +34,14 @@ public class CotizacionResumenDTO {
     private BigDecimal precioTotal;
     private EstadoCotizacionNegocios estadoCotizacion;
 
-    public CotizacionResumenDTO(String nombreCliente, String apellidoPaternoCliente, String marcaAutomovil, String modeloAutomovil, Integer anioAutomovil, LocalDateTime fechaCreacion, BigDecimal precioManoObra, List<InsumoCotizacionDetalleDTO> insumosCotizacion, EstadoCotizacionNegocios estadoCotizacion) {
+    public CotizacionResumenDTO(Long id, String nombreCliente, String apellidoPaternoCliente, String apellidoMaternoCliente, String marcaAutomovil, String modeloAutomovil, String matriculaAutomovil, Integer anioAutomovil, LocalDateTime fechaCreacion, BigDecimal precioManoObra, List<InsumoCotizacionDetalleDTO> insumosCotizacion, EstadoCotizacionNegocios estadoCotizacion) {
+        this.id = id;
         this.nombreCliente = nombreCliente;
         this.apellidoPaternoCliente = apellidoPaternoCliente;
+        this.apellidoMaternoCliente = apellidoMaternoCliente;
         this.marcaAutomovil = marcaAutomovil;
         this.modeloAutomovil = modeloAutomovil;
+        this.matriculaAutomovil = matriculaAutomovil;
         this.anioAutomovil = anioAutomovil;
         this.fechaCreacion = fechaCreacion;
         this.precioManoObra = precioManoObra;
@@ -43,6 +49,26 @@ public class CotizacionResumenDTO {
         this.estadoCotizacion = estadoCotizacion;
     }
 
+    
+    
+    public CotizacionResumenDTO(Long id, String nombreCliente, String apellidoPaternoCliente, String marcaAutomovil, String modeloAutomovil, String matriculaAutomovil, Integer anioAutomovil, LocalDateTime fechaCreacion, BigDecimal precioManoObra, List<InsumoCotizacionDetalleDTO> insumosCotizacion, EstadoCotizacionNegocios estadoCotizacion) {
+        this.id = id;
+        this.nombreCliente = nombreCliente;
+        this.apellidoPaternoCliente = apellidoPaternoCliente;
+        this.marcaAutomovil = marcaAutomovil;
+        this.modeloAutomovil = modeloAutomovil;
+        this.matriculaAutomovil = matriculaAutomovil;
+        this.anioAutomovil = anioAutomovil;
+        this.fechaCreacion = fechaCreacion;
+        this.precioManoObra = precioManoObra;
+        this.insumosCotizacion = insumosCotizacion;
+        this.estadoCotizacion = estadoCotizacion;
+    }
+
+    public Long getId() {
+        return id;
+    }
+    
     public String getNombreCliente() {
         return nombreCliente;
     }
@@ -51,6 +77,10 @@ public class CotizacionResumenDTO {
         return apellidoPaternoCliente;
     }
 
+    public String getApellidoMaternoCliente() {
+        return apellidoMaternoCliente;
+    }
+    
     public String getMarcaAutomovil() {
         return marcaAutomovil;
     }
@@ -77,6 +107,10 @@ public class CotizacionResumenDTO {
 
     public BigDecimal getPrecioTotal() {
         return precioTotal;
+    }
+
+    public String getMatriculaAutomovil() {
+        return matriculaAutomovil;
     }
 
     public void setPrecioTotal(BigDecimal precioTotal) {
