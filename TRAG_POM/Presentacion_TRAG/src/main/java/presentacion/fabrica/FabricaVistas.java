@@ -65,8 +65,7 @@ public class FabricaVistas {
 
     public static IConsultaCotizacion getVistaConsultarCotizacion(IControlConsultaCotizacion control) {
 
-        IConsultaCotizacion consultaCotizacion = new VistaConsultaCotizacion();
-        return consultaCotizacion;
+        return new VistaConsultaCotizacion(control);
 
     }
 

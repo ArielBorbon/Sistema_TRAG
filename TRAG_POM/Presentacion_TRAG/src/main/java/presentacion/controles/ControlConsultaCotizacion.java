@@ -36,7 +36,6 @@ public class ControlConsultaCotizacion implements IControlConsultaCotizacion {
         if (texto == null) texto = "";
 
         try {
-            // obtener lista de insumos que contengan el texto que agregamos
             List<InsumoResumenDTO> insumos = administradorInsumos.obtenerInsumosNombre(texto);
 
             if (vista != null) {
@@ -52,21 +51,10 @@ public class ControlConsultaCotizacion implements IControlConsultaCotizacion {
         if (insumo == null) return;
 
         try {
-            // añadir insumo a la vista mostrando solo nombre y precio
             vista.aniadirInsumo(insumo);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    @Override
-    public void aniadirInsumo(String nombreInsumo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void eliminarInsumo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override

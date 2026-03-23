@@ -14,10 +14,6 @@ public interface IControlConsultaCotizacion {
     
     public void seleccionarInsumo(InsumoResumenDTO insumo);
     
-    public abstract void aniadirInsumo(String nombreInsumo);
-    
-    public abstract void eliminarInsumo();
-    
     public abstract void guardar();
     
     public abstract void regresar();

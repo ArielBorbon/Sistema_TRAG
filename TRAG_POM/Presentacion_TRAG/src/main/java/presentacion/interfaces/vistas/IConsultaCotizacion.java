@@ -1,6 +1,7 @@
 package presentacion.interfaces.vistas;
 
 import dtos.cotizacion.CotizacionResumenDTO;
+import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
 import dtos.insumos.InsumoDetalleDTO;
 import dtos.insumos.InsumoResumenDTO;
 import java.util.List;
@@ -14,8 +15,14 @@ public interface IConsultaCotizacion extends IVista{
     
     public abstract void mostrarMensajeRapido(String mensaje);
     
-    void mostrarInsumosBuscados(List<InsumoResumenDTO> insumos);
+    public abstract void mostrarInsumosBuscados(List<InsumoResumenDTO> insumos);
 
-    void aniadirInsumo(InsumoResumenDTO insumo);
+    public abstract void aniadirInsumo(InsumoResumenDTO insumo);
+    
+    public abstract void eliminarInsumo(InsumoResumenDTO insumo);
+    
+    public abstract void guardarInsumo(InsumoResumenDTO insumo);
+    
+    public List<InsumoCotizacionDetalleDTO> obtenerInsumosActuales();
     
 }

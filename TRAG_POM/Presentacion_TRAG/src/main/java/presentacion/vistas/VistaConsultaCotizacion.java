@@ -48,12 +48,6 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         setLocationRelativeTo(null);
     }
     
-    public VistaConsultaCotizacion() {
-        initComponents();
-        configurarLayout();
-        setLocationRelativeTo(null);
-    }
-    
     private void configurarLayout(){
         this.getContentPane().setLayout(new BorderLayout());
 
@@ -64,7 +58,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         // panel que solo pinta el fondo de color
         panelFondo = new JPanel();
         panelFondo.setBackground(new Color(243, 243, 243));
-        panelFondo.setLayout(null); 
+        panelFondo.setLayout(null);
         this.getContentPane().add(panelFondo, BorderLayout.CENTER);
         
         // poner el icono del cliente el label
@@ -121,7 +115,6 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         tablaInsumos.getColumnModel().getColumn(1).setPreferredWidth(200); // Pieza
         tablaInsumos.getColumnModel().getColumn(2).setPreferredWidth(150); // Costo
         tablaInsumos.getColumnModel().getColumn(3).setPreferredWidth(205); // Cantidad
-        //tablaInsumos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
         // meter tabla en el scroll
         scrollPiezas.setViewportView(tablaInsumos);
@@ -145,7 +138,17 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
                 txtBuscarInsumo.requestFocus();
             }
         });
+        
+        btnEliminarInsumo.addActionListener(evt -> {
+            eliminarInsumo(null);
+        });
 
+        btnGuardar.addActionListener(evt -> {
+            if (control != null) {
+                control.guardar();
+            }
+        });
+        
         // buscador de insumos
         txtBuscarInsumo = new JTextField();
         txtBuscarInsumo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -160,7 +163,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         contenedorInsumosBuscados.setVisible(false);
 
         scrollInsumosBuscados = new JScrollPane(contenedorInsumosBuscados);
-        scrollInsumosBuscados.setBounds(467, 535, 400, 150);
+        scrollInsumosBuscados.setBounds(267, 535, 400, 90);
         scrollInsumosBuscados.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         scrollInsumosBuscados.setVisible(false);
 
@@ -201,33 +204,28 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
     
     // método que ayuda a crear un card donde se acomodarán todos los insumos
     private JPanel crearCardInsumo(InsumoResumenDTO insumo) {
+
         JPanel card = new JPanel(new BorderLayout());
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true));
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        card.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        card.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-        JLabel lblNombre = new JLabel(insumo.getNombre() != null ? insumo.getNombre() : "N/A");
-        lblNombre.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblNombre.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        JLabel nombre = new JLabel(insumo.getNombre());
+        nombre.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
 
-        JLabel lblPrecio = new JLabel("$" + insumo.getPrecioSugerido());
-        lblPrecio.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblPrecio.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-        lblPrecio.setHorizontalAlignment(SwingConstants.RIGHT);
+        JLabel precio = new JLabel("$" + insumo.getPrecioSugerido());
+        precio.setHorizontalAlignment(SwingConstants.RIGHT);
+        precio.setBorder(BorderFactory.createEmptyBorder(0,0,0,30));
 
-        card.add(lblNombre, BorderLayout.WEST);
-        card.add(lblPrecio, BorderLayout.EAST);
+        card.add(nombre, BorderLayout.WEST);
+        card.add(precio, BorderLayout.EAST);
 
         card.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (control != null) {
-                    control.seleccionarInsumo(insumo); // agrega insumo a la cotización
-                    txtBuscarInsumo.setText("");
-                    contenedorInsumosBuscados.setVisible(false);
-                    scrollInsumosBuscados.setVisible(false);
-                }
+                control.seleccionarInsumo(insumo);
+
+                txtBuscarInsumo.setText("");
+                scrollInsumosBuscados.setVisible(false);
             }
         });
 
@@ -267,6 +265,29 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         } catch (Exception e) {
             return new ImageIcon();
         }
+    }
+    
+    private void recalcularTotales() {
+        java.math.BigDecimal totalInsumos = java.math.BigDecimal.ZERO;
+
+        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+            String precioStr = modeloTabla.getValueAt(i, 2).toString().replace("$", "");
+            int cantidad = Integer.parseInt(modeloTabla.getValueAt(i, 3).toString());
+
+            java.math.BigDecimal precio = new java.math.BigDecimal(precioStr);
+            java.math.BigDecimal subtotal = precio.multiply(java.math.BigDecimal.valueOf(cantidad));
+
+            totalInsumos = totalInsumos.add(subtotal);
+        }
+
+        etqTotalPiezasCotizacion.setText("$" + totalInsumos);
+
+        // Mano de obra actual (ya mostrada)
+        String manoObraStr = etqTotalManoObra.getText().replace("$", "");
+        java.math.BigDecimal manoObra = new java.math.BigDecimal(manoObraStr);
+
+        java.math.BigDecimal totalFinal = totalInsumos.add(manoObra);
+        etqTotalCotizacion.setText("$" + totalFinal);
     }
 
     /**
@@ -357,14 +378,14 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         etqTotalCotizacion.setText("total");
 
         btnGuardar.setBackground(new java.awt.Color(177, 255, 186));
-        btnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnGuardar.setText("Guardar");
         btnGuardar.setMaximumSize(new java.awt.Dimension(85, 32));
         btnGuardar.setMinimumSize(new java.awt.Dimension(85, 32));
         btnGuardar.setPreferredSize(new java.awt.Dimension(85, 32));
 
         btnIniciarTrabajo.setBackground(new java.awt.Color(255, 243, 177));
-        btnIniciarTrabajo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnIniciarTrabajo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnIniciarTrabajo.setText("Iniciar Trabajo");
         btnIniciarTrabajo.setMaximumSize(new java.awt.Dimension(85, 32));
         btnIniciarTrabajo.setMinimumSize(new java.awt.Dimension(85, 32));
@@ -421,9 +442,9 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnIniciarTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(btnIniciarTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(38, 38, 38)
+                                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(66, 66, 66))
         );
         layout.setVerticalGroup(
@@ -584,6 +605,8 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
                 contador++;
             }
         }
+        
+        recalcularTotales();
     }
 
     @Override
@@ -630,6 +653,7 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    @Override
     public void mostrarInsumosBuscados(List<InsumoResumenDTO> insumos) {
         contenedorInsumosBuscados.removeAll();
 
@@ -646,11 +670,12 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         contenedorInsumosBuscados.revalidate();
         contenedorInsumosBuscados.repaint();
 
+        contenedorInsumosBuscados.setPreferredSize(
+            new Dimension(scrollInsumosBuscados.getWidth(), insumos.size() * 55)
+        );
+
         contenedorInsumosBuscados.setVisible(true);
         scrollInsumosBuscados.setVisible(true);
-
-        panelFondo.revalidate();
-        panelFondo.repaint();
     }
 
     @Override
@@ -658,9 +683,70 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
         int rowCount = modeloTabla.getRowCount();
         modeloTabla.addRow(new Object[]{
             rowCount + 1,
-            insumo.getNombre(),
+            insumo,
             "$" + insumo.getPrecioSugerido(),
-            1 // cantidad pendiente inicial
+            1
         });
+        recalcularTotales();
+    }
+    
+    @Override
+    public void eliminarInsumo(InsumoResumenDTO insumo) {
+        int filaSeleccionada = tablaInsumos.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Selecciona un insumo primero");
+            return;
+        }
+
+        String nombre = modeloTabla.getValueAt(filaSeleccionada, 1).toString();
+        int cantidad = Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 3).toString());
+        
+        int confirmacion = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "¿Desea eliminar " + cantidad + " unidades de \"" + nombre + "\"?",
+            "Confirmar eliminación",
+            javax.swing.JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
+            modeloTabla.removeRow(filaSeleccionada);
+            for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+                modeloTabla.setValueAt(i + 1, i, 0);
+            }
+            recalcularTotales();
+        }
+    }
+    
+    @Override
+    public void guardarInsumo(InsumoResumenDTO insumo) {
+        // TODO
+    }
+    
+    @Override
+    public List<InsumoCotizacionDetalleDTO> obtenerInsumosActuales() {
+        List<InsumoCotizacionDetalleDTO> lista = new java.util.ArrayList<>();
+
+        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+
+            InsumoResumenDTO insumo =
+                (InsumoResumenDTO) modeloTabla.getValueAt(i, 1);
+
+            String precioStr = modeloTabla.getValueAt(i, 2).toString().replace("$", "");
+            int cantidad = Integer.parseInt(modeloTabla.getValueAt(i, 3).toString());
+
+            java.math.BigDecimal precio = new java.math.BigDecimal(precioStr);
+
+            InsumoCotizacionDetalleDTO dto =
+                new InsumoCotizacionDetalleDTO(
+                    null,
+                    cantidad,
+                    precio
+                );
+
+            lista.add(dto);
+        }
+
+        return lista;
     }
 }
