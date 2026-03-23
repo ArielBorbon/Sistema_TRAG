@@ -648,6 +648,9 @@ public class VistaConsultaCotizacion extends javax.swing.JFrame implements ICons
 
         contenedorInsumosBuscados.setVisible(true);
         scrollInsumosBuscados.setVisible(true);
+
+        panelFondo.revalidate();
+        panelFondo.repaint();
     }
 
     @Override
