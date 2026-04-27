@@ -8,6 +8,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -15,6 +16,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -226,9 +228,40 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             }
         };
 
-        for (int i = 0; i <= 4; i++) {
-            tblInsumosCotizacion.getColumnModel().getColumn(i).setCellRenderer(rendererAzul);
-        }
+        DecimalFormat df = new java.text.DecimalFormat("$#,##0.00");
+        DefaultTableCellRenderer rendererMoneda = new DefaultTableCellRenderer() {
+            Color colorAzulClaro = new Color(218, 235, 255);
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                // Formateamos a moneda
+                if (value instanceof java.math.BigDecimal) {
+                    value = df.format(value);
+                } else if (value instanceof Number) {
+                    value = df.format(((Number) value).doubleValue());
+                }
+
+                Component celda = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                
+                if (!isSelected) {
+                    celda.setBackground((row % 2 == 0) ? colorAzulClaro : Color.WHITE);
+                }
+                
+                setHorizontalAlignment(SwingConstants.RIGHT);
+                ((javax.swing.JComponent) celda).setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK),
+                        BorderFactory.createEmptyBorder(0, 0, 0, 10)
+                ));
+                return celda;
+            }
+        };
+
+        tblInsumosCotizacion.getColumnModel().getColumn(0).setCellRenderer(rendererAzul);
+        tblInsumosCotizacion.getColumnModel().getColumn(1).setCellRenderer(rendererAzul);
+        tblInsumosCotizacion.getColumnModel().getColumn(3).setCellRenderer(rendererAzul);
+        
+        tblInsumosCotizacion.getColumnModel().getColumn(2).setCellRenderer(rendererMoneda);
+        tblInsumosCotizacion.getColumnModel().getColumn(4).setCellRenderer(rendererMoneda);
 
         tblInsumosCotizacion.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
         tblInsumosCotizacion.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new javax.swing.JCheckBox()));
@@ -248,20 +281,14 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
 
         tblInsumosCotizacion.getColumnModel().getColumn(0).setPreferredWidth(40);
         tblInsumosCotizacion.getColumnModel().getColumn(0).setMaxWidth(60);
-
         tblInsumosCotizacion.getColumnModel().getColumn(1).setPreferredWidth(300);
-
         tblInsumosCotizacion.getColumnModel().getColumn(2).setPreferredWidth(100);
-
         tblInsumosCotizacion.getColumnModel().getColumn(3).setPreferredWidth(100);
-
         tblInsumosCotizacion.getColumnModel().getColumn(4).setPreferredWidth(100);
-
         tblInsumosCotizacion.getColumnModel().getColumn(5).setPreferredWidth(120);
         tblInsumosCotizacion.getColumnModel().getColumn(5).setMinWidth(100);
 
         tblInsumosCotizacion.getColumnModel().getColumn(3).setCellEditor(new SpinnerEditor());
-
     }
 
     private void actualizarSubtotal(int fila) {
@@ -319,6 +346,9 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         lblTotal = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         lblManoObraInvalida = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         btnAgregarInsumo = new javax.swing.JButton();
         cmpTxtBuscarInsumos = new javax.swing.JTextField();
@@ -449,7 +479,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         gridBagConstraints.ipadx = 111;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 25, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 11, 0, 0);
         jPanel7.add(jLabel3, gridBagConstraints);
 
         cmpTxtTotalInsumos.setEditable(false);
@@ -478,7 +508,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 21, 0, 25);
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 25);
         jPanel7.add(jLabel4, gridBagConstraints);
 
         cmpTxtCostoManoObra.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -512,7 +542,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 25, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 11, 0, 11);
         jPanel7.add(jLabel5, gridBagConstraints);
 
         lblTotal.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -544,6 +574,32 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 26, 0, 0);
         jPanel7.add(lblManoObraInvalida, gridBagConstraints);
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel7.setText("$");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 11, 0, 0);
+        jPanel7.add(jLabel7, gridBagConstraints);
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel8.setText("$");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(4, 10, 4, 0);
+        jPanel7.add(jLabel8, gridBagConstraints);
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel9.setText("$");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        jPanel7.add(jLabel9, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -733,6 +789,9 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
@@ -829,8 +888,9 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
                 sumaInsumos = sumaInsumos.add(subtotalFila);
             }
         }
+        DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
 
-        cmpTxtTotalInsumos.setText(sumaInsumos.setScale(2, java.math.RoundingMode.HALF_UP).toString());
+        cmpTxtTotalInsumos.setText(df.format(sumaInsumos));
 
         BigDecimal costoManoObra = BigDecimal.ZERO;
         try {
@@ -843,7 +903,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
 
         BigDecimal totalGeneral = sumaInsumos.add(costoManoObra);
 
-        lblTotal.setText(totalGeneral.setScale(2, java.math.RoundingMode.HALF_UP).toString());
+        lblTotal.setText(df.format(totalGeneral));
     }
 
     private void actualizarCostoManoObra() {
@@ -857,40 +917,38 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         String costoManoObraS = cmpTxtCostoManoObra.getText();
         String totalS = lblTotal.getText();
 
-        Double totalInsumosD = null;
-        Double costoManoObraD = null;
-        Double totalD = null;
         try {
-            totalInsumosD = Double.valueOf(totalInsumosS);
-            costoManoObraD = Double.valueOf(costoManoObraS);
-            totalD = Double.valueOf(totalS);
+            // Limpieza
+            String cleanInsumos = totalInsumosS.replace(",", "");
+            String cleanManoObra = costoManoObraS.replace(",", "");
+            String cleanTotal = totalS.replace("$", "").replace(",", "").trim();
+
+            BigDecimal totalInsumos = new BigDecimal(cleanInsumos);
+            BigDecimal costoManoObra = new BigDecimal(cleanManoObra);
+            BigDecimal total = new BigDecimal(cleanTotal);
 
             lblManoObraInvalida.setVisible(false);
-            
-            BigDecimal totalInsumos = BigDecimal.valueOf(totalInsumosD);
-            BigDecimal costoManoObra = BigDecimal.valueOf(costoManoObraD);
-            BigDecimal total = BigDecimal.valueOf(totalD);
 
             List<BorradorInsumoCotizacion> borradoresInsumoCotizacion = obtenerInsumosCotizacion();
-
-            BorradorCotizacion borradorCotizacion = new BorradorCotizacion(idCotizacion, totalInsumos, costoManoObra, total, borradoresInsumoCotizacion);
+            BorradorCotizacion borradorCotizacion = new BorradorCotizacion(
+                idCotizacion, totalInsumos, costoManoObra, total, borradoresInsumoCotizacion
+            );
 
             control.guardarCambioCotizacion(borradorCotizacion);
-            
             btnActualizar.setEnabled(true);
-            
-        } catch (NumberFormatException e) {
-            
-            if(costoManoObraS.isBlank()){
+
+        } catch (NumberFormatException | ArithmeticException e) {
+            if (costoManoObraS.isBlank()) {
                 lblManoObraInvalida.setText("Debe ingresar un costo de mano de obra");
                 lblManoObraInvalida.setVisible(true);
-            } else if(!costoManoObraS.matches("-?\\d+(\\.\\d+)?")){
-                lblManoObraInvalida.setText("Debe ingresar una cantidad válida");
-                lblManoObraInvalida.setVisible(true);
+            } else {
+                String cleanManoObra = costoManoObraS.replace(",", "");
+                if (!cleanManoObra.matches("-?\\d+(\\.\\d+)?")) {
+                    lblManoObraInvalida.setText("Debe ingresar una cantidad válida");
+                    lblManoObraInvalida.setVisible(true);
+                }
             }
-            
             btnActualizar.setEnabled(false);
-            
         }
 
     }
