@@ -873,7 +873,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
 
             List<BorradorInsumoCotizacion> borradoresInsumoCotizacion = obtenerInsumosCotizacion();
 
-            BorradorCotizacion borradorCotizacion = new BorradorCotizacion(totalInsumos, costoManoObra, total, borradoresInsumoCotizacion);
+            BorradorCotizacion borradorCotizacion = new BorradorCotizacion(idCotizacion, totalInsumos, costoManoObra, total, borradoresInsumoCotizacion);
 
             control.guardarCambioCotizacion(borradorCotizacion);
             
