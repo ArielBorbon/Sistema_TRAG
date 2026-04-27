@@ -1,4 +1,3 @@
-
 package presentacion.vistas;
 
 import dtos.cotizacion.CotizacionDetalleDTO;
@@ -27,20 +26,21 @@ import presentacion.interfaces.IControlConsultarCotizaciones;
 /**
  *
  * Archivo: VistaConsultaCotizacion.java
- * 
+ *
  * @author Ariel Eduardo Borbón Izaguirre - 253080
  * @author Sebastián Bórquez Huerta - 253080
  * @author Yuri Germán García López - 253080
  * @author Manuel Romo López - 253080
- * 
+ *
  */
-public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCotizacion{
+public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCotizacion {
 
     private IControlConsultarCotizaciones control;
-    
+
     private Long idCotizacion;
-    
+
     private boolean esCancelada = false;
+
     /**
      * Creates new form VistaCrearCotizacion
      */
@@ -48,30 +48,38 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         initComponents();
         configurarTablaInsumos();
         configurarBuscardorInsumos();
-        
+
         this.control = control;
-        
+
         setLocationRelativeTo(null);
     }
-    
+
     private void configurarBuscardorInsumos() {
 
         popMenuBuscarInsumos.add(scrollPaneBuscarInsumos);
 
         cmpTxtBuscarInsumos.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { buscarSugerencias(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                buscarSugerencias();
+            }
+
             @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { buscarSugerencias(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                buscarSugerencias();
+            }
+
             @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { buscarSugerencias(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                buscarSugerencias();
+            }
         });
 
         listBuscarInsumos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (evt.getClickCount() == 1) { 
+                if (evt.getClickCount() == 1) {
                     String seleccion = listBuscarInsumos.getSelectedValue();
-                    if (seleccion != null) {
+                    if (seleccion != null && !seleccion.equals("No se encontraron resultados")) {
                         cmpTxtBuscarInsumos.setText(seleccion);
                         popMenuBuscarInsumos.setVisible(false);
                         cmpTxtBuscarInsumos.requestFocus();
@@ -85,10 +93,10 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
                     String textoBuscador = cmpTxtBuscarInsumos.getText();
-                    
-                    if (!textoBuscador.trim().isEmpty()) {
+
+                    if (!textoBuscador.isEmpty() && !textoBuscador.equals("No se encontraron resultados")) {
                         seleccionInsumoAgregarInsumoATabla(textoBuscador);
-                        
+
                         cmpTxtBuscarInsumos.setText("");
                         popMenuBuscarInsumos.setVisible(false);
                     }
@@ -96,7 +104,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             }
         });
     }
-    
+
     private void buscarSugerencias() {
         String texto = cmpTxtBuscarInsumos.getText().trim();
         if (!texto.isEmpty()) {
@@ -105,32 +113,30 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             popMenuBuscarInsumos.setVisible(false);
         }
     }
-    
+
     @Override
     public void actualizarSugerencias(List<InsumoResumenDTO> insumos) {
         DefaultListModel<String> modelo = new DefaultListModel<>();
-        
-        insumos.stream()
-                .map(InsumoResumenDTO::getNombre)
-                .forEach(modelo::addElement);
-                
-        boolean tieneCoincidencias = !modelo.isEmpty();
 
-        if (tieneCoincidencias) {
-            listBuscarInsumos.setModel(modelo);
-            scrollPaneBuscarInsumos.setPreferredSize(new Dimension(cmpTxtBuscarInsumos.getWidth(), 150));
-            popMenuBuscarInsumos.pack();
-            popMenuBuscarInsumos.show(cmpTxtBuscarInsumos, 0, cmpTxtBuscarInsumos.getHeight());
-            cmpTxtBuscarInsumos.requestFocus(); 
+        if (insumos == null || insumos.isEmpty()) {
+            modelo.addElement("No se encontraron resultados");
         } else {
-            popMenuBuscarInsumos.setVisible(false);
+            insumos.stream()
+                    .map(InsumoResumenDTO::getNombre)
+                    .forEach(modelo::addElement);
         }
+
+        listBuscarInsumos.setModel(modelo);
+        scrollPaneBuscarInsumos.setPreferredSize(new Dimension(cmpTxtBuscarInsumos.getWidth(), 150));
+        popMenuBuscarInsumos.pack();
+        popMenuBuscarInsumos.show(cmpTxtBuscarInsumos, 0, cmpTxtBuscarInsumos.getHeight());
+        cmpTxtBuscarInsumos.requestFocus();
     }
-    
+
     private void seleccionInsumoAgregarInsumoATabla(String nombreInsumo) {
         control.agregarInsumo(nombreInsumo);
     }
-    
+
     @Override
     public void agregarInsumoTabla(InsumoResumenDTO insumoResumen) {
         DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
@@ -140,7 +146,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             Long idExistente = (Long) modelo.getValueAt(i, 6);
 
             if (idExistente != null && idExistente.equals(idNuevo)) {
-                return; 
+                return;
             }
         }
 
@@ -148,7 +154,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         String nombreInsumo = insumoResumen.getNombre();
         BigDecimal costoSugerido = insumoResumen.getPrecioSugerido();
         int cantidad = 1;
-        BigDecimal subtotal = insumoResumen.getPrecioSugerido(); 
+        BigDecimal subtotal = insumoResumen.getPrecioSugerido();
 
         modelo.addRow(new Object[]{
             numeroInsumo,
@@ -163,7 +169,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         recalcularTotales();
         crearBorradorCotizacion();
     }
-    
+
     private void configurarTablaInsumos() {
 
         String[] columnas = {"No.", "Insumo", "Costo", "Cantidad", "Subtotal", "Acción", "ID_INSUMO"};
@@ -175,17 +181,24 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
                 }
                 return column == 2 || column == 3 || column == 5;
             }
+
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 switch (columnIndex) {
-                    case 0: case 3: return Integer.class;
-                    case 2: case 4: return java.math.BigDecimal.class;
-                    case 6: return Long.class;
-                    default: return String.class;
+                    case 0:
+                    case 3:
+                        return Integer.class;
+                    case 2:
+                    case 4:
+                        return java.math.BigDecimal.class;
+                    case 6:
+                        return Long.class;
+                    default:
+                        return String.class;
                 }
             }
         };
-        
+
         tblInsumosCotizacion.setModel(modeloTabla);
 
         if (tblInsumosCotizacion.getColumnCount() > 6) {
@@ -194,10 +207,13 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
 
         DefaultTableCellRenderer rendererAzul = new DefaultTableCellRenderer() {
             Color colorAzulClaro = new Color(218, 235, 255);
+
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                if (column == 5) return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                
+                if (column == 5) {
+                    return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                }
+
                 Component celda = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 if (!isSelected) {
                     celda.setBackground((row % 2 == 0) ? colorAzulClaro : Color.WHITE);
@@ -229,7 +245,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
                 }
             }
         });
-        
+
         tblInsumosCotizacion.getColumnModel().getColumn(0).setPreferredWidth(40);
         tblInsumosCotizacion.getColumnModel().getColumn(0).setMaxWidth(60);
 
@@ -243,14 +259,14 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
 
         tblInsumosCotizacion.getColumnModel().getColumn(5).setPreferredWidth(120);
         tblInsumosCotizacion.getColumnModel().getColumn(5).setMinWidth(100);
-        
+
         tblInsumosCotizacion.getColumnModel().getColumn(3).setCellEditor(new SpinnerEditor());
-        
+
     }
-    
+
     private void actualizarSubtotal(int fila) {
         DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
-        
+
         try {
             Object valorCosto = modelo.getValueAt(fila, 2);
             Object valorCantidad = modelo.getValueAt(fila, 3);
@@ -261,9 +277,9 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             BigDecimal subtotal = costo.multiply(new BigDecimal(cantidad));
 
             modelo.setValueAt(subtotal, fila, 4);
-            
+
             recalcularTotales();
-            
+
         } catch (NumberFormatException e) {
             modelo.setValueAt(BigDecimal.ZERO, fila, 4);
             recalcularTotales();
@@ -667,12 +683,12 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         volverConsultaCotizacion();
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    private void agregarInsumo(){
+    private void agregarInsumo() {
         String textoBuscador = cmpTxtBuscarInsumos.getText().trim();
-        
+
         if (!textoBuscador.isEmpty()) {
             seleccionInsumoAgregarInsumoATabla(textoBuscador);
-            
+
             cmpTxtBuscarInsumos.setText("");
             popMenuBuscarInsumos.setVisible(false);
             cmpTxtBuscarInsumos.requestFocus();
@@ -680,12 +696,12 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             JOptionPane.showMessageDialog(this, "Por favor seleccione un insumo antes de agregar.", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }
-    
-    private void volverConsultaCotizacion(){
+
+    private void volverConsultaCotizacion() {
         control.volverConsultarCotizacion();
     }
-    
-    private void cancelarConsultarCotizacion(){
+
+    private void cancelarConsultarCotizacion() {
         control.cancelarConsultarCotizacion();
     }
 
@@ -728,30 +744,29 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         idCotizacion = cotizacion.getId();
         lblNombreServicio.setText(cotizacion.getNombreServicio());
         cmpTxtCostoManoObra.setText(cotizacion.getPrecioManoObra().toString());
-        
 
-        esCancelada = cotizacion.getEstado() != null && 
-                      cotizacion.getEstado().name().equals("CANCELADA");
+        esCancelada = cotizacion.getEstado() != null
+                && cotizacion.getEstado().name().equals("CANCELADA");
 
         cmpTxtCostoManoObra.setEditable(!esCancelada);
-        
+
         lblBuscarInsumo.setVisible(!esCancelada);
         cmpTxtBuscarInsumos.setVisible(!esCancelada);
         btnAgregarInsumo.setVisible(!esCancelada);
-        
-        btnActualizar.setVisible(!esCancelada); 
-        
+
+        btnActualizar.setVisible(!esCancelada);
+
         llenarTablaInsumos(cotizacion);
-        
+
         gestionarColumnaAccion();
-        
+
         recalcularTotales();
     }
-    
+
     private void llenarTablaInsumos(CotizacionDetalleDTO cotizacion) {
-        
+
         DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
-        
+
         modelo.setRowCount(0);
 
         if (cotizacion != null && cotizacion.getInsumosCotizacion() != null) {
@@ -769,7 +784,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             }
         }
     }
-    
+
     private void gestionarColumnaAccion() {
 
         TableColumnModel modeloColumnas = tblInsumosCotizacion.getColumnModel();
@@ -786,7 +801,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             modeloColumnas.removeColumn(modeloColumnas.getColumn(indiceColumna));
         }
     }
-    
+
     private void recalcularTotales() {
 
         DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
@@ -808,52 +823,54 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             if (!textoManoObra.trim().isEmpty()) {
                 costoManoObra = new BigDecimal(textoManoObra);
             }
-        } catch (NumberFormatException e) {}
+        } catch (NumberFormatException e) {
+        }
 
         BigDecimal totalGeneral = sumaInsumos.add(costoManoObra);
 
         lblTotal.setText(totalGeneral.setScale(2, java.math.RoundingMode.HALF_UP).toString());
     }
-    
-    private void actualizarCostoManoObra(){
+
+    private void actualizarCostoManoObra() {
         recalcularTotales();
         crearBorradorCotizacion();
     }
-    
-    private void crearBorradorCotizacion(){
-        
+
+    private void crearBorradorCotizacion() {
+
         String totalInsumosS = cmpTxtTotalInsumos.getText();
         String costoManoObraS = cmpTxtCostoManoObra.getText();
         String totalS = lblTotal.getText();
-        
+
         Double totalInsumosD = null;
         Double costoManoObraD = null;
         Double totalD = null;
-        try{
+        try {
             totalInsumosD = Double.valueOf(totalInsumosS);
             costoManoObraD = Double.valueOf(costoManoObraS);
             totalD = Double.valueOf(totalS);
-            
-        } catch(NumberFormatException e){}
-        
-        if(totalInsumosD != null && costoManoObraD != null && totalD != null){
-            
+
+        } catch (NumberFormatException e) {
+        }
+
+        if (totalInsumosD != null && costoManoObraD != null && totalD != null) {
+
             BigDecimal totalInsumos = BigDecimal.valueOf(totalInsumosD);
             BigDecimal costoManoObra = BigDecimal.valueOf(costoManoObraD);
             BigDecimal total = BigDecimal.valueOf(totalD);
-            
+
             List<BorradorInsumoCotizacion> borradoresInsumoCotizacion = obtenerInsumosCotizacion();
-            
+
             BorradorCotizacion borradorCotizacion = new BorradorCotizacion(idCotizacion, totalInsumos, costoManoObra, total, borradoresInsumoCotizacion);
-         
+
             control.guardarCambioCotizacion(borradorCotizacion);
-            
+
         }
 
     }
-    
-    private List<BorradorInsumoCotizacion> obtenerInsumosCotizacion(){
-        
+
+    private List<BorradorInsumoCotizacion> obtenerInsumosCotizacion() {
+
         List<BorradorInsumoCotizacion> borradoresInsumoCotizacion = new ArrayList<>();
 
         DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
@@ -871,12 +888,11 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
 
             borradoresInsumoCotizacion.add(borrador);
         }
-        
+
         return borradoresInsumoCotizacion;
     }
-    
-    
-    private void actualizarCotizacion(){
+
+    private void actualizarCotizacion() {
         crearBorradorCotizacion();
         control.actualizarCotizacion();
     }
@@ -895,13 +911,13 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
     public void mostrarMensaje(String mensajeError) {
         JOptionPane.showMessageDialog(this, mensajeError, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
-    
+
     @Override
     public void mostrarMensajeExito() {
         JOptionPane.showMessageDialog(this, "La cotización se ha actualizado.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
         control.aceptarExitoActualizacionCotizacion();
     }
-    
+
     // Clases para botón de eliminar
     private void reordenarNumerosTabla() {
         DefaultTableModel modelo = (DefaultTableModel) tblInsumosCotizacion.getModel();
@@ -911,6 +927,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
     }
 
     class ButtonRenderer extends javax.swing.JButton implements javax.swing.table.TableCellRenderer {
+
         public ButtonRenderer() {
             setOpaque(true);
             setBackground(new Color(255, 102, 102)); // Rojo suave
@@ -920,17 +937,18 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            
+
             if (esCancelada) {
-                return new javax.swing.JLabel(""); 
+                return new javax.swing.JLabel("");
             }
-            
+
             setText((value == null) ? "Eliminar" : value.toString());
             return this;
         }
     }
 
     class ButtonEditor extends javax.swing.DefaultCellEditor {
+
         protected javax.swing.JButton button;
         private boolean isPushed;
         private JTable table;
@@ -943,7 +961,7 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             button.setBackground(new Color(250, 226, 95));
             button.setForeground(Color.WHITE);
             button.setFont(new Font("Segoe UI", Font.BOLD, 12));
-            
+
             button.addActionListener(e -> fireEditingStopped());
         }
 
@@ -959,17 +977,17 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
         @Override
         public Object getCellEditorValue() {
             if (isPushed) {
-                isPushed = false; 
-                
+                isPushed = false;
+
                 javax.swing.SwingUtilities.invokeLater(() -> {
                     DefaultTableModel model = (DefaultTableModel) table.getModel();
-                    
+
                     if (currentRow >= 0 && currentRow < model.getRowCount()) {
-                        
+
                         if (table.isEditing()) {
                             table.getCellEditor().cancelCellEditing();
                         }
-                        
+
                         model.removeRow(currentRow);
                         reordenarNumerosTabla();
                         recalcularTotales();
@@ -986,8 +1004,9 @@ public class VistaConsultaCotizacion extends JFrame implements IVistaConsultaCot
             return super.stopCellEditing();
         }
     }
-    
+
     class SpinnerEditor extends javax.swing.DefaultCellEditor {
+
         private javax.swing.JSpinner spinner;
 
         public SpinnerEditor() {
