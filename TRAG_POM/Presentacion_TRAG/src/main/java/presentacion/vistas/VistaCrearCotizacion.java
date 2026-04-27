@@ -314,6 +314,7 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
         jLabel5 = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        lblManoObraInvalida = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         btnAgregarInsumo = new javax.swing.JButton();
         cmpTxtBuscarInsumos = new javax.swing.JTextField();
@@ -344,7 +345,6 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1100, 700));
-        setPreferredSize(new java.awt.Dimension(1000, 700));
         getContentPane().add(panelEncabezado1, java.awt.BorderLayout.PAGE_START);
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 51));
@@ -504,7 +504,7 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
         jLabel5.setText("TOTAL: ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.weighty = 1.0;
@@ -515,7 +515,7 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
         lblTotal.setText(" jLabel6");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         jPanel7.add(lblTotal, gridBagConstraints);
@@ -523,11 +523,23 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
         jLabel7.setText("Cantidades en pesos MXN.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.weightx = 2.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 55);
         jPanel7.add(jLabel7, gridBagConstraints);
+
+        lblManoObraInvalida.setForeground(new java.awt.Color(255, 0, 51));
+        lblManoObraInvalida.setVisible(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 26, 0, 0);
+        jPanel7.add(lblManoObraInvalida, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -728,6 +740,7 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblManoObraInvalida;
     private javax.swing.JLabel lblNombreServicio;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JList<String> listBuscarInsumos;
@@ -818,11 +831,8 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
             costoManoObraD = Double.valueOf(costoManoObraS);
             totalD = Double.valueOf(totalS);
 
-        } catch (NumberFormatException e) {
-        }
-
-        if (totalInsumosD != null && costoManoObraD != null && totalD != null) {
-
+            lblManoObraInvalida.setVisible(false);
+            
             BigDecimal totalInsumos = BigDecimal.valueOf(totalInsumosD);
             BigDecimal costoManoObra = BigDecimal.valueOf(costoManoObraD);
             BigDecimal total = BigDecimal.valueOf(totalD);
@@ -832,7 +842,21 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
             BorradorCotizacion borradorCotizacion = new BorradorCotizacion(totalInsumos, costoManoObra, total, borradoresInsumoCotizacion);
 
             control.guardarCambioCotizacion(borradorCotizacion);
-
+            
+            btnAceptar.setEnabled(true);
+            
+        } catch (NumberFormatException e) {
+            
+            if(costoManoObraS.isBlank()){
+                lblManoObraInvalida.setText("Debe ingresar un costo de mano de obra");
+                lblManoObraInvalida.setVisible(true);
+            } else if(!costoManoObraS.matches("-?\\d+(\\.\\d+)?")){
+                lblManoObraInvalida.setText("Debe ingresar una cantidad válida");
+                lblManoObraInvalida.setVisible(true);
+            }
+            
+            btnAceptar.setEnabled(false);
+            
         }
 
     }
