@@ -904,7 +904,7 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Guardar Cotización en PDF");
-        fileChooser.setSelectedFile(new File("Cotizacion_" + System.currentTimeMillis() + ".pdf"));
+        fileChooser.setSelectedFile(new File("Cotizacion_" + cotizacion.getId() + ".pdf"));
 
         int seleccion = fileChooser.showSaveDialog(this);
 

@@ -7,6 +7,7 @@ import com.itextpdf.text.pdf.*;
 import dtos.insumocotizacion.InsumoCotizacionDetalleDTO;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -33,6 +34,7 @@ public class GeneradorPDF {
             List<InsumoCotizacionDetalleDTO> insumosCotizacion) {
         
         Document documento = new Document(PageSize.LETTER, 40, 40, 40, 40);
+        DecimalFormat df = new DecimalFormat("#,##0.00");
 
         try {
             PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(rutaDestino));
@@ -155,10 +157,19 @@ public class GeneradorPDF {
                         tablaInsumos,
                         insumoCotizacion.getInsumo().getNombre(),
                         insumoCotizacion.getCantidadRequerida().toString(), 
-                        insumoCotizacion.getPrecio().toString(), 
-                        insumoCotizacion.getSubtotal().toString(),
+                        df.format(insumoCotizacion.getPrecio()),
+                        df.format(insumoCotizacion.getSubtotal()),
                         fuenteNegrita);
             }
+            
+            agregarFilaInsumo(
+                tablaInsumos, 
+                "Mano de obra", 
+                "", 
+                df.format(costoManoObra),
+                df.format(costoManoObra),
+                fuenteNegrita
+            );
             
             BigDecimal subtotal = insumosCotizacion.stream()
                 .map(InsumoCotizacionDetalleDTO::getSubtotal)
@@ -172,9 +183,9 @@ public class GeneradorPDF {
 
             // Totales
             BaseColor grisClaro = new BaseColor(230, 230, 230);
-            agregarFilaTotales(tablaInsumos, "Subtotal", subtotal.toString(), fuenteNegrita, grisClaro);
-            agregarFilaTotales(tablaInsumos, "IVA", iva.toString(), fuenteNegrita, grisClaro);
-            agregarFilaTotales(tablaInsumos, "Total", total.toString(), fuenteNegrita, grisClaro);
+            agregarFilaTotales(tablaInsumos, "Subtotal", df.format(subtotal), fuenteNegrita, grisClaro);
+            agregarFilaTotales(tablaInsumos, "IVA", df.format(iva), fuenteNegrita, grisClaro);
+            agregarFilaTotales(tablaInsumos, "Total", df.format(total), fuenteNegrita, grisClaro);
 
             documento.add(tablaInsumos);
             documento.add(new Paragraph("\n"));
@@ -209,33 +220,21 @@ public class GeneradorPDF {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    private static void agregarCelda(PdfPTable tabla, String texto, Font fuente, int alineacion, BaseColor colorFondo) {
-        PdfPCell celda = new PdfPCell(new Phrase(texto, fuente));
-        celda.setHorizontalAlignment(alineacion);
-        celda.setBackgroundColor(colorFondo);
-        celda.setPaddingBottom(5);
-        tabla.addCell(celda);
-    }
-
     private static void agregarFilaInsumo(PdfPTable tabla, String concepto, String cantidad, String pUnitario, String precio, Font fuenteNegrita) {
         agregarCelda(tabla, concepto, fuenteNegrita, Element.ALIGN_LEFT, BaseColor.WHITE);
         agregarCelda(tabla, cantidad, fuenteNegrita, Element.ALIGN_CENTER, BaseColor.WHITE);
 
-        PdfPCell c1 = new PdfPCell(new Phrase("$", fuenteNegrita));
-        c1.setBorder(Rectangle.LEFT | Rectangle.TOP | Rectangle.BOTTOM); 
-        tabla.addCell(c1);
-        PdfPCell c2 = new PdfPCell(new Phrase(pUnitario, fuenteNegrita));
-        c2.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        c2.setBorder(Rectangle.RIGHT | Rectangle.TOP | Rectangle.BOTTOM);
-        tabla.addCell(c2);
+        PdfPCell cUnitario = new PdfPCell(new Phrase("$" + pUnitario, fuenteNegrita));
+        cUnitario.setColspan(2);
+        cUnitario.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        cUnitario.setPaddingBottom(5);
+        tabla.addCell(cUnitario);
 
-        PdfPCell c3 = new PdfPCell(new Phrase("$", fuenteNegrita));
-        c3.setBorder(Rectangle.LEFT | Rectangle.TOP | Rectangle.BOTTOM);
-        tabla.addCell(c3);
-        PdfPCell c4 = new PdfPCell(new Phrase(precio, fuenteNegrita));
-        c4.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        c4.setBorder(Rectangle.RIGHT | Rectangle.TOP | Rectangle.BOTTOM);
-        tabla.addCell(c4);
+        PdfPCell cPrecioTotal = new PdfPCell(new Phrase("$" + precio, fuenteNegrita));
+        cPrecioTotal.setColspan(2);
+        cPrecioTotal.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        cPrecioTotal.setPaddingBottom(5);
+        tabla.addCell(cPrecioTotal);
     }
 
     private static void agregarFilaTotales(PdfPTable tabla, String etiqueta, String valor, Font fuenteNegrita, BaseColor colorFondo) {
@@ -249,16 +248,20 @@ public class GeneradorPDF {
         eti.setColspan(2); 
         tabla.addCell(eti); 
 
-        PdfPCell s = new PdfPCell(new Phrase("$", fuenteNegrita));
-        s.setBackgroundColor(colorFondo);
-        s.setBorder(Rectangle.LEFT | Rectangle.TOP | Rectangle.BOTTOM);
-        tabla.addCell(s);
-
-        PdfPCell v = new PdfPCell(new Phrase(valor, fuenteNegrita));
+        PdfPCell v = new PdfPCell(new Phrase("$" + valor, fuenteNegrita));
+        v.setColspan(2);
         v.setHorizontalAlignment(Element.ALIGN_RIGHT);
         v.setBackgroundColor(colorFondo);
-        v.setBorder(Rectangle.RIGHT | Rectangle.TOP | Rectangle.BOTTOM);
+        v.setPaddingBottom(5);
         tabla.addCell(v); 
+    }
+
+    private static void agregarCelda(PdfPTable tabla, String texto, Font fuente, int alineacion, BaseColor colorFondo) {
+        PdfPCell celda = new PdfPCell(new Phrase(texto, fuente));
+        celda.setHorizontalAlignment(alineacion);
+        celda.setBackgroundColor(colorFondo);
+        celda.setPaddingBottom(5);
+        tabla.addCell(celda);
     }
 
     static class BordeRedondeadoEvent implements PdfPCellEvent {
