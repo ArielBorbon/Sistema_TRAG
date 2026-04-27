@@ -915,7 +915,12 @@ public class VistaCrearCotizacion extends JFrame implements IVistaCrearCotizacio
 
     @Override
     public void mostrarMensajeExito() {
-        JOptionPane.showMessageDialog(this, "La cotización se ha creado exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this,
+                "La cotización se ha guardado y el PDF se ha generado con éxito.",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        control.aceptarExitoCreacionCotizacion();
     }
 
     // Clases para botón de eliminar

@@ -38,4 +38,5 @@ public interface IControlAgregarCotizacion{
     public abstract void atrasCrearCotizacion();
             
     public abstract void cancelarAgregar();
+    public abstract void aceptarExitoCreacionCotizacion();
 }
