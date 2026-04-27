@@ -1,4 +1,3 @@
-
 package presentacion.controles;
 
 import com.mycompany.administradorcotizaciones_trag.IAdministradorCotizaciones;
@@ -25,23 +24,23 @@ import presentacion.interfaces.IControlCotizaciones;
 /**
  *
  * Archivo: ControlConsultarCotizaciones.java
- * 
+ *
  * @author Ariel Eduardo Borbón Izaguirre - 253080
  * @author Sebastián Bórquez Huerta - 253080
  * @author Yuri Germán García López - 253080
  * @author Manuel Romo López - 253080
- * 
+ *
  */
 public class ControlConsultarCotizaciones implements IControlConsultarCotizaciones {
 
     private final IAdministradorCotizaciones administradorCotizaciones;
     private final IAdministradorInsumos administradorInsumos;
-    
+
     private IVistaHistorialCotizaciones vistaHistorialCotizaciones;
     private IVistaConsultaCotizacion vistaConsultaCotizacion;
-    
+
     private BorradorCotizacion borradorCotizacion;
-    
+
     private IControlCotizaciones controlCotizaciones;
 
     public ControlConsultarCotizaciones() {
@@ -52,14 +51,14 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
     public void setControlCotizaciones(IControlCotizaciones controlCotizaciones) {
         this.controlCotizaciones = controlCotizaciones;
     }
-    
+
     @Override
     public void iniciar() {
         this.vistaHistorialCotizaciones = FabricaVistas.obtenerVistaHistorialCotizaciones(this);
-        
+
         // Al arrancar la pantalla, traemos todas las cotizaciones sin filtros
         buscarCotizaciones(null, null, null, "Todos");
-        
+
         this.vistaHistorialCotizaciones.mostrar();
     }
 
@@ -81,22 +80,24 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
             }
 
             if (fechaInicio != null || fechaFin != null) {
-                
-                final LocalDateTime inicioAjustada = (fechaInicio != null) 
-                        ? fechaInicio.withHour(0).withMinute(0).withSecond(0).withNano(0) 
+
+                final LocalDateTime inicioAjustada = (fechaInicio != null)
+                        ? fechaInicio.withHour(0).withMinute(0).withSecond(0).withNano(0)
                         : null;
 
-                final LocalDateTime finAjustada = (fechaFin != null) 
-                        ? fechaFin.withHour(23).withMinute(59).withSecond(59).withNano(999999999) 
+                final LocalDateTime finAjustada = (fechaFin != null)
+                        ? fechaFin.withHour(23).withMinute(59).withSecond(59).withNano(999999999)
                         : null;
 
                 listaFiltrada = listaFiltrada.stream()
                         .filter(c -> {
-                            if (c.getFechaCreacion() == null) return false;
-                            
+                            if (c.getFechaCreacion() == null) {
+                                return false;
+                            }
+
                             boolean cumpleInicio = (inicioAjustada == null) || !c.getFechaCreacion().isBefore(inicioAjustada);
                             boolean cumpleFin = (finAjustada == null) || !c.getFechaCreacion().isAfter(finAjustada);
-                            
+
                             return cumpleInicio && cumpleFin;
                         })
                         .collect(Collectors.toList());
@@ -104,16 +105,15 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
 
             if (estado != null && !estado.equalsIgnoreCase("Todos") && !estado.isEmpty()) {
                 listaFiltrada = listaFiltrada.stream()
-                        .filter(c -> c.getEstadoCotizacion() != null && 
-                                     c.getEstadoCotizacion().name().equalsIgnoreCase(estado))
+                        .filter(c -> c.getEstadoCotizacion() != null
+                        && c.getEstadoCotizacion().name().equalsIgnoreCase(estado))
                         .collect(Collectors.toList());
             }
-            
+
             listaFiltrada.forEach(c -> {
 
                 if (c.getEstadoCotizacion() != null && c.getEstadoCotizacion().name().equalsIgnoreCase("ACTIVA")) {
-                    
-                    
+
                     if (c.getInsumosCotizacion() != null) {
                         c.getInsumosCotizacion().removeIf(insumo -> !insumo.isActivo());
                     }
@@ -127,17 +127,17 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
             ex.printStackTrace();
         }
     }
-    
+
     @Override
     public void cancelarCotizacion(Long idCotizacion) {
-        
+
         try {
             administradorCotizaciones.eliminarCotizacion(idCotizacion);
             buscarCotizaciones(null, null, null, "Todos");
         } catch (NegocioException ex) {
             vistaHistorialCotizaciones.mostrarMensajeRapido("Error al deshabilitar la cotización");
         }
-        
+
     }
 
     @Override
@@ -152,15 +152,14 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
 
     @Override
     public void verDetalleCotizacion(CotizacionResumenDTO cotizacionSeleccionada) {
-        
+
         this.vistaHistorialCotizaciones.ocultar();
-        
+
         try {
             CotizacionDetalleDTO cotizacion = administradorCotizaciones.obtenerCotizacion(cotizacionSeleccionada.getId());
 
-
             if (cotizacion.getEstado() != null && cotizacion.getEstado().name().equalsIgnoreCase("ACTIVA")) {
-                if (cotizacion.getInsumosCotizacion()!= null) {
+                if (cotizacion.getInsumosCotizacion() != null) {
 
                     cotizacion.getInsumosCotizacion().removeIf(insumo -> !insumo.isActivo());
                 }
@@ -175,7 +174,7 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
         } catch (NegocioException ex) {
             vistaHistorialCotizaciones.mostrarMensaje(ex.getMessage());
         }
-       
+
     }
 
     @Override
@@ -183,19 +182,18 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
         vistaHistorialCotizaciones.ocultar();
         controlCotizaciones.administrarCotizaciones();
     }
-    
+
     @Override
     public void volverConsultarCotizacion() {
         vistaConsultaCotizacion.ocultar();
         vistaHistorialCotizaciones.mostrar();
     }
-    
+
     @Override
     public void cancelarConsultarCotizacion() {
         vistaConsultaCotizacion.ocultar();
         controlCotizaciones.administrarCotizaciones();
     }
-
 
     @Override
     public void guardarCambioCotizacion(BorradorCotizacion cotizacion) {
@@ -206,9 +204,9 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
     public void buscarInsumosNombre(String nombreInsumo) {
         try {
             List<InsumoResumenDTO> insumos = administradorInsumos.obtenerInsumosNombre(nombreInsumo);
-            
+
             vistaConsultaCotizacion.actualizarSugerencias(insumos);
-            
+
         } catch (NegocioException e) {
             vistaConsultaCotizacion.mostrarMensaje(e.getMessage());
         }
@@ -218,13 +216,13 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
     public void agregarInsumo(String nombre) {
         try {
             List<InsumoResumenDTO> insumos = administradorInsumos.obtenerInsumosNombre(nombre);
-            
-            for(InsumoResumenDTO insumo: insumos){
-                if(insumo.getNombre().equals(nombre)){
+
+            for (InsumoResumenDTO insumo : insumos) {
+                if (insumo.getNombre().equals(nombre)) {
                     vistaConsultaCotizacion.agregarInsumoTabla(insumo);
                 }
             }
-            
+
         } catch (NegocioException e) {
             vistaConsultaCotizacion.mostrarMensaje(e.getMessage());
         }
@@ -239,26 +237,26 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
         }
 
         List<InsumoCotizacionActualizarDTO> insumosCotizacion = new ArrayList<>();
-        
+
         try {
 
             CotizacionDetalleDTO cotizacionExistente = administradorCotizaciones.obtenerCotizacion(borradorCotizacion.getId());
-        
-            for (BorradorInsumoCotizacion borradorInsumo: borradorCotizacion.getBorradoresInsumoCotizacion()) {
+
+            for (BorradorInsumoCotizacion borradorInsumo : borradorCotizacion.getBorradoresInsumoCotizacion()) {
                 insumosCotizacion.add(new InsumoCotizacionActualizarDTO(
-                    borradorInsumo.getCantidad(), 
-                    borradorInsumo.getCosto(), 
-                    borradorCotizacion.getId(),
-                    borradorInsumo.getIdInsumo()
+                        borradorInsumo.getCantidad(),
+                        borradorInsumo.getCosto(),
+                        borradorCotizacion.getId(),
+                        borradorInsumo.getIdInsumo()
                 ));
             }
 
             CotizacionActualizarDTO cotizacionActualizar = new CotizacionActualizarDTO(
-                borradorCotizacion.getId(), 
-                borradorCotizacion.getCostoManoObra(), 
-                cotizacionExistente.getDiagnosticoGeneral(), 
-                cotizacionExistente.getEstadoAutomovil(),
-                insumosCotizacion
+                    borradorCotizacion.getId(),
+                    borradorCotizacion.getCostoManoObra(),
+                    cotizacionExistente.getDiagnosticoGeneral(),
+                    cotizacionExistente.getEstadoAutomovil(),
+                    insumosCotizacion
             );
 
             CotizacionDetalleDTO cotizacionActualizada = administradorCotizaciones.actualizarCotizacion(cotizacionActualizar);
@@ -278,10 +276,59 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
 
     @Override
     public void aceptarExitoActualizacionCotizacion() {
-        
+
         vistaConsultaCotizacion.ocultar();
         controlCotizaciones.administrarCotizaciones();
     }
 
+    @Override
+    public void imprimirCotizacion(CotizacionResumenDTO cotizacionSeleccionada) {
+        try {
+            CotizacionDetalleDTO cotizacion = administradorCotizaciones.obtenerCotizacion(cotizacionSeleccionada.getId());
+
+            if (cotizacion.getEstado() != null && cotizacion.getEstado().name().equalsIgnoreCase("ACTIVA")) {
+                if (cotizacion.getInsumosCotizacion() != null) {
+                    cotizacion.getInsumosCotizacion().removeIf(insumo -> !insumo.isActivo());
+                }
+            }
+
+            javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+            fileChooser.setDialogTitle("Guardar PDF de Cotización");
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("PDF Documents", "pdf"));
+            fileChooser.setSelectedFile(new java.io.File("Cotizacion_" + cotizacionSeleccionada.getId() + ".pdf"));
+
+            int seleccion = fileChooser.showSaveDialog(null);
+
+            if (seleccion == javax.swing.JFileChooser.APPROVE_OPTION) {
+                java.io.File fileToSave = fileChooser.getSelectedFile();
+                String rutaDestino = fileToSave.getAbsolutePath();
+
+                if (!rutaDestino.toLowerCase().endsWith(".pdf")) {
+                    rutaDestino += ".pdf";
+                }
+
+                LocalDateTime fecha = cotizacionSeleccionada.getFechaCreacion() != null ? cotizacionSeleccionada.getFechaCreacion() : LocalDateTime.now();
+                String nombreCliente = cotizacionSeleccionada.getNombreCliente() + " " + (cotizacionSeleccionada.getApellidoPaternoCliente() != null ? cotizacionSeleccionada.getApellidoPaternoCliente() : "");
+                java.math.BigDecimal manoObra = cotizacion.getPrecioManoObra() != null ? cotizacion.getPrecioManoObra() : java.math.BigDecimal.ZERO;
+                String automovil = cotizacionSeleccionada.getMarcaAutomovil() + " " + cotizacionSeleccionada.getModeloAutomovil();
+
+                presentacion.utils.GeneradorPDF.crearDocumentoPDF(
+                        rutaDestino,
+                        fecha,
+                        nombreCliente,
+                        manoObra,
+                        automovil,
+                        cotizacion.getInsumosCotizacion()
+                );
+
+                vistaHistorialCotizaciones.mostrarMensajeRapido("Cotización descargada con éxito en:\n" + rutaDestino);
+            }
+
+        } catch (NegocioException ex) {
+            vistaHistorialCotizaciones.mostrarMensaje("Error al obtener los detalles de la cotización: " + ex.getMessage());
+        } catch (Exception ex) {
+            vistaHistorialCotizaciones.mostrarMensaje("Error inesperado al generar el PDF: " + ex.getMessage());
+        }
+    }
 
 }

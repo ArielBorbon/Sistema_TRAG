@@ -1,4 +1,3 @@
-
 package presentacion.vistas;
 
 import com.toedter.calendar.JDateChooser;
@@ -35,12 +34,12 @@ import presentacion.interfaces.IControlConsultarCotizaciones;
 /**
  *
  * Archivo: VistaHistorialCotizaciones.java
- * 
+ *
  * @author Ariel Eduardo Borbón Izaguirre - 253080
  * @author Sebastián Bórquez Huerta - 253080
  * @author Yuri Germán García López - 253080
  * @author Manuel Romo López - 253080
- * 
+ *
  */
 public class VistaHistorialCotizaciones extends JFrame implements IVistaHistorialCotizaciones {
 
@@ -239,7 +238,7 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
         panelInfo.add(lblFecha, gbc);
 
         gbc.gridx = 5;
-        gbc.weightx = 1.0; 
+        gbc.weightx = 1.0;
         gbc.anchor = GridBagConstraints.EAST;
         String precio = (c.getPrecioTotal() != null) ? "$" + c.getPrecioTotal() : "$0.00";
         JLabel lblPrecio = new JLabel(precio);
@@ -264,13 +263,16 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
         btnCambiarEstado.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         btnCambiarEstado.addActionListener(e -> {
-            int confirmacion = JOptionPane.showConfirmDialog(this, 
-                "¿Deseas " + (estaActiva ? "cancelar" : "activar") + " esta cotización?", 
-                "Confirmar", JOptionPane.YES_NO_OPTION);
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                    "¿Deseas " + (estaActiva ? "cancelar" : "activar") + " esta cotización?",
+                    "Confirmar", JOptionPane.YES_NO_OPTION);
             if (confirmacion == JOptionPane.YES_OPTION) {
-                if (estaActiva) control.cancelarCotizacion(c.getId());
-                else control.activiarCotizacion(c.getId());
-                btnBuscar.doClick(); 
+                if (estaActiva) {
+                    control.cancelarCotizacion(c.getId());
+                } else {
+                    control.activiarCotizacion(c.getId());
+                }
+                btnBuscar.doClick();
             }
         });
         panelInfo.add(btnCambiarEstado, gbc);
@@ -279,15 +281,41 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
         btnVer.setBackground(Color.WHITE);
         btnVer.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnVer.setPreferredSize(new Dimension(50, 40));
-        btnVer.addActionListener(e -> { if (control != null) control.verDetalleCotizacion(c); });
+        btnVer.addActionListener(e -> {
+            if (control != null) {
+                control.verDetalleCotizacion(c);
+            }
+        });
 
         JPanel panelBtnVer = new JPanel(new GridBagLayout());
         panelBtnVer.setBackground(Color.WHITE);
         panelBtnVer.setPreferredSize(new Dimension(70, 100));
         panelBtnVer.add(btnVer);
 
+        JButton btnImprimir = new JButton("PDF");
+        btnImprimir.setBackground(new Color(218, 235, 255)); 
+        btnImprimir.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnImprimir.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnImprimir.setPreferredSize(new Dimension(60, 40));
+
+        btnImprimir.setEnabled(estaActiva);
+
+        btnImprimir.addActionListener(e -> {
+            if (control != null) {
+                control.imprimirCotizacion(c);
+            }
+        });
+
+        JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 25)); 
+        panelAcciones.setBackground(Color.WHITE);
+        panelAcciones.setPreferredSize(new Dimension(130, 100)); 
+
+        panelAcciones.add(btnVer);
+        panelAcciones.add(btnImprimir);
+
         contenedor.add(panelInfo, BorderLayout.CENTER);
-        contenedor.add(panelBtnVer, BorderLayout.EAST);
+
+        contenedor.add(panelAcciones, BorderLayout.EAST);
 
         card.add(contenedor, BorderLayout.CENTER);
         return card;
@@ -349,7 +377,7 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
 
         dateInicio.addPropertyChangeListener("date", evt -> buscar());
         dateFin.addPropertyChangeListener("date", evt -> buscar());
-        
+
         cmbEstado.addActionListener(evt -> buscar());
     }
 
@@ -373,7 +401,7 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
 
             String estadoStr = "Todos";
             int seleccion = cmbEstado.getSelectedIndex();
-            
+
             if (seleccion == 1) {
                 estadoStr = EstadoCotizacionNegocios.ACTIVA.name();
             } else if (seleccion == 2) {
@@ -384,7 +412,7 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
                     txtNombreCliente.getText(),
                     inicio,
                     fin,
-                    estadoStr 
+                    estadoStr
             );
         }
     }
@@ -487,7 +515,7 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
         volver();
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    private void volver(){
+    private void volver() {
         control.volverHistorialCotizaciones();
     }
 

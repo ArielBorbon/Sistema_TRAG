@@ -32,4 +32,7 @@ public interface IControlConsultarCotizaciones {
     public abstract void actualizarCotizacion();
     public abstract void aceptarExitoActualizacionCotizacion();
     
+    
+    public abstract void imprimirCotizacion(CotizacionResumenDTO cotizacionSeleccionada);
+    
 }
