@@ -34,6 +34,6 @@ public interface IControlConsultarCotizaciones {
     
     
     public abstract void imprimirCotizacion(CotizacionResumenDTO cotizacionSeleccionada);
-    public abstract void emitirReporteGeneralPDF(String nombreCliente, LocalDateTime fechaInicio, LocalDateTime fechaFin, String estado);
+    public abstract void imprimirReporteGeneralPDF(String nombreCliente, LocalDateTime fechaInicio, LocalDateTime fechaFin, String estado, int totalActivas, int totalCanceladas, double sumaTotal);
     
 }

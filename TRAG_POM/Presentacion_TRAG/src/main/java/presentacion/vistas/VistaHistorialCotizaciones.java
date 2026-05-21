@@ -405,15 +405,28 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
                     fin = dateFin.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
                 }
 
+                String clienteFiltro = txtNombreCliente.getText().trim().isEmpty() ? "Todos" : txtNombreCliente.getText();
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                String fechaInicioStr = (dateInicio.getDate() != null) ? sdf.format(dateInicio.getDate()) : "Siempre";
+                String fechaFinStr = (dateFin.getDate() != null) ? sdf.format(dateFin.getDate()) : "Siempre";
+                String periodoStr = fechaInicioStr + " a: " + fechaFinStr;
+                
+                String estadoFiltro = cmbEstado.getSelectedItem().toString();
                 String estadoStr = "Todos";
                 int seleccion = cmbEstado.getSelectedIndex();
                 if (seleccion == 1) {
-                    estadoStr = EstadoCotizacionNegocios.ACTIVA.name();
+                    estadoStr = "ACTIVA";
                 } else if (seleccion == 2) {
-                    estadoStr = EstadoCotizacionNegocios.CANCELADA.name();
+                    estadoStr = "CANCELADA";
                 }
 
-                control.emitirReporteGeneralPDF(txtNombreCliente.getText(), inicio, fin, estadoStr);
+                int numNoCanceladas = 0;
+                int numCanceladas = 0;
+                double montoTotalAcumulado = 0.0;
+
+                java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
+ 
+                control.imprimirReporteGeneralPDF(txtNombreCliente.getText(), inicio, fin, estadoStr, 0, 0, 0.0);
             }
         });
         

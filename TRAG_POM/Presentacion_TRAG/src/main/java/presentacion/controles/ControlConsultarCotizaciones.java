@@ -9,10 +9,12 @@ import dtos.cotizacion.CotizacionResumenDTO;
 import dtos.insumocotizacion.InsumoCotizacionActualizarDTO;
 import dtos.insumos.InsumoResumenDTO;
 import excepciones.NegocioException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.JFrame;
 import presentacion.borradores.BorradorCotizacion;
 import presentacion.borradores.BorradorInsumoCotizacion;
 import presentacion.fabrica.FabricaVistas;
@@ -20,7 +22,7 @@ import presentacion.interfaces.vistas.IVistaConsultaCotizacion;
 import presentacion.interfaces.vistas.IVistaHistorialCotizaciones;
 import presentacion.interfaces.IControlConsultarCotizaciones;
 import presentacion.interfaces.IControlCotizaciones;
-import presentacion.utils.GeneradorReportePDF;
+import presentacion.vistas.MensajePrevisualizarReporte;
 
 /**
  *
@@ -333,10 +335,10 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
     }
     
     @Override
-    public void emitirReporteGeneralPDF(String nombreCliente, LocalDateTime fechaInicio, LocalDateTime fechaFin, String estado) {
+    public void imprimirReporteGeneralPDF(String nombreCliente, LocalDateTime fechaInicio, LocalDateTime fechaFin, String estado, int tActivas, int tCanceladas, double sTotal) {
         try {
             List<CotizacionResumenDTO> listaFiltrada = administradorCotizaciones.obtenerTodasCotizaciones();
-
+            
             if (nombreCliente != null && !nombreCliente.trim().isEmpty()) {
                 String busquedaLower = nombreCliente.trim().toLowerCase();
                 listaFiltrada = listaFiltrada.stream()
@@ -344,80 +346,85 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
                             String nom = c.getNombreCliente() != null ? c.getNombreCliente().toLowerCase() : "";
                             String ape = c.getApellidoPaternoCliente() != null ? c.getApellidoPaternoCliente().toLowerCase() : "";
                             return nom.contains(busquedaLower) || ape.contains(busquedaLower);
-                        })
-                        .collect(Collectors.toList());
+                        }).collect(Collectors.toList());
             }
 
             if (fechaInicio != null || fechaFin != null) {
-                final LocalDateTime inicioAjustada = (fechaInicio != null)
-                        ? fechaInicio.withHour(0).withMinute(0).withSecond(0).withNano(0)
-                        : null;
-
-                final LocalDateTime finAjustada = (fechaFin != null)
-                        ? fechaFin.withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                        : null;
-
+                final LocalDateTime inicioAjustada = (fechaInicio != null) ? fechaInicio.withHour(0).withMinute(0).withSecond(0).withNano(0) : null;
+                final LocalDateTime finAjustada = (fechaFin != null) ? fechaFin.withHour(23).withMinute(59).withSecond(59).withNano(999999999) : null;
                 listaFiltrada = listaFiltrada.stream()
                         .filter(c -> {
                             if (c.getFechaCreacion() == null) return false;
                             boolean cumpleInicio = (inicioAjustada == null) || !c.getFechaCreacion().isBefore(inicioAjustada);
                             boolean cumpleFin = (finAjustada == null) || !c.getFechaCreacion().isAfter(finAjustada);
                             return cumpleInicio && cumpleFin;
-                        })
-                        .collect(Collectors.toList());
+                        }).collect(Collectors.toList());
             }
 
             List<CotizacionResumenDTO> cotizacionesActivas = new ArrayList<>();
             List<CotizacionResumenDTO> cotizacionesCanceladas = new ArrayList<>();
+            BigDecimal acumuladoTotal = BigDecimal.ZERO;
 
             for (CotizacionResumenDTO c : listaFiltrada) {
-                String estadoCotizacion = c.getEstadoCotizacion() != null ? c.getEstadoCotizacion().name() : "";
+                String est = c.getEstadoCotizacion() != null ? c.getEstadoCotizacion().name() : "";
+                BigDecimal precio = c.getPrecioTotal() != null ? c.getPrecioTotal() : BigDecimal.ZERO;
                 
-                if (estadoCotizacion.equalsIgnoreCase("ACTIVA")) {
-                    if (c.getInsumosCotizacion() != null) {
-                        c.getInsumosCotizacion().removeIf(insumo -> !insumo.isActivo());
+                if (est.equalsIgnoreCase("ACTIVA")) {
+                    if (c.getInsumosCotizacion() != null) c.getInsumosCotizacion().removeIf(i -> !i.isActivo());
+                    if (estado.equalsIgnoreCase("Todos") || estado.equalsIgnoreCase("ACTIVA")) {
+                        cotizacionesActivas.add(c);
+                        acumuladoTotal = acumuladoTotal.add(precio);
                     }
-                    cotizacionesActivas.add(c);
-                } else if (estadoCotizacion.equalsIgnoreCase("CANCELADA")) {
-                    cotizacionesCanceladas.add(c);
+                } else if (est.equalsIgnoreCase("CANCELADA")) {
+                    if (estado.equalsIgnoreCase("Todos") || estado.equalsIgnoreCase("CANCELADA")) {
+                        cotizacionesCanceladas.add(c);
+                        acumuladoTotal = acumuladoTotal.add(precio);
+                    }
                 }
             }
 
-            if (listaFiltrada.isEmpty()) {
-                vistaHistorialCotizaciones.mostrarMensajeRapido("No existen datos que coincidan con los filtros para generar un reporte.");
-                return;
-            }
+            String clienteModal = (nombreCliente != null && !nombreCliente.trim().isEmpty()) ? nombreCliente : "Todos";
+            
+            String fInicioStr = (fechaInicio != null) ? fechaInicio.toLocalDate().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "Siempre";
+            String fFinStr = (fechaFin != null) ? fechaFin.toLocalDate().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "Siempre";
+            String periodoModal = fInicioStr + " a: " + fFinStr;
+            
+            String estadoModal = estado.equalsIgnoreCase("ACTIVA") ? "Habilitadas" : (estado.equalsIgnoreCase("CANCELADA") ? "Canceladas" : "Todos");
+            java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
 
-            javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
-            fileChooser.setDialogTitle("Guardar Reporte de Cotizaciones");
-            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Documentos PDF", "pdf"));
-            fileChooser.setSelectedFile(new java.io.File("Reporte_Cotizaciones_" + java.time.LocalDate.now() + ".pdf"));
+            MensajePrevisualizarReporte dialogoPreview = new MensajePrevisualizarReporte(
+                    (JFrame) vistaHistorialCotizaciones,
+                    clienteModal,
+                    fInicioStr,
+                    fFinStr,
+                    estadoModal,
+                    cotizacionesActivas.size(),
+                    cotizacionesCanceladas.size(),
+                    df.format(acumuladoTotal)
+            );
+            dialogoPreview.setVisible(true);
 
-            int seleccion = fileChooser.showSaveDialog(null);
+            if (dialogoPreview.isConfirmado()) {
+                javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+                fileChooser.setDialogTitle("Guardar Reporte de Cotizaciones");
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Documentos PDF", "pdf"));
+                fileChooser.setSelectedFile(new java.io.File("Reporte_Cotizaciones_" + java.time.LocalDate.now() + ".pdf"));
 
-            if (seleccion == javax.swing.JFileChooser.APPROVE_OPTION) {
-                java.io.File fileToSave = fileChooser.getSelectedFile();
-                String rutaDestino = fileToSave.getAbsolutePath();
+                int seleccion = fileChooser.showSaveDialog(null);
+                if (seleccion == javax.swing.JFileChooser.APPROVE_OPTION) {
+                    java.io.File fileToSave = fileChooser.getSelectedFile();
+                    String rutaDestino = fileToSave.getAbsolutePath();
+                    if (!rutaDestino.toLowerCase().endsWith(".pdf")) rutaDestino += ".pdf";
 
-                if (!rutaDestino.toLowerCase().endsWith(".pdf")) {
-                    rutaDestino += ".pdf";
+                    presentacion.utils.GeneradorReportePDF.crearReporteConsolidadoPDF(
+                            rutaDestino, nombreCliente, fechaInicio, fechaFin, estado,
+                            cotizacionesActivas, cotizacionesCanceladas
+                    );
+                    vistaHistorialCotizaciones.mostrarMensajeRapido("Reporte guardado con éxito.");
                 }
-
-                presentacion.utils.GeneradorReportePDF.crearReporteConsolidadoPDF(
-                        rutaDestino,
-                        nombreCliente,
-                        fechaInicio,
-                        fechaFin,
-                        estado,
-                        cotizacionesActivas,
-                        cotizacionesCanceladas
-                );
-
-                vistaHistorialCotizaciones.mostrarMensajeRapido("Reporte General generado con éxito en:\n" + rutaDestino);
             }
-
         } catch (Exception ex) {
-            vistaHistorialCotizaciones.mostrarMensajeRapido("Error inesperado al compilar el reporte: " + ex.getMessage());
+            vistaHistorialCotizaciones.mostrarMensajeRapido("Error: " + ex.getMessage());
             ex.printStackTrace();
         }
     }
