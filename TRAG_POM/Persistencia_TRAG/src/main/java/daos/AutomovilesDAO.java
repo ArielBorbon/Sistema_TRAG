@@ -13,12 +13,12 @@ import javax.persistence.NoResultException;
 /**
  *
  * Archivo: AutomovilesDAO.java
- * 
+ *
  * @author Ariel Eduardo Borbón Izaguirre - 253080
  * @author Sebastián Bórquez Huerta - 253080
  * @author Yuri Germán García López - 253080
  * @author Manuel Romo López - 253080
- * 
+ *
  */
 public class AutomovilesDAO implements IAutomovilesDAO {
 
@@ -100,6 +100,27 @@ public class AutomovilesDAO implements IAutomovilesDAO {
             em.close();
         }
 
+    }
+
+    @Override
+    public List<Automovil> obtenerAutomovilesPorCliente(Long idCliente) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            String jpql = "SELECT a FROM Automovil a "
+                    + "JOIN FETCH a.cliente "
+                    + "WHERE a.cliente.id = :idCliente "
+                    + "AND a.activo = :activo";
+
+            return em.createQuery(jpql, Automovil.class)
+                    .setParameter("idCliente", idCliente)
+                    .setParameter("activo", true)
+                    .getResultList();
+
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al consultar los automóviles del cliente con ID: " + idCliente, e);
+        } finally {
+            em.close();
+        }
     }
 
 }

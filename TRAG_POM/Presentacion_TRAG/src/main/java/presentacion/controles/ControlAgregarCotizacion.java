@@ -350,4 +350,16 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion {
         controlCotizaciones.administrarCotizaciones();
     }
 
+    @Override
+    public void cargarVehiculosPorCliente(Long idCliente) {
+        try {
+            List<AutomovilResumenDTO> autosDelCliente = administradorAutomoviles.obtenerAutomovilesPorCliente(idCliente);
+
+            vistaSeleccionClienteAuto.cargarAutosCliente(autosDelCliente);
+
+        } catch (NegocioException ex) {
+            vistaSeleccionClienteAuto.mostrarMensaje("Error al actualizar los automóviles: " + ex.getMessage());
+        }
+    }
+
 }

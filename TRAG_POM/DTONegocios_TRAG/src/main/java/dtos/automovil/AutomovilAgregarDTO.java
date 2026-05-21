@@ -20,6 +20,12 @@ public class AutomovilAgregarDTO {
     private String marca;
     private Long idCliente; 
 
+    public AutomovilAgregarDTO() {
+    }
+
+    
+    
+    
     public AutomovilAgregarDTO(Integer anio, String matricula, String vin, String modelo, String marca, Long idCliente) {
         this.anio = anio;
         this.matricula = matricula;
@@ -84,4 +90,10 @@ public class AutomovilAgregarDTO {
     public void setIdCliente(Long idCliente) {
         this.idCliente = idCliente;
     }
+    
+    
+    
+    
+    
+    
 }
