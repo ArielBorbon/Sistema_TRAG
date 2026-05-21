@@ -20,6 +20,7 @@ import presentacion.interfaces.vistas.IVistaConsultaCotizacion;
 import presentacion.interfaces.vistas.IVistaHistorialCotizaciones;
 import presentacion.interfaces.IControlConsultarCotizaciones;
 import presentacion.interfaces.IControlCotizaciones;
+import presentacion.utils.GeneradorReportePDF;
 
 /**
  *
@@ -330,5 +331,95 @@ public class ControlConsultarCotizaciones implements IControlConsultarCotizacion
             vistaHistorialCotizaciones.mostrarMensaje("Error inesperado al generar el PDF: " + ex.getMessage());
         }
     }
+    
+    @Override
+    public void emitirReporteGeneralPDF(String nombreCliente, LocalDateTime fechaInicio, LocalDateTime fechaFin, String estado) {
+        try {
+            List<CotizacionResumenDTO> listaFiltrada = administradorCotizaciones.obtenerTodasCotizaciones();
 
+            if (nombreCliente != null && !nombreCliente.trim().isEmpty()) {
+                String busquedaLower = nombreCliente.trim().toLowerCase();
+                listaFiltrada = listaFiltrada.stream()
+                        .filter(c -> {
+                            String nom = c.getNombreCliente() != null ? c.getNombreCliente().toLowerCase() : "";
+                            String ape = c.getApellidoPaternoCliente() != null ? c.getApellidoPaternoCliente().toLowerCase() : "";
+                            return nom.contains(busquedaLower) || ape.contains(busquedaLower);
+                        })
+                        .collect(Collectors.toList());
+            }
+
+            if (fechaInicio != null || fechaFin != null) {
+                final LocalDateTime inicioAjustada = (fechaInicio != null)
+                        ? fechaInicio.withHour(0).withMinute(0).withSecond(0).withNano(0)
+                        : null;
+
+                final LocalDateTime finAjustada = (fechaFin != null)
+                        ? fechaFin.withHour(23).withMinute(59).withSecond(59).withNano(999999999)
+                        : null;
+
+                listaFiltrada = listaFiltrada.stream()
+                        .filter(c -> {
+                            if (c.getFechaCreacion() == null) return false;
+                            boolean cumpleInicio = (inicioAjustada == null) || !c.getFechaCreacion().isBefore(inicioAjustada);
+                            boolean cumpleFin = (finAjustada == null) || !c.getFechaCreacion().isAfter(finAjustada);
+                            return cumpleInicio && cumpleFin;
+                        })
+                        .collect(Collectors.toList());
+            }
+
+            List<CotizacionResumenDTO> cotizacionesActivas = new ArrayList<>();
+            List<CotizacionResumenDTO> cotizacionesCanceladas = new ArrayList<>();
+
+            for (CotizacionResumenDTO c : listaFiltrada) {
+                String estadoCotizacion = c.getEstadoCotizacion() != null ? c.getEstadoCotizacion().name() : "";
+                
+                if (estadoCotizacion.equalsIgnoreCase("ACTIVA")) {
+                    if (c.getInsumosCotizacion() != null) {
+                        c.getInsumosCotizacion().removeIf(insumo -> !insumo.isActivo());
+                    }
+                    cotizacionesActivas.add(c);
+                } else if (estadoCotizacion.equalsIgnoreCase("CANCELADA")) {
+                    cotizacionesCanceladas.add(c);
+                }
+            }
+
+            if (listaFiltrada.isEmpty()) {
+                vistaHistorialCotizaciones.mostrarMensajeRapido("No existen datos que coincidan con los filtros para generar un reporte.");
+                return;
+            }
+
+            javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+            fileChooser.setDialogTitle("Guardar Reporte de Cotizaciones");
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Documentos PDF", "pdf"));
+            fileChooser.setSelectedFile(new java.io.File("Reporte_Cotizaciones_" + java.time.LocalDate.now() + ".pdf"));
+
+            int seleccion = fileChooser.showSaveDialog(null);
+
+            if (seleccion == javax.swing.JFileChooser.APPROVE_OPTION) {
+                java.io.File fileToSave = fileChooser.getSelectedFile();
+                String rutaDestino = fileToSave.getAbsolutePath();
+
+                if (!rutaDestino.toLowerCase().endsWith(".pdf")) {
+                    rutaDestino += ".pdf";
+                }
+
+                presentacion.utils.GeneradorReportePDF.crearReporteConsolidadoPDF(
+                        rutaDestino,
+                        nombreCliente,
+                        fechaInicio,
+                        fechaFin,
+                        estado,
+                        cotizacionesActivas,
+                        cotizacionesCanceladas
+                );
+
+                vistaHistorialCotizaciones.mostrarMensajeRapido("Reporte General generado con éxito en:\n" + rutaDestino);
+            }
+
+        } catch (Exception ex) {
+            vistaHistorialCotizaciones.mostrarMensajeRapido("Error inesperado al compilar el reporte: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+    
 }

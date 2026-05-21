@@ -54,6 +54,7 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
     private JTextField txtFechaInicio;
     private JTextField txtFechaFin;
     private JButton btnBuscar;
+    private JButton btnGenerarReporte;
 
     private JDateChooser dateInicio;
     private JDateChooser dateFin;
@@ -87,13 +88,25 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
         crearPanelFiltros();
         panelMenu.add(panelFiltros, BorderLayout.NORTH);
 
+        btnGenerarReporte = new JButton("Generar Reporte");
+        btnGenerarReporte.setPreferredSize(new Dimension(160, 40));
+        btnGenerarReporte.setBackground(new Color(54, 54, 54)); // Gris oscuro industrial
+        btnGenerarReporte.setForeground(Color.WHITE);
+        btnGenerarReporte.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnGenerarReporte.setFocusPainted(false);
+        btnGenerarReporte.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnVolver.setPreferredSize(new Dimension(141, 40)); 
+
+        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
+        panelBoton.add(btnVolver);
+        panelBoton.add(btnGenerarReporte); 
+        
+        panelMenu.add(panelBoton, BorderLayout.SOUTH);
+
         configurarBusquedaEnTiempoReal();
 
         panelMenu.add(scrollCotizaciones, BorderLayout.CENTER);
-
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 15));
-        panelBoton.add(btnVolver);
-        panelMenu.add(panelBoton, BorderLayout.SOUTH);
 
         contenedorTarjetas = new JPanel();
         contenedorTarjetas.setLayout(new BoxLayout(contenedorTarjetas, BoxLayout.Y_AXIS));
@@ -379,6 +392,31 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
         dateFin.addPropertyChangeListener("date", evt -> buscar());
 
         cmbEstado.addActionListener(evt -> buscar());
+        
+        btnGenerarReporte.addActionListener(evt -> {
+            if (control != null) {
+                LocalDateTime inicio = null;
+                LocalDateTime fin = null;
+
+                if (dateInicio.getDate() != null) {
+                    inicio = dateInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                }
+                if (dateFin.getDate() != null) {
+                    fin = dateFin.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                }
+
+                String estadoStr = "Todos";
+                int seleccion = cmbEstado.getSelectedIndex();
+                if (seleccion == 1) {
+                    estadoStr = EstadoCotizacionNegocios.ACTIVA.name();
+                } else if (seleccion == 2) {
+                    estadoStr = EstadoCotizacionNegocios.CANCELADA.name();
+                }
+
+                control.emitirReporteGeneralPDF(txtNombreCliente.getText(), inicio, fin, estadoStr);
+            }
+        });
+        
     }
 
     private void buscar() {

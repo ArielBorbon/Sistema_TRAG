@@ -2,6 +2,7 @@ package presentacion.utils;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import dtos.cotizacion.CotizacionResumenDTO;
+import java.awt.Color;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -32,8 +33,8 @@ public class GeneradorReportePDF {
     ) {
         Document documento = new Document(PageSize.LETTER, 40, 40, 40, 40);
         DecimalFormat df = new DecimalFormat("#,##0.00");
-        DateTimeFormatter formateadorFiltro = DateTimeFormatter.ofPattern("d 'de' MMMM yyyy", Locale.forLanguageTag("es-ES"));
-        
+        DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         try {
             PdfWriter writer = PdfWriter.getInstance(documento, new FileOutputStream(rutaDestino));
             documento.open();
@@ -53,183 +54,181 @@ public class GeneradorReportePDF {
             canvas.closePath();
             canvas.fill();
 
-            Font fuenteTitulo = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD, BaseColor.BLACK);
-            Font fuenteEmpresa = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
-            Font fuenteNormal = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.BLACK);
-            Font fuenteNegrita = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.BLACK);
-            Font fuenteBlanca = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.WHITE);
-            Font fuenteSeccion = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, new BaseColor(54, 54, 54));
+            Font fuenteTituloEncabezado = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD, BaseColor.BLACK);
+            Font fuenteFiltrosEtiqueta = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, BaseColor.BLACK);
+            Font fuenteFiltrosNegrita = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK);
+            
+            Font fuenteVerdeStatus = new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD, new BaseColor(34, 139, 34));
+            Font fuenteRojoStatus = new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD, new BaseColor(220, 20, 60));
+            
+            Font fuenteTableHeader = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.WHITE);
+            Font fuenteCeldaNormal = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.BLACK);
+            Font fuenteCeldaNegrita = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.BLACK);
 
-            for(int i = 0; i < 3; i++) { documento.add(new Paragraph("\n")); }
+            for (int i = 0; i < 3; i++) { documento.add(new Paragraph("\n")); }
 
             PdfPTable tablaTitulo = new PdfPTable(1);
-            tablaTitulo.setWidthPercentage(45);
-            tablaTitulo.setHorizontalAlignment(Element.ALIGN_LEFT);
-            PdfPCell celdaTitulo = new PdfPCell(new Phrase("REPORTE DE COTIZACIONES", fuenteTitulo));
+            tablaTitulo.setWidthPercentage(30);
+            tablaTitulo.setHorizontalAlignment(Element.ALIGN_CENTER);
+            PdfPCell celdaTitulo = new PdfPCell(new Phrase("Cotizaciones", fuenteTituloEncabezado));
             celdaTitulo.setHorizontalAlignment(Element.ALIGN_CENTER);
-            celdaTitulo.setPadding(8);
+            celdaTitulo.setPadding(10);
             celdaTitulo.setBorder(Rectangle.NO_BORDER);
-            celdaTitulo.setCellEvent(new GeneradorPDF.BordeRedondeadoEvent(new BaseColor(230, 230, 230), BaseColor.DARK_GRAY));
+            celdaTitulo.setCellEvent(new GeneradorPDF.BordeRedondeadoEvent(new BaseColor(245, 245, 245), BaseColor.DARK_GRAY));
             tablaTitulo.addCell(celdaTitulo);
             documento.add(tablaTitulo);
+            
             documento.add(new Paragraph("\n"));
 
-            PdfPTable tablaHeader = new PdfPTable(1);
-            tablaHeader.setWidthPercentage(100);
-            Paragraph datosEmpresa = new Paragraph();
-            datosEmpresa.add(new Chunk("REFRIGERACIÓN AUTOMOTRIZ GRANADOS\n", fuenteEmpresa));
-            datosEmpresa.add(new Chunk("OTANCAHUI NO. 1701, ESQ. GOLFO DE TEHUANTEPEC\n", fuenteNormal));
-            datosEmpresa.add(new Chunk("Teléfono: (55) 644 155 7060 | Email: robertogranados888@gmail.com\n", fuenteNormal));
-            PdfPCell celdaEmpresa = new PdfPCell(datosEmpresa);
-            celdaEmpresa.setBorder(Rectangle.NO_BORDER);
-            tablaHeader.addCell(celdaEmpresa);
-            documento.add(tablaHeader);
+            String textCliente = (filtroCliente != null && !filtroCliente.trim().isEmpty()) ? filtroCliente : "Todos";
+            String textInicio = (fechaInicio != null) ? fechaInicio.format(formateador) : "Siempre";
+            String textFin = (fechaFin != null) ? fechaFin.format(formateador) : "Siempre";
+            String textEstado = filtroEstado.equalsIgnoreCase("ACTIVA") ? "Habilitadas" : (filtroEstado.equalsIgnoreCase("CANCELADA") ? "Canceladas" : "Todos");
+
+            Paragraph pFiltros = new Paragraph();
+            pFiltros.setIndentationLeft(30);
+            pFiltros.setLeading(18f);
+            
+            pFiltros.add(new Chunk("Cliente: ", fuenteFiltrosEtiqueta));
+            pFiltros.add(new Chunk(textCliente + "\n", fuenteFiltrosNegrita));
+            pFiltros.add(new Chunk("Fecha de inicio: ", fuenteFiltrosEtiqueta));
+            pFiltros.add(new Chunk(textInicio + "\n", fuenteFiltrosNegrita));
+            pFiltros.add(new Chunk("Fecha fin: ", fuenteFiltrosEtiqueta));
+            pFiltros.add(new Chunk(textFin + "\n", fuenteFiltrosNegrita));
+            pFiltros.add(new Chunk("Estado: ", fuenteFiltrosEtiqueta));
+            pFiltros.add(new Chunk(textEstado + "\n", fuenteFiltrosNegrita));
+            documento.add(pFiltros);
+
             documento.add(new Paragraph("\n"));
 
-            PdfPTable tablaDatosFiltros = new PdfPTable(2);
-            tablaDatosFiltros.setWidthPercentage(100);
-            tablaDatosFiltros.setWidths(new float[]{18f, 82f});
+            BigDecimal totalHabilitadas = cotizacionesActivas.stream().map(c -> c.getPrecioTotal() != null ? c.getPrecioTotal() : BigDecimal.ZERO).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal totalCanceladas = cotizacionesCanceladas.stream().map(c -> c.getPrecioTotal() != null ? c.getPrecioTotal() : BigDecimal.ZERO).reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+            BigDecimal granTotalTodo = BigDecimal.ZERO;
+            if (filtroEstado.equalsIgnoreCase("Todos")) {
+                granTotalTodo = totalHabilitadas.add(totalCanceladas);
+            } else if (filtroEstado.equalsIgnoreCase("ACTIVA")) {
+                granTotalTodo = totalHabilitadas;
+            } else if (filtroEstado.equalsIgnoreCase("CANCELADA")) {
+                granTotalTodo = totalCanceladas;
+            }
 
-            String fInicioStr = (fechaInicio != null) ? fechaInicio.format(formateadorFiltro) : "Siempre";
-            String fFinStr = (fechaFin != null) ? fechaFin.format(formateadorFiltro) : "Siempre";
-            String clienteStr = (filtroCliente != null && !filtroCliente.trim().isEmpty()) ? filtroCliente : "Todos los clientes";
+            BaseColor colorGrisEncabezado = new BaseColor(110, 110, 110);
 
-            agregarCelda(tablaDatosFiltros, "CLIENTE:", fuenteNegrita, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatosFiltros, clienteStr, fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatosFiltros, "FECHA INICIO:", fuenteNegrita, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatosFiltros, fInicioStr, fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatosFiltros, "FECHA FIN:", fuenteNegrita, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatosFiltros, fFinStr, fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatosFiltros, "ESTADO FILTRO:", fuenteNegrita, Element.ALIGN_LEFT, BaseColor.WHITE);
-            agregarCelda(tablaDatosFiltros, filtroEstado.toUpperCase(), fuenteNormal, Element.ALIGN_LEFT, BaseColor.WHITE);
-
-            documento.add(tablaDatosFiltros);
-            documento.add(new Paragraph("\n"));
-
-            BigDecimal dineroActivas = BigDecimal.ZERO;
-            BigDecimal dineroCanceladas = BigDecimal.ZERO;
-
-            BaseColor colorHeaderTabla = new BaseColor(100, 100, 100);
-
-            if (filtroEstado.equalsIgnoreCase("Todos") || filtroEstado.equalsIgnoreCase("ACTIVA") || filtroEstado.equalsIgnoreCase("Habilitadas")) {
-                documento.add(new Paragraph("Cotizaciones Habilitadas (" + cotizacionesActivas.size() + " encontradas)", fuenteSeccion));
+            if (filtroEstado.equalsIgnoreCase("Todos") || filtroEstado.equalsIgnoreCase("ACTIVA")) {
+                Paragraph tituloActivas = new Paragraph("No Canceladas: " + cotizacionesActivas.size(), fuenteVerdeStatus);
+                tituloActivas.setIndentationLeft(10);
+                documento.add(tituloActivas);
                 documento.add(new Paragraph("\n"));
 
                 if (cotizacionesActivas.isEmpty()) {
-                    documento.add(new Paragraph("No se registraron cotizaciones habilitadas bajo los filtros seleccionados.\n\n", fuenteNormal));
+                    Paragraph vacio = new Paragraph("   No se encontraron registros activos.", fuenteCeldaNormal);
+                    documento.add(vacio);
                 } else {
-                    PdfPTable tablaActivas = crearEstructuraTablaReporte();
-                    crearEncabezadoTabla(tablaActivas, colorHeaderTabla, fuenteBlanca);
+                    PdfPTable tablaA = crearTablaBaseReporte();
+                    inicializarHeadersReporte(tablaA, colorGrisEncabezado, fuenteTableHeader);
 
                     for (CotizacionResumenDTO c : cotizacionesActivas) {
-                        String clienteNombre = c.getNombreCliente() + " " + (c.getApellidoPaternoCliente() != null ? c.getApellidoPaternoCliente() : "");
-                        String vehiculo = c.getMarcaAutomovil() + " " + c.getModeloAutomovil();
-                        String fCreacion = (c.getFechaCreacion() != null) ? c.getFechaCreacion().toLocalDate().toString() : "N/A";
-                        BigDecimal monto = (c.getPrecioTotal() != null) ? c.getPrecioTotal() : BigDecimal.ZERO;
-                        dineroActivas = dineroActivas.add(monto);
+                        String f = c.getFechaCreacion() != null ? c.getFechaCreacion().format(formateador) : "N/A";
+                        String cl = c.getNombreCliente() + " " + (c.getApellidoPaternoCliente() != null ? c.getApellidoPaternoCliente() : "");
+                        String v = c.getMarcaAutomovil() + " " + c.getModeloAutomovil();
+                        String servicio = "Servicio de Refrigeración"; 
 
-                        agregarFilaDatos(tablaActivas, fCreacion, clienteNombre, vehiculo, "$" + df.format(monto), fuenteNormal);
+                        llenarFilaReporte(tablaA, f, cl, v, servicio, fuenteCeldaNormal);
                     }
-                    documento.add(tablaActivas);
-                    
-                    // Subtotal financiero de la sección
-                    Paragraph pSubActivas = new Paragraph("Total Generado (Habilitadas): $" + df.format(dineroActivas), fuenteNegrita);
-                    pSubActivas.setAlignment(Element.ALIGN_RIGHT);
-                    documento.add(pSubActivas);
-                    documento.add(new Paragraph("\n"));
+                    documento.add(tablaA);
                 }
+                documento.add(new Paragraph("\n\n"));
             }
 
-            // ==========================================
-            // SECCIÓN 2: COTIZACIONES CANCELADAS
-            // ==========================================
-            if (filtroEstado.equalsIgnoreCase("Todos") || filtroEstado.equalsIgnoreCase("CANCELADA") || filtroEstado.equalsIgnoreCase("Canceladas")) {
-                documento.add(new Paragraph("Cotizaciones Canceladas (" + cotizacionesCanceladas.size() + " encontradas)", fuenteSeccion));
+            if (filtroEstado.equalsIgnoreCase("Todos") || filtroEstado.equalsIgnoreCase("CANCELADA")) {
+                Paragraph tituloCanceladas = new Paragraph("Canceladas: " + cotizacionesCanceladas.size(), fuenteRojoStatus);
+                tituloCanceladas.setIndentationLeft(10);
+                documento.add(tituloCanceladas);
                 documento.add(new Paragraph("\n"));
 
                 if (cotizacionesCanceladas.isEmpty()) {
-                    documento.add(new Paragraph("No se registraron cotizaciones canceladas bajo los filtros seleccionados.\n\n", fuenteNormal));
+                    Paragraph vacio = new Paragraph("   No se encontraron registros cancelados.", fuenteCeldaNormal);
+                    documento.add(vacio);
                 } else {
-                    PdfPTable tablaCanceladas = crearEstructuraTablaReporte();
-                    crearEncabezadoTabla(tablaCanceladas, colorHeaderTabla, fuenteBlanca);
+                    PdfPTable tablaC = crearTablaBaseReporte();
+                    inicializarHeadersReporte(tablaC, colorGrisEncabezado, fuenteTableHeader);
 
                     for (CotizacionResumenDTO c : cotizacionesCanceladas) {
-                        String clienteNombre = c.getNombreCliente() + " " + (c.getApellidoPaternoCliente() != null ? c.getApellidoPaternoCliente() : "");
-                        String vehiculo = c.getMarcaAutomovil() + " " + c.getModeloAutomovil();
-                        String fCreacion = (c.getFechaCreacion() != null) ? c.getFechaCreacion().toLocalDate().toString() : "N/A";
-                        BigDecimal monto = (c.getPrecioTotal() != null) ? c.getPrecioTotal() : BigDecimal.ZERO;
-                        dineroCanceladas = dineroCanceladas.add(monto);
+                        String f = c.getFechaCreacion() != null ? c.getFechaCreacion().format(formateador) : "N/A";
+                        String cl = c.getNombreCliente() + " " + (c.getApellidoPaternoCliente() != null ? c.getApellidoPaternoCliente() : "");
+                        String v = c.getMarcaAutomovil() + " " + c.getModeloAutomovil();
+                        String servicio = "Servicio Cancelado";
 
-                        agregarFilaDatos(tablaCanceladas, fCreacion, clienteNombre, vehiculo, "$" + df.format(monto), fuenteNormal);
+                        llenarFilaReporte(tablaC, f, cl, v, servicio, fuenteCeldaNormal);
                     }
-                    documento.add(tablaCanceladas);
-                    
-                    // Subtotal financiero de la sección
-                    Paragraph pSubCanceladas = new Paragraph("Total Dejado de Percibir (Canceladas): $" + df.format(dineroCanceladas), fuenteNegrita);
-                    pSubCanceladas.setAlignment(Element.ALIGN_RIGHT);
-                    documento.add(pSubCanceladas);
-                    documento.add(new Paragraph("\n"));
+                    documento.add(tablaC);
                 }
+                documento.add(new Paragraph("\n\n"));
             }
 
-            // ==========================================
-            // BLOQUE RESUMEN FINAL DE TOTALES
-            // ==========================================
-            documento.add(new Paragraph("----------------------------------------------------------------------------------------------------------------------------------", fuenteNormal));
-            PdfPTable tablaTotalesFinales = new PdfPTable(2);
-            tablaTotalesFinales.setWidthPercentage(40);
-            tablaTotalesFinales.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            tablaTotalesFinales.setWidths(new float[]{60f, 40f});
-            
-            BaseColor grisFondoTotales = new BaseColor(240, 240, 240);
-            BigDecimal granTotalConsolidado = dineroActivas.add(dineroCanceladas);
+            PdfPTable tablaCierreOkey = new PdfPTable(2);
+            tablaCierreOkey.setWidthPercentage(40);
+            tablaCierreOkey.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            tablaCierreOkey.setWidths(new float[]{60f, 40f});
 
-            agregarCelda(tablaTotalesFinales, "Total Habilitadas:", fuenteNegrita, Element.ALIGN_RIGHT, grisFondoTotales);
-            agregarCelda(tablaTotalesFinales, "$" + df.format(dineroActivas), fuenteNormal, Element.ALIGN_RIGHT, grisFondoTotales);
-            
-            agregarCelda(tablaTotalesFinales, "Total Canceladas:", fuenteNegrita, Element.ALIGN_RIGHT, grisFondoTotales);
-            agregarCelda(tablaTotalesFinales, "$" + df.format(dineroCanceladas), fuenteNormal, Element.ALIGN_RIGHT, grisFondoTotales);
-            
-            agregarCelda(tablaTotalesFinales, "GRAND TOTAL:", fuenteNegrita, Element.ALIGN_RIGHT, new BaseColor(220, 220, 220));
-            agregarCelda(tablaTotalesFinales, "$" + df.format(granTotalConsolidado), fuenteNegrita, Element.ALIGN_RIGHT, new BaseColor(220, 220, 220));
+            BaseColor grisFondoTotales = new BaseColor(242, 242, 242);
 
-            documento.add(tablaTotalesFinales);
+            if (filtroEstado.equalsIgnoreCase("Todos") || filtroEstado.equalsIgnoreCase("ACTIVA")) {
+                agregarCeldaEspecial(tablaCierreOkey, "Total Habilitadas:", fuenteCeldaNegrita, Element.ALIGN_RIGHT, grisFondoTotales);
+                agregarCeldaEspecial(tablaCierreOkey, "$" + df.format(totalHabilitadas), fuenteCeldaNormal, Element.ALIGN_RIGHT, grisFondoTotales);
+            } else {
+                agregarCeldaEspecial(tablaCierreOkey, "Total Habilitadas:", fuenteCeldaNegrita, Element.ALIGN_RIGHT, grisFondoTotales);
+                agregarCeldaEspecial(tablaCierreOkey, "", fuenteCeldaNormal, Element.ALIGN_RIGHT, grisFondoTotales);
+            }
+
+            if (filtroEstado.equalsIgnoreCase("Todos") || filtroEstado.equalsIgnoreCase("CANCELADA")) {
+                agregarCeldaEspecial(tablaCierreOkey, "Total Canceladas:", fuenteCeldaNegrita, Element.ALIGN_RIGHT, grisFondoTotales);
+                agregarCeldaEspecial(tablaCierreOkey, "$" + df.format(totalCanceladas), fuenteCeldaNormal, Element.ALIGN_RIGHT, grisFondoTotales);
+            } else {
+                agregarCeldaEspecial(tablaCierreOkey, "Total Canceladas:", fuenteCeldaNegrita, Element.ALIGN_RIGHT, grisFondoTotales);
+                agregarCeldaEspecial(tablaCierreOkey, "", fuenteCeldaNormal, Element.ALIGN_RIGHT, grisFondoTotales);
+            }
+
+            agregarCeldaEspecial(tablaCierreOkey, "TOTAL:", fuenteCeldaNegrita, Element.ALIGN_RIGHT, new BaseColor(220, 220, 220));
+            agregarCeldaEspecial(tablaCierreOkey, "$" + df.format(granTotalTodo), fuenteCeldaNegrita, Element.ALIGN_RIGHT, new BaseColor(220, 220, 220));
+
+            documento.add(tablaCierreOkey);
             documento.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    private static PdfPTable crearEstructuraTablaReporte() throws DocumentException {
+
+    private static PdfPTable crearTablaBaseReporte() throws DocumentException {
         PdfPTable tabla = new PdfPTable(4);
         tabla.setWidthPercentage(100);
-        tabla.setWidths(new float[]{15f, 35f, 30f, 20f});
+        tabla.setWidths(new float[]{18f, 27f, 25f, 30f});
         return tabla;
     }
 
-    private static void crearEncabezadoTabla(PdfPTable tabla, BaseColor colorFondo, Font fuente) {
-        agregarCelda(tabla, "Fecha", fuente, Element.ALIGN_CENTER, colorFondo);
-        agregarCelda(tabla, "Cliente", fuente, Element.ALIGN_LEFT, colorFondo);
-        agregarCelda(tabla, "Vehículo", fuente, Element.ALIGN_LEFT, colorFondo);
-        agregarCelda(tabla, "Monto Total", fuente, Element.ALIGN_RIGHT, colorFondo);
+    private static void inicializarHeadersReporte(PdfPTable tabla, BaseColor fondo, Font fuente) {
+        agregarCeldaEspecial(tabla, "Fecha", fuente, Element.ALIGN_CENTER, fondo);
+        agregarCeldaEspecial(tabla, "Cliente", fuente, Element.ALIGN_CENTER, fondo);
+        agregarCeldaEspecial(tabla, "Vehiculo", fuente, Element.ALIGN_CENTER, fondo);
+        agregarCeldaEspecial(tabla, "Servicio", fuente, Element.ALIGN_CENTER, fondo);
     }
 
-    private static void agregarFilaDatos(PdfPTable tabla, String fecha, String cliente, String vehiculo, String monto, Font fuente) {
-        agregarCelda(tabla, fecha, fuente, Element.ALIGN_CENTER, BaseColor.WHITE);
-        agregarCelda(tabla, cliente, fuente, Element.ALIGN_LEFT, BaseColor.WHITE);
-        agregarCelda(tabla, vehiculo, fuente, Element.ALIGN_LEFT, BaseColor.WHITE);
-        agregarCelda(tabla, monto, fuente, Element.ALIGN_RIGHT, BaseColor.WHITE);
+    private static void llenarFilaReporte(PdfPTable tabla, String f, String c, String v, String s, Font fuente) {
+        agregarCeldaEspecial(tabla, f, fuente, Element.ALIGN_CENTER, BaseColor.WHITE);
+        agregarCeldaEspecial(tabla, c, fuente, Element.ALIGN_CENTER, BaseColor.WHITE);
+        agregarCeldaEspecial(tabla, v, fuente, Element.ALIGN_CENTER, BaseColor.WHITE);
+        agregarCeldaEspecial(tabla, s, fuente, Element.ALIGN_CENTER, BaseColor.WHITE);
     }
 
-    private static void agregarCelda(PdfPTable tabla, String texto, Font fuente, int alineacion, BaseColor colorFondo) {
+    private static void agregarCeldaEspecial(PdfPTable tabla, String texto, Font fuente, int alineacion, BaseColor colorFondo) {
         PdfPCell celda = new PdfPCell(new Phrase(texto, fuente));
         celda.setHorizontalAlignment(alineacion);
+        celda.setVerticalAlignment(Element.ALIGN_MIDDLE);
         celda.setBackgroundColor(colorFondo);
         celda.setPaddingTop(6);
         celda.setPaddingBottom(6);
-        celda.setPaddingLeft(5);
-        celda.setPaddingRight(5);
         tabla.addCell(celda);
     }
     
