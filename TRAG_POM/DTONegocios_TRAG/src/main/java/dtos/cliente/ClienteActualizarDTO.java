@@ -15,7 +15,7 @@ import enums.EstadoClienteNegocios;
  */
 public class ClienteActualizarDTO {
     
-    private Long id;
+   private Long id;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -24,6 +24,16 @@ public class ClienteActualizarDTO {
     private EstadoClienteNegocios estado;
 
     public ClienteActualizarDTO() {
+    }
+    
+    public ClienteActualizarDTO(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, EstadoClienteNegocios estado) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.estado = estado;
     }
 
     public Long getId() {
@@ -57,6 +67,8 @@ public class ClienteActualizarDTO {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    
 
     
 }

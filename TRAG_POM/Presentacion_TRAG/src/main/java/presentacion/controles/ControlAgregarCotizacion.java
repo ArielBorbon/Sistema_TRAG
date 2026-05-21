@@ -110,7 +110,9 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion {
                     clienteSeleccionado.getId(),
                     clienteSeleccionado.getNombre(),
                     clienteSeleccionado.getApellidoPaterno(),
-                    clienteSeleccionado.getApellidoMaterno());
+                    clienteSeleccionado.getApellidoMaterno(),
+                    clienteSeleccionado.getCorreo(),
+                    clienteSeleccionado.getTelefono());
 
             vistaSeleccionClienteAuto.cargarAutosCliente(automovilesCliente);
         } catch (NegocioException e) {

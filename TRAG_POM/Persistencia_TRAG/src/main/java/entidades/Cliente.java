@@ -1,8 +1,8 @@
-
 package entidades;
 
 import enums.EstadoCliente;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,18 +18,17 @@ import javax.persistence.Table;
 /**
  *
  * Archivo: Cliente.java
- * 
+ *
  * @author Ariel Eduardo Borbón Izaguirre - 253080
  * @author Sebastián Bórquez Huerta - 253080
  * @author Yuri Germán García López - 253080
  * @author Manuel Romo López - 253080
- * 
+ *
  */
 @Entity
 @Table(name = "clientes")
 public class Cliente implements Serializable {
 
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,12 +50,14 @@ public class Cliente implements Serializable {
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Automovil> automoviles;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoCliente estado;
+    private EstadoCliente estado = EstadoCliente.HABILITADO;
 
     public Cliente() {
+    this.estado = EstadoCliente.HABILITADO;
+    this.automoviles = new ArrayList<>();
     }
 
     public Cliente(Long id) {

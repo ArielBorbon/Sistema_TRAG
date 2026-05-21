@@ -6,6 +6,7 @@ import javax.swing.UIManager;
 import presentacion.controles.ControlAgregarCotizacion;
 import presentacion.controles.ControlCotizaciones;
 import presentacion.controles.ControlConsultarCotizaciones;
+import presentacion.vistas.MenuPrincipal;
 
 /**
  *
@@ -20,21 +21,16 @@ import presentacion.controles.ControlConsultarCotizaciones;
 public class Presentacion_TRAG {
 
     public static void main(String[] args) {
-        
         try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
+            com.formdev.flatlaf.FlatLightLaf.setup();
         } catch (Exception ex) {
             System.err.println("No se pudo inicializar FlatLaf");
         }
-        
-        ControlAgregarCotizacion controlAgregarCotizacion = new ControlAgregarCotizacion();
-        ControlConsultarCotizaciones controlHistorialCotizaciones = new ControlConsultarCotizaciones();
-        
-        ControlCotizaciones controlCotizaciones = new ControlCotizaciones(controlAgregarCotizacion, controlHistorialCotizaciones);
-        
-        controlAgregarCotizacion.setControlCotizaciones(controlCotizaciones);
-        controlHistorialCotizaciones.setControlCotizaciones(controlCotizaciones);
-        
-        controlCotizaciones.administrarCotizaciones();
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MenuPrincipal().setVisible(true);
+            }
+        });
     }
 }

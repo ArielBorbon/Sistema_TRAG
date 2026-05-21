@@ -58,17 +58,33 @@ public class AdministradorClientes {
         }
     }
 
-    public ClienteDetalleDTO actualizarCliente(ClienteActualizarDTO dto) {
-        if (dto.getId() == null) {
-            throw new IllegalArgumentException("El ID es necesario para editar.");
+   public ClienteDetalleDTO actualizarCliente(ClienteActualizarDTO dto) throws NegocioException {
+    if (dto.getId() == null) {
+        throw new IllegalArgumentException("El ID es necesario para editar.");
+    }
+
+    validarClienteActualizar(dto);
+
+    try {
+        Cliente clienteBD = clientesDAO.obtenerCliente(dto.getId());
+        if (clienteBD == null) {
+            throw new NegocioException("El cliente no existe en la base de datos.");
         }
 
-        validarClienteActualizar(dto);
+        clienteBD.setNombre(dto.getNombre());
+        clienteBD.setApellidoPaterno(dto.getApellidoPaterno());
+        clienteBD.setApellidoMaterno(dto.getApellidoMaterno());
+        clienteBD.setTelefono(dto.getTelefono());
+        clienteBD.setCorreo(dto.getCorreo());
 
-        Cliente clienteActualizar = DTOMapeadores.toEntity(dto);
+        Cliente clienteActualizado = clientesDAO.actualizarCliente(clienteBD);
 
-        return Mapeadores.toDTODetalle(clienteActualizar);
+        return Mapeadores.toDTODetalle(clienteActualizado);
+        
+    } catch (PersistenciaException e) {
+        throw new NegocioException("Error al guardar los cambios en la base de datos.", e);
     }
+}
 
     public void deshabilitarCliente(Long id) throws NegocioException {
         if (id == null) {
@@ -88,27 +104,6 @@ public class AdministradorClientes {
             
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al deshabilitar el cliente en la base de datos.", e);
-        }
-    }
-
-    public void habilitarCliente(Long id) throws NegocioException {
-        if (id == null) {
-            throw new IllegalArgumentException("El ID es necesario para habilitar.");
-        }
-
-        try {
-            Cliente cliente = clientesDAO.obtenerCliente(id);
-            
-            if (cliente == null) {
-                throw new NegocioException("No se encontró ningún cliente con el ID proporcionado.");
-            }
-            
-            cliente.setEstado(enums.EstadoCliente.HABILITADO);
-            
-            clientesDAO.actualizarCliente(cliente);
-            
-        } catch (PersistenciaException e) {
-            throw new NegocioException("Error al habilitar el cliente en la base de datos.", e);
         }
     }
 
@@ -132,6 +127,14 @@ public class AdministradorClientes {
             throw new NegocioException(MENSAJE_ERROR_OBTENER_TODOS_CLIENTES, e);
         }
 
+    }
+    
+    public List<ClienteResumenDTO> obtenerClientesPorNombre(String nombre) throws NegocioException {
+        try {
+            return Mapeadores.toDTOClientes(clientesDAO.buscarClientesPorNombre(nombre));
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al buscar los clientes por nombre.", e);
+        }
     }
 
     
@@ -205,5 +208,7 @@ public class AdministradorClientes {
             }
         }
     }
+    
+    
  
 }

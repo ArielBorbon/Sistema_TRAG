@@ -43,7 +43,7 @@ public class FAdministradorClientes implements IAdministradorClientes{
      * @param dto Datos actualizados del cliente.
      * @return ClienteDTO con la información actualizada.
      */
-    public ClienteDetalleDTO actualizarCliente(ClienteActualizarDTO dto) {
+    public ClienteDetalleDTO actualizarCliente(ClienteActualizarDTO dto) throws NegocioException {
         return administradorClientes.actualizarCliente(dto);
     }
 
@@ -62,6 +62,27 @@ public class FAdministradorClientes implements IAdministradorClientes{
     @Override
     public List<ClienteResumenDTO> obtenerTodosClientes() throws NegocioException {
         return administradorClientes.obtenerTodosClientes();
+    }
+
+    /**
+     * Fachada para deshabilitar (eliminación lógica) un cliente.
+     * 
+     * @param id ID del cliente a deshabilitar.
+     */
+    @Override
+    public void deshabilitarCliente(Long id) throws NegocioException {
+        administradorClientes.deshabilitarCliente(id);
+    }
+
+    /**
+     * Fachada para buscar clientes cuyo nombre coincida con el criterio de búsqueda.
+     * 
+     * @param nombre Texto a buscar en el nombre del cliente.
+     * @return Lista de ClienteResumenDTO que coinciden con la búsqueda.
+     */
+    @Override
+    public List<ClienteResumenDTO> obtenerClientesPorNombre(String nombre) throws NegocioException {
+        return administradorClientes.obtenerClientesPorNombre(nombre);
     }
 
 }

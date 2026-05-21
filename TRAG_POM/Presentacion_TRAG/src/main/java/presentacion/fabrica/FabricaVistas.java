@@ -1,6 +1,8 @@
 package presentacion.fabrica;
 
+import presentacion.interfaces.IControlAdministrarClientes;
 import presentacion.interfaces.IControlAgregarCotizacion;
+import presentacion.interfaces.IControlClientes;
 import presentacion.interfaces.vistas.IVistaSeleccionClienteAuto;
 import presentacion.vistas.VistaHistorialCotizaciones;
 import presentacion.vistas.VistaSeleccionClienteAuto;
@@ -17,6 +19,12 @@ import presentacion.vistas.VistaServicios;
 import presentacion.interfaces.vistas.IVistaHistorialCotizaciones;
 import presentacion.vistas.VistaConsultaCotizacion;
 import presentacion.interfaces.IControlConsultarCotizaciones;
+import presentacion.interfaces.vistas.IVistaAdministrarClientes;
+import presentacion.interfaces.vistas.IVistaAgregarEditarCliente;
+import presentacion.interfaces.vistas.IVistaPrincipalClientes;
+import presentacion.vistas.VistaAdministrarCliente;
+import presentacion.vistas.VistaAgregarEditarCliente;
+import presentacion.vistas.VistaPrincipalClientes;
 
 /**
  *
@@ -73,6 +81,21 @@ public class FabricaVistas {
         IVistaConsultaCotizacion vistaConsultaCotizacion = new VistaConsultaCotizacion(control);
         return vistaConsultaCotizacion;
 
+    }
+    
+    public static IVistaAdministrarClientes obtenerVistaAdministrarCliente(IControlAdministrarClientes control) {
+        IVistaAdministrarClientes vistaAdministrar = new VistaAdministrarCliente(control);
+        return vistaAdministrar;
+    }
+
+    public static IVistaAgregarEditarCliente obtenerVistaAgregarEditarCliente(IControlAdministrarClientes control) {
+        IVistaAgregarEditarCliente vistaAgregarEditar = new VistaAgregarEditarCliente(control);
+        return vistaAgregarEditar;
+    }
+    
+    public static IVistaPrincipalClientes obtenerVistaPrincipalClientes(IControlClientes control) {
+        IVistaPrincipalClientes vista = new VistaPrincipalClientes(control);
+        return vista;
     }
 
 }

@@ -4,17 +4,28 @@
  */
 package presentacion.vistas;
 
+import dtos.cliente.ClienteDetalleDTO;
+import javax.swing.JOptionPane;
+import presentacion.borradores.BorradorCliente;
+import presentacion.interfaces.IControlAdministrarClientes;
+import presentacion.interfaces.vistas.IVistaAgregarEditarCliente;
+
 /**
  *
  * @author romom
  */
-public class VistaAgregarCliente extends javax.swing.JFrame {
+public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVistaAgregarEditarCliente {
 
-    /**
-     * Creates new form VistaAgregarCliente
-     */
-    public VistaAgregarCliente() {
+    private IControlAdministrarClientes control;
+
+    private boolean modoEdicion = false;
+
+    public VistaAgregarEditarCliente(IControlAdministrarClientes control) {
         initComponents();
+        configurarImagen();
+        configurarBotones();
+        this.control = control;
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -28,6 +39,7 @@ public class VistaAgregarCliente extends javax.swing.JFrame {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
+        jButton4 = new javax.swing.JButton();
         panelEncabezado1 = new presentacion.vistas.PanelEncabezado();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -42,6 +54,9 @@ public class VistaAgregarCliente extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -54,10 +69,13 @@ public class VistaAgregarCliente extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
+        jButton4.setText("jButton3");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cliente.png"))); // NOI18N
-        jLabel1.setPreferredSize(new java.awt.Dimension(150, 130));
+        jLabel1.setPreferredSize(null);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel2.setText("Nuevo Cliente");
@@ -172,6 +190,17 @@ public class VistaAgregarCliente extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanel1.add(jTextField5, gridBagConstraints);
 
+        jButton3.setText("Cancelar");
+
+        jButton5.setText("Guardar");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Volver");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -181,15 +210,25 @@ public class VistaAgregarCliente extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(59, 59, 59)
-                        .addComponent(jLabel2))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 628, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 628, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(60, 60, 60))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(52, 52, 52))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,10 +240,15 @@ public class VistaAgregarCliente extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(91, 91, 91))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(22, 22, 22))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(152, 152, 152)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(103, 103, 103)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -223,42 +267,16 @@ public class VistaAgregarCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VistaAgregarCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VistaAgregarCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VistaAgregarCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VistaAgregarCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VistaAgregarCliente().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -275,4 +293,148 @@ public class VistaAgregarCliente extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField5;
     private presentacion.vistas.PanelEncabezado panelEncabezado1;
     // End of variables declaration//GEN-END:variables
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {
+        guardarCliente();
+    }
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {
+        cancelar();
+    }
+
+    private void guardarCliente() {
+        String nombre = jTextField1.getText().trim();
+        String apPaterno = jTextField2.getText().trim();
+        String apMaterno = jTextField5.getText().trim();
+        String telefono = jTextField3.getText().trim();
+        String correo = jTextField4.getText().trim();
+
+        if (nombre.isEmpty() || apPaterno.isEmpty()) {
+            mostrarMensaje("El nombre y el apellido paterno son obligatorios.");
+            return;
+        }
+
+        BorradorCliente borrador = new BorradorCliente(
+                null,
+                nombre,
+                apPaterno,
+                apMaterno.isEmpty() ? null : apMaterno,
+                telefono.isEmpty() ? null : telefono,
+                correo.isEmpty() ? null : correo
+        );
+
+        if (modoEdicion) {
+            control.actualizarCliente(borrador);
+        } else {
+            control.guardarNuevoCliente(borrador);
+        }
+    }
+
+    private void cancelar() {
+        control.cancelarAgregarEditar();
+    }
+
+    @Override
+    public void cargarDatosCliente(ClienteDetalleDTO cliente) {
+        modoEdicion = true;
+        jLabel2.setText("Editar Cliente");
+
+        jTextField1.setText(cliente.getNombre());
+        jTextField2.setText(cliente.getApellidoPaterno());
+        jTextField5.setText(cliente.getApellidoMaterno() != null ? cliente.getApellidoMaterno() : "");
+        jTextField3.setText(cliente.getTelefono() != null ? cliente.getTelefono() : "");
+        jTextField4.setText(cliente.getCorreo() != null ? cliente.getCorreo() : "");
+    }
+
+    @Override
+    public void limpiarFormulario() {
+        modoEdicion = false;
+        jLabel2.setText("Nuevo Cliente");
+
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField5.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+    }
+
+    @Override
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(
+                this,
+                mensaje,
+                "Aviso",
+                JOptionPane.WARNING_MESSAGE
+        );
+    }
+
+    @Override
+    public void mostrarMensajeExito(String mensaje) {
+        JOptionPane.showMessageDialog(
+                this,
+                mensaje,
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    @Override
+    public void mostrar() {
+        setVisible(true);
+    }
+
+    @Override
+    public void ocultar() {
+        dispose();
+    }
+
+    private void configurarImagen() {
+        java.awt.Image imagen = new javax.swing.ImageIcon(
+                getClass().getResource("/cliente.png")
+        ).getImage();
+
+        java.awt.Image imagenEscalada = imagen.getScaledInstance(
+                180,
+                180,
+                java.awt.Image.SCALE_SMOOTH
+        );
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(imagenEscalada));
+    }
+
+    private void configurarBotones() {
+        jButton6.setBackground(new java.awt.Color(52, 73, 94));
+        jButton6.setForeground(java.awt.Color.WHITE);
+        jButton6.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        jButton6.setFocusPainted(false);
+        jButton6.setBorderPainted(false);
+        jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        jButton6.addActionListener(e -> {
+            cancelar();
+        });
+
+        jButton3.setBackground(new java.awt.Color(231, 76, 60));
+        jButton3.setForeground(java.awt.Color.WHITE);
+        jButton3.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        jButton3.setFocusPainted(false);
+        jButton3.setBorderPainted(false);
+        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        jButton3.addActionListener(e -> {
+            limpiarFormulario();
+        });
+
+        jButton5.setBackground(new java.awt.Color(46, 204, 113));
+        jButton5.setForeground(java.awt.Color.WHITE);
+        jButton5.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        jButton5.setFocusPainted(false);
+        jButton5.setBorderPainted(false);
+        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        jButton5.addActionListener(e -> {
+            guardarCliente();
+        });
+    }
+
 }

@@ -43,18 +43,19 @@ import enums.EstadoClienteNegocios;
 import enums.EstadoCotizacionNegocios;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  *
  * Archivo: Mapeadores.java
- * 
+ *
  * @author Ariel Eduardo Borbón Izaguirre - 253080
  * @author Sebastián Bórquez Huerta - 253080
  * @author Yuri Germán García López - 253080
  * @author Manuel Romo López - 253080
- * 
+ *
  */
 public class Mapeadores {
 
@@ -86,34 +87,53 @@ public class Mapeadores {
         if (entidad == null) {
             return null;
         }
-        ClienteResumenDTO dto = new ClienteResumenDTO(
+
+        EstadoClienteNegocios estadoNegocios = EstadoClienteNegocios.valueOf(entidad.getEstado().name());
+
+        return new ClienteResumenDTO(
                 entidad.getId(),
-                entidad.getNombre(), 
+                entidad.getNombre(),
                 entidad.getApellidoPaterno(),
-                entidad.getApellidoMaterno()
+                entidad.getApellidoMaterno(),
+                estadoNegocios,
+                entidad.getTelefono(),
+                entidad.getCorreo(),
+                (entidad.getAutomoviles() != null) ? entidad.getAutomoviles().size() : 0
         );
-       
-        return dto;
     }
-    
+
     public static ClienteDetalleDTO toDTODetalle(Cliente entidad) {
         if (entidad == null) {
             return null;
         }
-        ClienteDetalleDTO dto = new ClienteDetalleDTO(
-                entidad.getId(), 
-                entidad.getNombre(), 
+
+        EstadoClienteNegocios estadoNegocios = (entidad.getEstado() != null)
+                ? EstadoClienteNegocios.valueOf(entidad.getEstado().name())
+                : EstadoClienteNegocios.HABILITADO;
+
+        List<AutomovilResumenDTO> listaAutosDTO = new ArrayList<>();
+        if (entidad.getAutomoviles() != null) {
+            listaAutosDTO = entidad.getAutomoviles().stream()
+                    .map(auto -> new AutomovilResumenDTO(
+                    auto.getId(),
+                    auto.getAnio(),
+                    auto.getMarca(),
+                    auto.getModelo(),
+                    auto.getMatricula()
+            ))
+                    .collect(Collectors.toList());
+        }
+
+        return new ClienteDetalleDTO(
+                entidad.getId(),
+                entidad.getNombre(),
                 entidad.getApellidoPaterno(),
                 entidad.getApellidoMaterno(),
-                entidad.getTelefono(), 
+                entidad.getTelefono(),
                 entidad.getCorreo(),
-                EstadoClienteNegocios.valueOf(entidad.getEstado().name()),
-                entidad.getAutomoviles().stream()
-                    .map(Mapeadores::toDTOResumen)
-                    .collect(Collectors.toList())
+                estadoNegocios,
+                listaAutosDTO 
         );
-       
-        return dto;
     }
 
     public static List<ClienteResumenDTO> toDTOClientes(List<Cliente> entidades) {
@@ -151,24 +171,24 @@ public class Mapeadores {
             return null;
         }
         ServicioDetalleDTO dto = new ServicioDetalleDTO(
-                entidad.getId(), 
-                entidad.getNombre(), 
-                entidad.getDescripcion(), 
+                entidad.getId(),
+                entidad.getNombre(),
+                entidad.getDescripcion(),
                 entidad.getPrecioManoObraSugerido(),
                 entidad.getDireccionIcono(),
                 entidad.getInsumosServicio().stream()
-                    .map(Mapeadores::toDTODetalle)
-                    .collect(Collectors.toList())
+                        .map(Mapeadores::toDTODetalle)
+                        .collect(Collectors.toList())
         );
         return dto;
     }
-    
+
     public static ServicioResumenDTO toDTOResumen(Servicio entidad) {
         if (entidad == null) {
             return null;
         }
         ServicioResumenDTO dto = new ServicioResumenDTO(
-                entidad.getId(), 
+                entidad.getId(),
                 entidad.getNombre(),
                 entidad.getDireccionIcono());
         return dto;
@@ -188,57 +208,57 @@ public class Mapeadores {
             return null;
         }
         CotizacionDetalleDTO dto = new CotizacionDetalleDTO(
-                entidad.getId(), 
-                entidad.getPrecioManoObra(), 
-                entidad.getEstadoAutomovil(), 
+                entidad.getId(),
+                entidad.getPrecioManoObra(),
+                entidad.getEstadoAutomovil(),
                 entidad.getDiagnosticoGeneral(),
                 entidad.getFechaCreacion(),
                 Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion()),
                 entidad.getServicio().getNombre(),
                 EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name()));
-        
+
         return dto;
     }
-    
+
     public static CotizacionResumenDTO toDTOResumen(Cotizacion entidad) {
         if (entidad == null) {
             return null;
         }
-        
+
         CotizacionResumenDTO dto;
-        
-        if(entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoMaterno() != null){
+
+        if (entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoMaterno() != null) {
 
             dto = new CotizacionResumenDTO(
-                entidad.getId(),
-                entidad.getOrdenTrabajo().getAutomovil().getCliente().getNombre(),
-                entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoPaterno(),
-                entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoMaterno(),
-                entidad.getOrdenTrabajo().getAutomovil().getMarca(),
-                entidad.getOrdenTrabajo().getAutomovil().getModelo(),
-                entidad.getOrdenTrabajo().getAutomovil().getMatricula(),
-                entidad.getOrdenTrabajo().getAutomovil().getAnio(),
-                entidad.getFechaCreacion(),
-                entidad.getPrecioManoObra(),
-                Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion()),
-                EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name())
+                    entidad.getId(),
+                    entidad.getOrdenTrabajo().getAutomovil().getCliente().getNombre(),
+                    entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoPaterno(),
+                    entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoMaterno(),
+                    entidad.getOrdenTrabajo().getAutomovil().getMarca(),
+                    entidad.getOrdenTrabajo().getAutomovil().getModelo(),
+                    entidad.getOrdenTrabajo().getAutomovil().getMatricula(),
+                    entidad.getOrdenTrabajo().getAutomovil().getAnio(),
+                    entidad.getFechaCreacion(),
+                    entidad.getPrecioManoObra(),
+                    Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion()),
+                    EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name())
             );
-        } else{
+        } else {
             dto = new CotizacionResumenDTO(
-                entidad.getId(),
-                entidad.getOrdenTrabajo().getAutomovil().getCliente().getNombre(),
-                entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoPaterno(),
-                entidad.getOrdenTrabajo().getAutomovil().getMarca(),
-                entidad.getOrdenTrabajo().getAutomovil().getModelo(),
-                entidad.getOrdenTrabajo().getAutomovil().getMatricula(),
-                entidad.getOrdenTrabajo().getAutomovil().getAnio(),
-                entidad.getFechaCreacion(),
-                entidad.getPrecioManoObra(),
-                Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion()),
-                EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name())
+                    entidad.getId(),
+                    entidad.getOrdenTrabajo().getAutomovil().getCliente().getNombre(),
+                    entidad.getOrdenTrabajo().getAutomovil().getCliente().getApellidoPaterno(),
+                    entidad.getOrdenTrabajo().getAutomovil().getMarca(),
+                    entidad.getOrdenTrabajo().getAutomovil().getModelo(),
+                    entidad.getOrdenTrabajo().getAutomovil().getMatricula(),
+                    entidad.getOrdenTrabajo().getAutomovil().getAnio(),
+                    entidad.getFechaCreacion(),
+                    entidad.getPrecioManoObra(),
+                    Mapeadores.toDTODetalleInsumosCotizacion(entidad.getInsumosCotizacion()),
+                    EstadoCotizacionNegocios.valueOf(entidad.getEstadoCotizacion().name())
             );
         }
-        
+
         return dto;
     }
 
@@ -264,7 +284,7 @@ public class Mapeadores {
 
         return dto;
     }
-    
+
     public static InsumoResumenDTO toDTOResumen(Insumo entidad) {
         if (entidad == null) {
             return null;
@@ -286,7 +306,7 @@ public class Mapeadores {
                 .map(Mapeadores::toDTODetalle)
                 .collect(Collectors.toList());
     }
-    
+
     public static List<InsumoResumenDTO> toDTOResumenInsumos(List<Insumo> entidades) {
         if (entidades == null) {
             return null;
@@ -295,35 +315,34 @@ public class Mapeadores {
                 .map(Mapeadores::toDTOResumen)
                 .collect(Collectors.toList());
     }
-    
-    
+
     public static AutomovilDetalleDTO toDTODetalle(Automovil entidad) {
         if (entidad == null) {
             return null;
         }
         AutomovilDetalleDTO dto = new AutomovilDetalleDTO(
                 entidad.getId(),
-                entidad.getAnio(), 
-                entidad.getMatricula(), 
-                entidad.getVin(), 
+                entidad.getAnio(),
+                entidad.getMatricula(),
+                entidad.getVin(),
                 entidad.getModelo(),
                 entidad.getMarca(),
                 entidad.getCliente().getId());
-        
+
         return dto;
     }
-    
+
     public static AutomovilResumenDTO toDTOResumen(Automovil entidad) {
         if (entidad == null) {
             return null;
         }
         AutomovilResumenDTO dto = new AutomovilResumenDTO(
                 entidad.getId(),
-                entidad.getAnio(), 
-                entidad.getMatricula(), 
+                entidad.getAnio(),
+                entidad.getMatricula(),
                 entidad.getModelo(),
                 entidad.getMarca());
-        
+
         return dto;
     }
 
@@ -340,12 +359,12 @@ public class Mapeadores {
         if (entidad == null) {
             return null;
         }
-        InsumoServicioDetalleDTO dto = 
-                new InsumoServicioDetalleDTO(
-                    entidad.getId(), 
-                    entidad.getCantidadDefault(), 
-                    entidad.getServicio().getId(), 
-                    Mapeadores.toDTOResumen(entidad.getInsumo())
+        InsumoServicioDetalleDTO dto
+                = new InsumoServicioDetalleDTO(
+                        entidad.getId(),
+                        entidad.getCantidadDefault(),
+                        entidad.getServicio().getId(),
+                        Mapeadores.toDTOResumen(entidad.getInsumo())
                 );
         return dto;
     }
@@ -379,23 +398,22 @@ public class Mapeadores {
                 entidad.getId(),
                 entidad.getCantidadRequerida(),
                 entidad.getPrecio(),
-                entidad.getCotizacion().getId(), 
+                entidad.getCotizacion().getId(),
                 Mapeadores.toDTOResumen(entidad.getInsumo()),
                 entidad.getActivo());
         return dto;
     }
 
-    public static List<InsumoCotizacionDetalleDTO> toDTODetalleInsumosCotizacion(List<InsumoCotizacion> entidades){
-        
+    public static List<InsumoCotizacionDetalleDTO> toDTODetalleInsumosCotizacion(List<InsumoCotizacion> entidades) {
+
         if (entidades == null) {
             return null;
         }
         return entidades.stream()
                 .map(Mapeadores::toDTODetalle)
                 .collect(Collectors.toList());
-        
-    }
 
+    }
 
     public static OrdenTrabajoDetalleDTO toDTODetalle(OrdenTrabajo entidad) {
         if (entidad == null) {
@@ -420,10 +438,10 @@ public class Mapeadores {
             return null;
         }
         DetallePagoDTO dto = new DetallePagoDTO(
-                entidad.getId(), 
-                entidad.getFechaEntrega(), 
-                entidad.getFechaGarantia(), 
-                entidad.getPagoTotal(), 
+                entidad.getId(),
+                entidad.getFechaEntrega(),
+                entidad.getFechaGarantia(),
+                entidad.getPagoTotal(),
                 entidad.getOrdenTrabajo().getId()
         );
 
@@ -435,10 +453,10 @@ public class Mapeadores {
             return null;
         }
         TrabajoDetalleDTO dto = new TrabajoDetalleDTO(
-                entidad.getId(), 
-                entidad.getFechaInicio(), 
-                entidad.getFechaEstimadaTermino(), 
-                entidad.getFechaTermino(), 
+                entidad.getId(),
+                entidad.getFechaInicio(),
+                entidad.getFechaEstimadaTermino(),
+                entidad.getFechaTermino(),
                 entidad.getOrdenTrabajo().getId());
 
         return dto;
@@ -458,9 +476,9 @@ public class Mapeadores {
             return null;
         }
         ImprevistoDetalleDTO dto = new ImprevistoDetalleDTO(
-                entidad.getId(), 
-                entidad.getNuevaFechaEntrega(), 
-                entidad.getEstado(), 
+                entidad.getId(),
+                entidad.getNuevaFechaEntrega(),
+                entidad.getEstado(),
                 entidad.getOrdenTrabajo().getId());
         return dto;
     }
@@ -470,10 +488,10 @@ public class Mapeadores {
             return null;
         }
         InsumoTrabajoAdquiridoDetalleDTO dto = new InsumoTrabajoAdquiridoDetalleDTO(
-                entidad.getId(), 
-                entidad.getCantidad(), 
-                entidad.getCostoReal(), 
-                entidad.getTrabajo().getId(), 
+                entidad.getId(),
+                entidad.getCantidad(),
+                entidad.getCostoReal(),
+                entidad.getTrabajo().getId(),
                 entidad.getInsumo().getId());
         return dto;
     }
@@ -483,9 +501,9 @@ public class Mapeadores {
             return null;
         }
         InsumoImprevistoDetalleDTO dto = new InsumoImprevistoDetalleDTO(
-                entidad.getId(), 
-                entidad.getCantidadRequerida(), 
-                entidad.getPrecio(), 
+                entidad.getId(),
+                entidad.getCantidadRequerida(),
+                entidad.getPrecio(),
                 entidad.getImprevisto().getId(), entidad.getInsumo().getId());
         return dto;
     }

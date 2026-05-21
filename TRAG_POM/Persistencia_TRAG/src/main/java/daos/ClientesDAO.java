@@ -13,12 +13,12 @@ import javax.persistence.NoResultException;
 /**
  *
  * Archivo: ClientesDAO.java
- * 
+ *
  * @author Ariel Eduardo Borbón Izaguirre - 253080
  * @author Sebastián Bórquez Huerta - 253080
  * @author Yuri Germán García López - 253080
  * @author Manuel Romo López - 253080
- * 
+ *
  */
 public class ClientesDAO implements IClientesDAO {
 
@@ -106,6 +106,29 @@ public class ClientesDAO implements IClientesDAO {
                 em.getTransaction().rollback();
             }
             throw new PersistenciaException(MENSAJE_ERROR_ACTUALIZAR, e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<Cliente> buscarClientesPorNombre(String nombre) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+
+        try {
+
+            String jpql = "SELECT DISTINCT c FROM Cliente c "
+                    + "LEFT JOIN FETCH c.automoviles a ON a.activo = true "
+                    + "WHERE LOWER(c.nombre) LIKE LOWER(:nombre) "
+                    + "AND c.estado != :estadoCliente";
+
+            return em.createQuery(jpql, Cliente.class)
+                    .setParameter("nombre", "%" + nombre + "%")
+                    .setParameter("estadoCliente", EstadoCliente.ELIMINADO)
+                    .getResultList();
+
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al buscar clientes por nombre.", e);
         } finally {
             em.close();
         }

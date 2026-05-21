@@ -1,6 +1,7 @@
 
 package com.mycompany.administradorclientes_trag;
 
+import dtos.cliente.ClienteActualizarDTO;
 import dtos.cliente.ClienteAgregarDTO;
 import dtos.cliente.ClienteDetalleDTO;
 import dtos.cliente.ClienteResumenDTO;
@@ -22,5 +23,8 @@ public interface IAdministradorClientes {
     public abstract ClienteDetalleDTO crearCliente(ClienteAgregarDTO dto) throws NegocioException;
     public abstract ClienteDetalleDTO obtenerCliente(Long idCliente) throws NegocioException;
     public abstract List<ClienteResumenDTO> obtenerTodosClientes() throws NegocioException;
+    public abstract ClienteDetalleDTO actualizarCliente(ClienteActualizarDTO dto) throws NegocioException;
+    public abstract void deshabilitarCliente(Long id) throws NegocioException;
+    public abstract List<ClienteResumenDTO> obtenerClientesPorNombre(String nombre) throws NegocioException;
     
 }
