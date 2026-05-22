@@ -10,12 +10,13 @@ import dtos.cliente.ClienteResumenDTO;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
-import presentacion.controles.ControlAgregarAutomovil;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import presentacion.controles.ControlEditarAutomovil;
 
 /**
@@ -30,6 +31,10 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         this.control = control;
         initComponents();
         configurarRenderCombo();
+        btnGuardar.setEnabled(false);
+        lblErrores.setForeground(java.awt.Color.RED);
+        lblErrores.setText(" ");
+        agregarListenersValidacion();
     }
 
     public void cargarComboClientes(List<ClienteResumenDTO> clientes) {
@@ -70,6 +75,103 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         }
     }
 
+    private void agregarListenersValidacion() {
+        javax.swing.event.DocumentListener listener = new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                validarFormulario();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                validarFormulario();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                validarFormulario();
+            }
+        };
+
+        txtMarca.getDocument().addDocumentListener(listener);
+        txtModelo.getDocument().addDocumentListener(listener);
+        txtAnio.getDocument().addDocumentListener(listener);
+        txtMatricula.getDocument().addDocumentListener(listener);
+        txtNiv.getDocument().addDocumentListener(listener);
+
+        cmbDueno.addItemListener(e -> validarFormulario());
+    }
+
+    private void validarFormulario() {
+        String marca = txtMarca.getText().trim();
+        String modelo = txtModelo.getText().trim();
+        String anioStr = txtAnio.getText().trim();
+        String matricula = txtMatricula.getText().trim().toUpperCase();
+        String niv = txtNiv.getText().trim().toUpperCase(); 
+        ClienteResumenDTO cliente = (ClienteResumenDTO) cmbDueno.getSelectedItem();
+
+        Border bordeError = BorderFactory.createLineBorder(java.awt.Color.RED, 2);
+        Border bordeNormal = UIManager.getBorder("TextField.border"); 
+
+        txtMarca.setBorder(bordeNormal);
+        txtModelo.setBorder(bordeNormal);
+        txtAnio.setBorder(bordeNormal);
+        txtMatricula.setBorder(bordeNormal);
+        txtNiv.setBorder(bordeNormal);
+
+        String regexTextoBase = "^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑ-]+$"; 
+        String regexMatricula = "^[A-Z0-9-]{4,10}$"; 
+        String regexAnio = "^(19|20)\\d{2}$"; 
+        String regexNiv = "^[A-HJ-NPR-Z0-9]{17}$"; 
+
+        if (marca.isEmpty() || !marca.matches(regexTextoBase)) {
+            mostrarError(txtMarca, bordeError, "La marca es requerida y no debe contener caracteres especiales raros.");
+            return;
+        }
+
+        if (modelo.isEmpty() || !modelo.matches(regexTextoBase)) {
+            mostrarError(txtModelo, bordeError, "El modelo es requerido y no debe contener caracteres especiales raros.");
+            return;
+        }
+
+        if (anioStr.isEmpty() || !anioStr.matches(regexAnio)) {
+            mostrarError(txtAnio, bordeError, "El año debe ser un número de 4 dígitos válido (ej. 2018).");
+            return;
+        } else {
+            int anio = Integer.parseInt(anioStr);
+            int anioActual = java.time.Year.now().getValue();
+            if (anio < 1950 || anio > (anioActual + 1)) {
+                mostrarError(txtAnio, bordeError, "El año debe estar entre 1950 y " + (anioActual + 1) + ".");
+                return;
+            }
+        }
+
+        if (matricula.isEmpty() || !matricula.matches(regexMatricula)) {
+            mostrarError(txtMatricula, bordeError, "Matrícula inválida. Usa letras mayúsculas, números y guiones (4-10 caracteres).");
+            return;
+        }
+
+        if (niv.isEmpty() || !niv.matches(regexNiv)) {
+            mostrarError(txtNiv, bordeError, "El NIV (VIN) debe tener exactamente 17 caracteres (no usar I, O, Q).");
+            return;
+        }
+
+        if (cliente == null) {
+            lblErrores.setText("Seleccione un dueño para el vehículo.");
+            btnGuardar.setEnabled(false);
+            return;
+        }
+
+        lblErrores.setText(" ");
+        btnGuardar.setEnabled(true);
+    }
+
+    private void mostrarError(javax.swing.JTextField campo, javax.swing.border.Border borde, String mensaje) {
+        campo.setBorder(borde);
+        lblErrores.setText(mensaje);
+        btnGuardar.setEnabled(false);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -98,6 +200,7 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         txtNiv = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         cmbDueno = new javax.swing.JComboBox<ClienteResumenDTO>();
+        lblErrores = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         btnCancelar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
@@ -193,36 +296,44 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         cmbDueno.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cmbDueno.setModel(new DefaultComboBoxModel<ClienteResumenDTO>());
 
+        lblErrores.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblErrores.setText("jLabel2");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(54, 54, 54)
                 .addComponent(imgAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtMatricula)
-                        .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNiv)
-                    .addComponent(txtAnio)
-                    .addComponent(cmbDueno, 0, 253, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtMatricula)
+                                .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(47, 47, 47)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNiv)
+                            .addComponent(txtAnio)
+                            .addComponent(cmbDueno, 0, 253, Short.MAX_VALUE)))
+                    .addComponent(lblErrores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(79, 79, 79))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(59, 59, 59)
+                .addGap(25, 25, 25)
+                .addComponent(lblErrores)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel9)
@@ -313,10 +424,7 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
 
         ClienteResumenDTO clienteSeleccionado = (ClienteResumenDTO) cmbDueno.getSelectedItem();
 
-        if (marca.isEmpty() || matricula.isEmpty() || clienteSeleccionado == null) {
-            JOptionPane.showMessageDialog(this, "Por favor llena todos los campos.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+
 
         int anioInt = Integer.parseInt(anio.trim());
 
@@ -369,6 +477,7 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JLabel lblErrores;
     private presentacion.vistas.PanelEncabezado panelEncabezado1;
     private javax.swing.JTextField txtAnio;
     private javax.swing.JTextField txtMarca;

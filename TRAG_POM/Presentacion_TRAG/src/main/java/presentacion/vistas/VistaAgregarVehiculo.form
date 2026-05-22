@@ -78,28 +78,33 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
                       <Component id="imgAutomovil" min="-2" pref="264" max="-2" attributes="0"/>
                       <EmptySpace pref="277" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jLabel6" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
-                              <Component id="jLabel4" min="-2" pref="201" max="-2" attributes="0"/>
-                              <Component id="jLabel5" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
-                              <Component id="txtMatricula" max="32767" attributes="0"/>
-                              <Component id="txtModelo" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="txtMarca" min="-2" pref="265" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jLabel7" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
-                          <Component id="jLabel9" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
-                          <Component id="jLabel8" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
-                          <Component id="txtNiv" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txtAnio" alignment="0" max="32767" attributes="0"/>
-                          <Component id="cmbDueno" pref="253" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jLabel6" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
+                                      <Component id="jLabel4" min="-2" pref="201" max="-2" attributes="0"/>
+                                      <Component id="jLabel5" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
+                                      <Component id="txtMatricula" max="32767" attributes="0"/>
+                                      <Component id="txtModelo" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="txtMarca" min="-2" pref="265" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jLabel7" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
+                                  <Component id="jLabel9" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
+                                  <Component id="jLabel8" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
+                                  <Component id="txtNiv" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtAnio" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="cmbDueno" pref="253" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="lblErrores" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
                   </Group>
@@ -108,7 +113,9 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <Component id="lblErrores" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
@@ -283,6 +290,14 @@
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;ClienteResumenDTO&gt;()"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ClienteResumenDTO&gt;"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblErrores">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="14" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="jLabel2"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
