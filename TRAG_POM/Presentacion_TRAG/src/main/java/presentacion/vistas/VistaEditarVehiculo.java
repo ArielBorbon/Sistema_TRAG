@@ -185,11 +185,7 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         btnGuardar.setEnabled(formularioValido);
     }
 
-    private void mostrarError(javax.swing.JTextField campo, javax.swing.border.Border borde, String mensaje) {
-        campo.setBorder(borde);
-        lblErrores.setText(mensaje);
-        btnGuardar.setEnabled(false);
-    }
+
 
     public void mostrarErrorBaseDatos(String mensajeError) {
         lblErrores.setText(mensajeError);
@@ -214,15 +210,7 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         lblErrorDueno.setText(" ");
     }
 
-    private void mostrarErrorCampo(javax.swing.JLabel labelError, javax.swing.JTextField campo, String mensaje) {
-        if (mensaje != null) {
-            campo.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED, 2));
-            labelError.setText(mensaje);
-        } else {
-            campo.setBorder(UIManager.getBorder("TextField.border"));
-            labelError.setText(" ");
-        }
-    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
