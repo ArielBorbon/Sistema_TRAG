@@ -136,4 +136,12 @@ public class AdministradorAutomoviles {
         }
     }
 
+    public List<AutomovilResumenDTO> obtenerAutomovilesPorNombreCliente(String nombre) throws NegocioException {
+        try {
+            return Mapeadores.toDTOAutomoviles(automovilesDAO.buscarAutomovilesPorNombreCliente(nombre));
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al buscar los automóviles filtrados por cliente.", e);
+        }
+    }
+
 }

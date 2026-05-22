@@ -1,4 +1,3 @@
-
 package presentacion.vistas;
 
 import dtos.automovil.AutomovilResumenDTO;
@@ -24,6 +23,7 @@ public class VistaAutomoviles extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         configurarTablaAutomoviles();
+        configurarBuscador();
     }
 
     public void llenarTabla(List<AutomovilResumenDTO> autos) {
@@ -33,12 +33,12 @@ public class VistaAutomoviles extends javax.swing.JFrame {
         for (AutomovilResumenDTO auto : autos) {
             Object[] fila = {
                 auto.getId(),
-                auto.getMarca(), 
-                auto.getModelo(), 
+                auto.getMarca(),
+                auto.getModelo(),
                 auto.getAnio(),
                 auto.getMatricula(),
-                auto.getNombreDueno(), 
-                "Eliminar" 
+                auto.getNombreDueno(),
+                "Eliminar"
             };
             modelo.addRow(fila);
         }
@@ -63,7 +63,7 @@ public class VistaAutomoviles extends javax.swing.JFrame {
         javax.swing.table.DefaultTableModel modeloTabla = new javax.swing.table.DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 6; 
+                return column == 6;
             }
 
             @Override
@@ -72,7 +72,7 @@ public class VistaAutomoviles extends javax.swing.JFrame {
                     return Long.class;
                 }
                 if (columnIndex == 3) {
-                    return Integer.class; 
+                    return Integer.class;
                 }
                 return String.class;
             }
@@ -120,11 +120,35 @@ public class VistaAutomoviles extends javax.swing.JFrame {
         tblAutomoviles.getColumnModel().getColumn(0).setWidth(0);
 
         tblAutomoviles.getColumnModel().getColumn(1).setPreferredWidth(120);
-        tblAutomoviles.getColumnModel().getColumn(2).setPreferredWidth(150); 
-        tblAutomoviles.getColumnModel().getColumn(3).setPreferredWidth(70);  
-        tblAutomoviles.getColumnModel().getColumn(4).setPreferredWidth(100); 
-        tblAutomoviles.getColumnModel().getColumn(5).setPreferredWidth(180); 
-        tblAutomoviles.getColumnModel().getColumn(6).setPreferredWidth(100); 
+        tblAutomoviles.getColumnModel().getColumn(2).setPreferredWidth(150);
+        tblAutomoviles.getColumnModel().getColumn(3).setPreferredWidth(70);
+        tblAutomoviles.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tblAutomoviles.getColumnModel().getColumn(5).setPreferredWidth(180);
+        tblAutomoviles.getColumnModel().getColumn(6).setPreferredWidth(100);
+    }
+
+    private void configurarBuscador() {
+        cmptxtBuscarVehiculos.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                buscar();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                buscar();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                buscar();
+            }
+        });
+    }
+
+    private void buscar() {
+        String textoBusqueda = cmptxtBuscarVehiculos.getText().trim();
+        control.buscarAutomoviles(textoBusqueda); 
     }
 
     /**

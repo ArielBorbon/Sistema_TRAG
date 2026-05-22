@@ -144,4 +144,27 @@ public class AutomovilesDAO implements IAutomovilesDAO {
         }
     }
 
+    @Override
+    public List<Automovil> buscarAutomovilesPorNombreCliente(String nombre) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+
+        try {
+            String jpql = "SELECT a FROM Automovil a "
+                    + "JOIN FETCH a.cliente c "
+                    + "WHERE (LOWER(c.nombre) LIKE LOWER(:nombre) "
+                    + "OR LOWER(c.apellidoPaterno) LIKE LOWER(:nombre)) "
+                    + "AND a.activo = :activo";
+
+            return em.createQuery(jpql, Automovil.class)
+                    .setParameter("nombre", "%" + nombre + "%")
+                    .setParameter("activo", true)
+                    .getResultList();
+
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al buscar automóviles por nombre de cliente.", e);
+        } finally {
+            em.close();
+        }
+    }
+
 }

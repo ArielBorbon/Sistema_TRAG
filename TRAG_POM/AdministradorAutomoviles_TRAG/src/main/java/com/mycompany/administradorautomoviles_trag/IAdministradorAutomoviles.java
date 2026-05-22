@@ -30,4 +30,5 @@ public interface IAdministradorAutomoviles {
     AutomovilDetalleDTO actualizarAutomovil(AutomovilActualizarDTO dto) throws NegocioException;
 
     void deshabilitarAutomovil(Long idAutomovil) throws NegocioException;
+    public List<AutomovilResumenDTO> obtenerAutomovilesPorNombreCliente(String nombre) throws NegocioException;
 }

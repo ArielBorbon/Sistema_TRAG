@@ -1,4 +1,3 @@
-
 package presentacion.controles;
 
 import com.mycompany.administradorautomoviles_trag.IAdministradorAutomoviles;
@@ -43,6 +42,19 @@ public class ControlAdministrarAutomoviles {
         }
     }
 
+    public void buscarAutomoviles(String textoBusqueda) {
+        try {
+            if (textoBusqueda.isEmpty()) {
+                cargarTabla(); 
+            } else {
+                List<AutomovilResumenDTO> listaFiltrada = adminAutomoviles.obtenerAutomovilesPorNombreCliente(textoBusqueda);
+               vista.llenarTabla(listaFiltrada);
+            }
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(vista, "Error al buscar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public void abrirAgregarVehiculo() {
         ControlAgregarAutomovil controlAgregar = new ControlAgregarAutomovil(vista);
         controlAgregar.iniciarVista();
@@ -51,19 +63,17 @@ public class ControlAdministrarAutomoviles {
     public void setControlOrquestador(ControlAutomoviles controlOrquestador) {
         this.controlOrquestador = controlOrquestador;
     }
-    
-    
+
     public void eliminarVehiculo(Long idAutomovil) {
         try {
-            adminAutomoviles.deshabilitarAutomovil(idAutomovil); 
+            adminAutomoviles.deshabilitarAutomovil(idAutomovil);
             JOptionPane.showMessageDialog(vista, "Vehículo eliminado correctamente.");
-            cargarTabla(); 
+            cargarTabla();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(vista, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    
+
     public void abrirEditarVehiculo(Long idAutomovil) {
         ControlEditarAutomovil controlEditar = new ControlEditarAutomovil(this, idAutomovil);
         controlEditar.iniciarVista();

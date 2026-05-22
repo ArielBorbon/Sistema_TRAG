@@ -55,4 +55,9 @@ public class FAdministradorAutomoviles implements IAdministradorAutomoviles {
         administradorAutomoviles.deshabilitarAutomovil(idAutomovil);
     }
 
+    @Override
+    public List<AutomovilResumenDTO> obtenerAutomovilesPorNombreCliente(String nombre) throws NegocioException {
+        return administradorAutomoviles.obtenerAutomovilesPorNombreCliente(nombre);
+    }
+
 }
