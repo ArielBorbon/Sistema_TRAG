@@ -123,4 +123,25 @@ public class AutomovilesDAO implements IAutomovilesDAO {
         }
     }
 
+    @Override
+    public Automovil actualizarAutomovil(Automovil automovil) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            EntityTransaction transaccion = em.getTransaction();
+            transaccion.begin();
+
+            Automovil autoActualizado = em.merge(automovil);
+
+            transaccion.commit();
+            return autoActualizado;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new PersistenciaException(MENSAJE_ERROR_ACTUALIZAR, e);
+        } finally {
+            em.close();
+        }
+    }
+
 }

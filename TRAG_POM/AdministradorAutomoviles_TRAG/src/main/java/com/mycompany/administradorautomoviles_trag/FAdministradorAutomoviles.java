@@ -1,5 +1,6 @@
 package com.mycompany.administradorautomoviles_trag;
 
+import dtos.automovil.AutomovilActualizarDTO;
 import dtos.automovil.AutomovilAgregarDTO;
 import dtos.automovil.AutomovilDetalleDTO;
 import dtos.automovil.AutomovilResumenDTO;
@@ -42,6 +43,16 @@ public class FAdministradorAutomoviles implements IAdministradorAutomoviles {
     @Override
     public List<AutomovilResumenDTO> obtenerAutomovilesPorCliente(Long idCliente) throws NegocioException {
         return administradorAutomoviles.obtenerAutomovilesPorCliente(idCliente);
+    }
+
+    @Override
+    public AutomovilDetalleDTO actualizarAutomovil(AutomovilActualizarDTO dto) throws NegocioException {
+        return administradorAutomoviles.actualizarAutomovil(dto);
+    }
+
+    @Override
+    public void deshabilitarAutomovil(Long idAutomovil) throws NegocioException {
+        administradorAutomoviles.deshabilitarAutomovil(idAutomovil);
     }
 
 }

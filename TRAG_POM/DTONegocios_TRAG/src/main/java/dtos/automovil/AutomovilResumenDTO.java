@@ -18,6 +18,8 @@ public class AutomovilResumenDTO {
     private String matricula;
     private String modelo;
     private String marca;
+    
+    private String nombreDueno;
 
     public AutomovilResumenDTO(Long id, Integer anio, String matricula, String modelo, String marca) {
         this.id = id;
@@ -50,6 +52,14 @@ public class AutomovilResumenDTO {
     @Override
     public String toString() {
         return marca + " " + modelo + ", " + anio + ", " + matricula;
+    }
+
+    public String getNombreDueno() {
+        return nombreDueno;
+    }
+
+    public void setNombreDueno(String nombreDueno) {
+        this.nombreDueno = nombreDueno;
     }
 
     

@@ -4,10 +4,10 @@
  */
 package presentacion.vistas;
 
-import com.formdev.flatlaf.FlatLightLaf;
-import javax.swing.UIManager;
 import presentacion.controles.ControlAdministrarClientes;
 import presentacion.controles.ControlAgregarCotizacion;
+import presentacion.controles.ControlAdministrarAutomoviles;
+import presentacion.controles.ControlAutomoviles;
 import presentacion.controles.ControlClientes;
 import presentacion.controles.ControlConsultarCotizaciones;
 import presentacion.controles.ControlCotizaciones;
@@ -123,7 +123,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     ) {
 
         boton.setText("<html><center>" + texto + "</center></html>");
-        
+
         boton.addActionListener(e -> accion.run());
 
         boton.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 22));
@@ -179,39 +179,45 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     private void configurarBotonesMenu() {
 
-    configurarBotonMenu(
-            jButtonCotizaciones,
-            "Administrar<br>Cotizaciones",
-            "/cotizacion.png",
-            () -> { // Lógica de Cotizaciones
-                this.dispose();
-                ControlAgregarCotizacion ctrlAgregar = new ControlAgregarCotizacion();
-                ControlConsultarCotizaciones ctrlHistorial = new ControlConsultarCotizaciones();
-                ControlCotizaciones controlCotizaciones = new ControlCotizaciones(ctrlAgregar, ctrlHistorial);
-                ctrlAgregar.setControlCotizaciones(controlCotizaciones);
-                ctrlHistorial.setControlCotizaciones(controlCotizaciones);
-                controlCotizaciones.administrarCotizaciones();
-            }
-    );
+        configurarBotonMenu(
+                jButtonCotizaciones,
+                "Administrar<br>Cotizaciones",
+                "/cotizacion.png",
+                () -> { 
+                    this.dispose();
+                    ControlAgregarCotizacion ctrlAgregar = new ControlAgregarCotizacion();
+                    ControlConsultarCotizaciones ctrlHistorial = new ControlConsultarCotizaciones();
+                    ControlCotizaciones controlCotizaciones = new ControlCotizaciones(ctrlAgregar, ctrlHistorial);
+                    ctrlAgregar.setControlCotizaciones(controlCotizaciones);
+                    ctrlHistorial.setControlCotizaciones(controlCotizaciones);
+                    controlCotizaciones.administrarCotizaciones();
+                }
+        );
 
-    configurarBotonMenu(
-            jButtonVehiculos,
-            "Administrar<br>Vehículos",
-            "/automovil.png",
-            () -> {
-            }
-    );
+        configurarBotonMenu(
+                jButtonVehiculos,
+                "Administrar<br>Vehículos",
+                "/automovil.png",
+                () -> {
+                    this.dispose();
+                    ControlAdministrarAutomoviles ctrlAdmin = new ControlAdministrarAutomoviles();
 
-    configurarBotonMenu(
-            jButtonClientes,
-            "Administrar<br>Clientes",
-            "/cliente.png",
-            () -> { // Lógica de Clientes
-                this.dispose();
-                ControlAdministrarClientes ctrlAdminClientes = new ControlAdministrarClientes();
-                ControlClientes controlClientes = new ControlClientes(ctrlAdminClientes);
-                controlClientes.iniciarModulo();
-            }
-    );
-}
+                    ControlAutomoviles controlModulo = new ControlAutomoviles(ctrlAdmin);
+
+                    controlModulo.iniciarModulo();
+                }
+        );
+
+        configurarBotonMenu(
+                jButtonClientes,
+                "Administrar<br>Clientes",
+                "/cliente.png",
+                () -> {
+                    this.dispose();
+                    ControlAdministrarClientes ctrlAdminClientes = new ControlAdministrarClientes();
+                    ControlClientes controlClientes = new ControlClientes(ctrlAdminClientes);
+                    controlClientes.iniciarModulo();
+                }
+        );
+    }
 }

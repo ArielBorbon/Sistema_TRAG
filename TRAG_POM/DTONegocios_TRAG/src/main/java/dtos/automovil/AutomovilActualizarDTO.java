@@ -12,13 +12,46 @@ package dtos.automovil;
  * 
  */
 public class AutomovilActualizarDTO{
-    private final Long id;
-    private final Integer anio;
-    private final String matricula;
-    private final String vin;
-    private final String modelo;
-    private final String marca;
-    private final Long idCliente; 
+    private  Long id;
+    private  Integer anio;
+    private  String matricula;
+    private  String vin;
+    private  String modelo;
+    private  String marca;
+    private  Long idCliente; 
+
+    public AutomovilActualizarDTO() {
+    }
+
+    public void setAnio(Integer anio) {
+        this.anio = anio;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
+
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
+    }
+    
+    
+    
+    
+    
+    
 
     public AutomovilActualizarDTO(Long id, Integer anio, String matricula, String vin, String modelo, String marca, Long idCliente) {
         this.id = id;
@@ -58,6 +91,12 @@ public class AutomovilActualizarDTO{
         return idCliente;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    
+    
     
     
 }

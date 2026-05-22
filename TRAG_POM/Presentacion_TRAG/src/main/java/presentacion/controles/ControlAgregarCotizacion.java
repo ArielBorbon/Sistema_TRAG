@@ -104,7 +104,8 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion {
         ClienteDetalleDTO clienteSeleccionado;
         try {
             clienteSeleccionado = administradorClientes.obtenerCliente(idCliente);
-            List<AutomovilResumenDTO> automovilesCliente = clienteSeleccionado.getAutomoviles();
+
+            List<AutomovilResumenDTO> automovilesCliente = administradorAutomoviles.obtenerAutomovilesPorCliente(idCliente);
 
             borradorCliente = new BorradorCliente(
                     clienteSeleccionado.getId(),
@@ -115,10 +116,10 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion {
                     clienteSeleccionado.getTelefono());
 
             vistaSeleccionClienteAuto.cargarAutosCliente(automovilesCliente);
+
         } catch (NegocioException e) {
             vistaSeleccionClienteAuto.mostrarMensaje(e.getMessage());
         }
-
     }
 
     @Override

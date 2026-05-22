@@ -1,5 +1,6 @@
 package com.mycompany.administradorautomoviles_trag;
 
+import dtos.automovil.AutomovilActualizarDTO;
 import dtos.automovil.AutomovilAgregarDTO;
 import dtos.automovil.AutomovilDetalleDTO;
 import dtos.automovil.AutomovilResumenDTO;
@@ -25,4 +26,8 @@ public interface IAdministradorAutomoviles {
     public abstract List<AutomovilResumenDTO> obtenerTodosAutomoviles() throws NegocioException;
 
     public List<AutomovilResumenDTO> obtenerAutomovilesPorCliente(Long idCliente) throws NegocioException;
+
+    AutomovilDetalleDTO actualizarAutomovil(AutomovilActualizarDTO dto) throws NegocioException;
+
+    void deshabilitarAutomovil(Long idAutomovil) throws NegocioException;
 }

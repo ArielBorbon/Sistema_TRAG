@@ -1,9 +1,11 @@
 package com.mycompany.administradorautomoviles_trag;
 
+import dtos.automovil.AutomovilActualizarDTO;
 import dtos.automovil.AutomovilAgregarDTO;
 import dtos.automovil.AutomovilDetalleDTO;
 import dtos.automovil.AutomovilResumenDTO;
 import entidades.Automovil;
+import entidades.Cliente;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IAutomovilesDAO;
@@ -80,6 +82,57 @@ public class AdministradorAutomoviles {
             return Mapeadores.toDTOAutomoviles(automovilesDAO.obtenerAutomovilesPorCliente(idCliente));
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al obtener los automóviles del cliente", e);
+        }
+    }
+
+    public AutomovilDetalleDTO actualizarAutomovil(AutomovilActualizarDTO dto) throws NegocioException {
+        if (dto == null || dto.getId() == null) {
+            throw new NegocioException("El ID del automóvil es necesario para actualizar.");
+        }
+
+        try {
+            Automovil autoExistente = automovilesDAO.obtenerAutomovil(dto.getId());
+            if (autoExistente == null) {
+                throw new NegocioException("No se encontró el automóvil a actualizar en el sistema.");
+            }
+
+            autoExistente.setMarca(dto.getMarca());
+            autoExistente.setModelo(dto.getModelo());
+            autoExistente.setAnio(dto.getAnio());
+            autoExistente.setMatricula(dto.getMatricula());
+            autoExistente.setVin(dto.getVin());
+
+            if (dto.getIdCliente() != null && !dto.getIdCliente().equals(autoExistente.getCliente().getId())) {
+                Cliente nuevoDueno = new Cliente();
+                nuevoDueno.setId(dto.getIdCliente());
+                autoExistente.setCliente(nuevoDueno);
+            }
+
+            Automovil autoActualizado = automovilesDAO.actualizarAutomovil(autoExistente);
+            return Mapeadores.toDTODetalle(autoActualizado);
+
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error en la base de datos al actualizar el automóvil", e);
+        }
+    }
+
+    public void deshabilitarAutomovil(Long idAutomovil) throws NegocioException {
+        if (idAutomovil == null) {
+            throw new NegocioException("El ID es necesario para eliminar el automóvil.");
+        }
+
+        try {
+            Automovil autoExistente = automovilesDAO.obtenerAutomovil(idAutomovil);
+            if (autoExistente == null) {
+                throw new NegocioException("No se encontró el automóvil a eliminar.");
+            }
+
+            autoExistente.setActivo(false);
+
+            automovilesDAO.actualizarAutomovil(autoExistente);
+
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error en la base de datos al intentar eliminar el automóvil", e);
         }
     }
 

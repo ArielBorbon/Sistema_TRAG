@@ -132,7 +132,7 @@ public class Mapeadores {
                 entidad.getTelefono(),
                 entidad.getCorreo(),
                 estadoNegocios,
-                listaAutosDTO 
+                listaAutosDTO
         );
     }
 
@@ -342,6 +342,13 @@ public class Mapeadores {
                 entidad.getMatricula(),
                 entidad.getModelo(),
                 entidad.getMarca());
+
+        if (entidad.getCliente() != null) {
+            String nombreCompleto = entidad.getCliente().getNombre() + " " + entidad.getCliente().getApellidoPaterno();
+            dto.setNombreDueno(nombreCompleto);
+        } else {
+            dto.setNombreDueno("Sin Dueño"); 
+        }
 
         return dto;
     }

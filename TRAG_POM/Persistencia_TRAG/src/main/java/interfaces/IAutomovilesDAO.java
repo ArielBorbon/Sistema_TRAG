@@ -21,4 +21,5 @@ public interface IAutomovilesDAO {
     public abstract Automovil obtenerAutomovil(Long idAutomovil) throws PersistenciaException;
     public abstract List<Automovil> obtenerTodosAutomoviles() throws PersistenciaException;
     public List<Automovil> obtenerAutomovilesPorCliente(Long idCliente) throws PersistenciaException;
+    public Automovil actualizarAutomovil(Automovil automovil) throws PersistenciaException;
 }
