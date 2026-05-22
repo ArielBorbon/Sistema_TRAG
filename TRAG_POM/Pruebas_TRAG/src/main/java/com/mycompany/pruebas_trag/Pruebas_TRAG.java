@@ -63,7 +63,7 @@ public class Pruebas_TRAG {
                             "Roberto",
                             "Pérez",
                             "López",
-                            "644123456",
+                            "6441234562",
                             "robertoperez@gmail.com",
                             EstadoClienteNegocios.HABILITADO)
             );
@@ -112,7 +112,7 @@ public class Pruebas_TRAG {
                     new AutomovilAgregarDTO(
                             2010,
                             "ABC123",
-                            "23424234",
+                            "1FMCU0GZ8KU294810",
                             "Sahara",
                             "Jeep",
                             2L)
@@ -122,7 +122,7 @@ public class Pruebas_TRAG {
                     new AutomovilAgregarDTO(
                             2016, 
                             "XYZ098",
-                            "93757374",
+                            "3VW3B7AJ4NM029381",
                             "Sahara",
                             "Jeep", 
                             2L)
@@ -132,7 +132,7 @@ public class Pruebas_TRAG {
                     new AutomovilAgregarDTO(
                             2021, 
                             "JFH747",
-                            "93757374",
+                            "WAUZZZ8V7KA049281",
                             "March",
                             "Nissan", 
                             3L)
@@ -142,7 +142,7 @@ public class Pruebas_TRAG {
                     new AutomovilAgregarDTO(
                             2005, 
                             "OEY834",
-                            "672342111",
+                            "JM1DK3W76L0392814",
                             "Lobo",
                             "Ford", 
                             4L)
@@ -153,7 +153,7 @@ public class Pruebas_TRAG {
                     new AutomovilAgregarDTO(
                             2023, 
                             "OEY834",
-                            "672342111",
+                            "VF38U5GZHNW029184",
                             "Aveo",
                             "Chrevrolet", 
                             5L)
