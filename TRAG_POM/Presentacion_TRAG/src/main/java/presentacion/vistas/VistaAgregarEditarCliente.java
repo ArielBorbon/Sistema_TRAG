@@ -24,6 +24,21 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         initComponents();
         configurarImagen();
         configurarBotones();
+        configurarRestriccionesCampos();
+        configurarTamanoCampos();
+
+        java.awt.Color colorError = java.awt.Color.RED;
+        lblNombre.setForeground(colorError);
+        lblPaterno.setForeground(colorError);
+        lblMaterno.setForeground(colorError);
+        lblTelefono.setForeground(colorError);
+        lblCorreo.setForeground(colorError);
+        lblNombre.setText(" ");
+        lblPaterno.setText(" ");
+        lblMaterno.setText(" ");
+        lblTelefono.setText(" ");
+        lblCorreo.setText(" ");
+        configurarValidacionEnTiempoReal();
         this.control = control;
         setLocationRelativeTo(null);
     }
@@ -54,6 +69,11 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
+        lblNombre = new javax.swing.JLabel();
+        lblTelefono = new javax.swing.JLabel();
+        lblCorreo = new javax.swing.JLabel();
+        lblPaterno = new javax.swing.JLabel();
+        lblMaterno = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
 
@@ -80,11 +100,11 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         jLabel2.setText("Nuevo Cliente");
 
         java.awt.GridBagLayout jPanel1Layout = new java.awt.GridBagLayout();
-        jPanel1Layout.columnWidths = new int[] {0, 0, 0};
-        jPanel1Layout.rowHeights = new int[] {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0};
+        jPanel1Layout.columnWidths = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        jPanel1Layout.rowHeights = new int[] {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0};
         jPanel1.setLayout(jPanel1Layout);
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel3.setText("Nombre");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -93,7 +113,7 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(jLabel3, gridBagConstraints);
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel4.setText("Apellido Paterno");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -103,7 +123,7 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.insets = new java.awt.Insets(0, 60, 0, 0);
         jPanel1.add(jLabel4, gridBagConstraints);
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel5.setText("Apellido Materno");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -113,7 +133,7 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.insets = new java.awt.Insets(40, 0, 0, 0);
         jPanel1.add(jLabel5, gridBagConstraints);
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setText("Teléfono");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -123,7 +143,7 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.insets = new java.awt.Insets(40, 0, 0, 0);
         jPanel1.add(jLabel6, gridBagConstraints);
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel7.setText("Correo (opcional)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -132,7 +152,7 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.insets = new java.awt.Insets(40, 60, 0, 0);
         jPanel1.add(jLabel7, gridBagConstraints);
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -145,7 +165,7 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(jTextField1, gridBagConstraints);
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -159,7 +179,7 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.insets = new java.awt.Insets(0, 60, 0, 0);
         jPanel1.add(jTextField2, gridBagConstraints);
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
@@ -167,7 +187,7 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(jTextField3, gridBagConstraints);
 
-        jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField4ActionPerformed(evt);
@@ -181,13 +201,54 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.insets = new java.awt.Insets(0, 60, 0, 0);
         jPanel1.add(jTextField4, gridBagConstraints);
 
-        jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField5ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanel1.add(jTextField5, gridBagConstraints);
+
+        lblNombre.setBackground(new java.awt.Color(255, 51, 51));
+        lblNombre.setText("jLabel8");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
+        jPanel1.add(lblNombre, gridBagConstraints);
+
+        lblTelefono.setText("jLabel9");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
+        jPanel1.add(lblTelefono, gridBagConstraints);
+
+        lblCorreo.setText("jLabel10");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.insets = new java.awt.Insets(0, 30, 0, 0);
+        jPanel1.add(lblCorreo, gridBagConstraints);
+
+        lblPaterno.setText("jLabel11");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 30, 0, 0);
+        jPanel1.add(lblPaterno, gridBagConstraints);
+
+        lblMaterno.setText("jLabel12");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
+        jPanel1.add(lblMaterno, gridBagConstraints);
 
         jButton5.setBackground(new java.awt.Color(204, 255, 204));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -279,6 +340,10 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
 
+    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField5ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton4;
@@ -298,6 +363,11 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JLabel lblCorreo;
+    private javax.swing.JLabel lblMaterno;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblPaterno;
+    private javax.swing.JLabel lblTelefono;
     private presentacion.vistas.PanelEncabezado panelEncabezado1;
     // End of variables declaration//GEN-END:variables
 
@@ -315,44 +385,6 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         String apMaterno = jTextField5.getText().trim();
         String telefono = jTextField3.getText().trim();
         String correo = jTextField4.getText().trim();
-
-        if (nombre.isEmpty() || apPaterno.isEmpty()) {
-            mostrarMensaje("El nombre y el apellido paterno son obligatorios.");
-            return;
-        }
-
-        String regexLetras = "^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$";
-        
-        if (!nombre.matches(regexLetras)) {
-            mostrarMensaje("El nombre solo puede contener letras.");
-            return;
-        }
-        if (!apPaterno.matches(regexLetras)) {
-            mostrarMensaje("El apellido paterno solo puede contener letras.");
-            return;
-        }
-        if (!apMaterno.isEmpty() && !apMaterno.matches(regexLetras)) {
-            mostrarMensaje("El apellido materno solo puede contener letras.");
-            return;
-        }
-
-        if (telefono.isEmpty()) {
-            mostrarMensaje("El teléfono es obligatorio.");
-            return;
-        }
-        
-        if (!telefono.matches("^\\d{10}$")) {
-            mostrarMensaje("El teléfono debe contener exactamente 10 dígitos numéricos.");
-            return;
-        }
-
-        if (!correo.isEmpty()) {
-            String regexCorreo = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-            if (!correo.matches(regexCorreo)) {
-                mostrarMensaje("El formato del correo electrónico no es válido.");
-                return;
-            }
-        }
 
         BorradorCliente borrador = new BorradorCliente(
                 null,
@@ -451,5 +483,199 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
             guardarCliente();
         });
     }
+
+    private void configurarValidacionEnTiempoReal() {
+        javax.swing.event.DocumentListener docListener = new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                validarCampos();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                validarCampos();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                validarCampos();
+            }
+        };
+
+        jTextField1.getDocument().addDocumentListener(docListener);
+        jTextField2.getDocument().addDocumentListener(docListener);
+        jTextField3.getDocument().addDocumentListener(docListener);
+        jTextField4.getDocument().addDocumentListener(docListener);
+        jTextField5.getDocument().addDocumentListener(docListener);
+
+        validarCampos();
+    }
+
+    private void validarCampos() {
+        String nombre = jTextField1.getText().trim();
+        String apPaterno = jTextField2.getText().trim();
+        String apMaterno = jTextField5.getText().trim();
+        String telefono = jTextField3.getText().trim();
+        String correo = jTextField4.getText().trim();
+
+        String regexLetras = "^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$";
+        String regexCorreo = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+
+        boolean formularioValido = true;
+
+        lblNombre.setText(" ");
+        lblPaterno.setText(" ");
+        lblMaterno.setText(" ");
+        lblTelefono.setText(" ");
+        lblCorreo.setText(" ");
+
+        if (nombre.isEmpty()) {
+            lblNombre.setText("El nombre es obligatorio.");
+            formularioValido = false;
+        } else if (!nombre.matches(regexLetras)) {
+            lblNombre.setText("Solo letras permitidas.");
+            formularioValido = false;
+        }
+
+        if (apPaterno.isEmpty()) {
+            lblPaterno.setText("El apellido es obligatorio.");
+            formularioValido = false;
+        } else if (!apPaterno.matches(regexLetras)) {
+            lblPaterno.setText("Solo letras permitidas.");
+            formularioValido = false;
+        }
+
+        if (!apMaterno.isEmpty() && !apMaterno.matches(regexLetras)) {
+            lblMaterno.setText("Solo letras permitidas.");
+            formularioValido = false;
+        }
+
+        if (telefono.isEmpty()) {
+            lblTelefono.setText("El teléfono es obligatorio.");
+            formularioValido = false;
+        } else if (!telefono.matches("^\\d{10}$")) {
+            lblTelefono.setText("Debe tener 10 dígitos.");
+            formularioValido = false;
+        }
+
+        if (!correo.isEmpty() && !correo.matches(regexCorreo)) {
+            lblCorreo.setText("Formato de correo inválido.");
+            formularioValido = false;
+        }
+
+        jButton5.setEnabled(formularioValido);
+    }
+
+    private void configurarRestriccionesCampos() {
+
+        limitarCampoTexto(jTextField1, 40, true);
+        limitarCampoTexto(jTextField2, 40, true);
+        limitarCampoTexto(jTextField5, 40, true);
+        limitarCampoTexto(jTextField4, 40, false);
+
+        limitarCampoTelefono(jTextField3);
+    }
+
+    private void limitarCampoTexto(javax.swing.JTextField campo, int maxCaracteres, boolean soloLetras) {
+
+        ((javax.swing.text.AbstractDocument) campo.getDocument())
+                .setDocumentFilter(new javax.swing.text.DocumentFilter() {
+
+                    @Override
+                    public void replace(FilterBypass fb, int offset, int length,
+                            String text, javax.swing.text.AttributeSet attrs)
+                            throws javax.swing.text.BadLocationException {
+
+                        if (text == null) {
+                            return;
+                        }
+
+                        String textoActual = fb.getDocument().getText(
+                                0,
+                                fb.getDocument().getLength()
+                        );
+
+                        String nuevoTexto = textoActual.substring(0, offset)
+                                + text
+                                + textoActual.substring(offset + length);
+
+                        if (nuevoTexto.length() > maxCaracteres) {
+                            return;
+                        }
+
+                        if (soloLetras
+                                && !text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]*")) {
+                            return;
+                        }
+
+                        super.replace(fb, offset, length, text, attrs);
+                    }
+
+                    @Override
+                    public void insertString(FilterBypass fb, int offset,
+                            String string,
+                            javax.swing.text.AttributeSet attr)
+                            throws javax.swing.text.BadLocationException {
+
+                        replace(fb, offset, 0, string, attr);
+                    }
+                });
+    }
+
+    private void limitarCampoTelefono(javax.swing.JTextField campo) {
+
+        ((javax.swing.text.AbstractDocument) campo.getDocument())
+                .setDocumentFilter(new javax.swing.text.DocumentFilter() {
+
+                    @Override
+                    public void replace(FilterBypass fb, int offset, int length,
+                            String text, javax.swing.text.AttributeSet attrs)
+                            throws javax.swing.text.BadLocationException {
+
+                        if (text == null) {
+                            return;
+                        }
+
+                        String textoActual = fb.getDocument().getText(
+                                0,
+                                fb.getDocument().getLength()
+                        );
+
+                        String nuevoTexto = textoActual.substring(0, offset)
+                                + text
+                                + textoActual.substring(offset + length);
+
+                        if (nuevoTexto.length() > 10) {
+                            return;
+                        }
+
+                        if (!text.matches("\\d*")) {
+                            return;
+                        }
+
+                        super.replace(fb, offset, length, text, attrs);
+                    }
+
+                    @Override
+                    public void insertString(FilterBypass fb, int offset,
+                            String string,
+                            javax.swing.text.AttributeSet attr)
+                            throws javax.swing.text.BadLocationException {
+
+                        replace(fb, offset, 0, string, attr);
+                    }
+                });
+    }
+    
+    private void configurarTamanoCampos() {
+
+    java.awt.Dimension tamanoCampo = new java.awt.Dimension(260, 40);
+
+    jTextField1.setPreferredSize(tamanoCampo);
+    jTextField2.setPreferredSize(tamanoCampo);
+    jTextField3.setPreferredSize(tamanoCampo);
+    jTextField4.setPreferredSize(tamanoCampo);
+    jTextField5.setPreferredSize(tamanoCampo);
+}
 
 }

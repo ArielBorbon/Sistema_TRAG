@@ -57,7 +57,7 @@ public class VistaPrincipalClientes extends javax.swing.JFrame implements IVista
         jPanel1.add(jLabel1, gridBagConstraints);
 
         btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnNuevo.setText("Nueva");
+        btnNuevo.setText("Nuevo");
         btnNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoActionPerformed(evt);
@@ -72,7 +72,7 @@ public class VistaPrincipalClientes extends javax.swing.JFrame implements IVista
         jPanel1.add(btnNuevo, gridBagConstraints);
 
         btnVerTodas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnVerTodas.setText("Ver todas");
+        btnVerTodas.setText("Ver todos");
         btnVerTodas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerTodasActionPerformed(evt);
