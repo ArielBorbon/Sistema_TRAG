@@ -57,10 +57,9 @@ public class GeneradorReportePDF {
             Font fuenteTituloEncabezado = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD, BaseColor.BLACK);
             Font fuenteFiltrosEtiqueta = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, BaseColor.BLACK);
             Font fuenteFiltrosNegrita = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK);
-            
+            Font fuenteHeroTotalCentrado = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD, BaseColor.BLACK);
             Font fuenteVerdeStatus = new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD, new BaseColor(34, 139, 34));
             Font fuenteRojoStatus = new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD, new BaseColor(220, 20, 60));
-            
             Font fuenteTableHeader = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.WHITE);
             Font fuenteCeldaNormal = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.BLACK);
             Font fuenteCeldaNegrita = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.BLACK);
@@ -80,6 +79,18 @@ public class GeneradorReportePDF {
             
             documento.add(new Paragraph("\n"));
 
+            BigDecimal totalHabilitadas = cotizacionesActivas.stream().map(c -> c.getPrecioTotal() != null ? c.getPrecioTotal() : BigDecimal.ZERO).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal totalCanceladas = cotizacionesCanceladas.stream().map(c -> c.getPrecioTotal() != null ? c.getPrecioTotal() : BigDecimal.ZERO).reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+            BigDecimal granTotalTodo = BigDecimal.ZERO;
+            if (filtroEstado.equalsIgnoreCase("Todos")) {
+                granTotalTodo = totalHabilitadas.add(totalCanceladas);
+            } else if (filtroEstado.equalsIgnoreCase("ACTIVA")) {
+                granTotalTodo = totalHabilitadas;
+            } else if (filtroEstado.equalsIgnoreCase("CANCELADA")) {
+                granTotalTodo = totalCanceladas;
+            }
+            
             String textCliente = (filtroCliente != null && !filtroCliente.trim().isEmpty()) ? filtroCliente : "Todos";
             String textInicio = (fechaInicio != null) ? fechaInicio.format(formateador) : "Siempre";
             String textFin = (fechaFin != null) ? fechaFin.format(formateador) : "Siempre";
@@ -101,17 +112,11 @@ public class GeneradorReportePDF {
 
             documento.add(new Paragraph("\n"));
 
-            BigDecimal totalHabilitadas = cotizacionesActivas.stream().map(c -> c.getPrecioTotal() != null ? c.getPrecioTotal() : BigDecimal.ZERO).reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal totalCanceladas = cotizacionesCanceladas.stream().map(c -> c.getPrecioTotal() != null ? c.getPrecioTotal() : BigDecimal.ZERO).reduce(BigDecimal.ZERO, BigDecimal::add);
+            Paragraph pTotalHero = new Paragraph("Total: $" + df.format(granTotalTodo), fuenteHeroTotalCentrado);
+            pTotalHero.setAlignment(Element.ALIGN_CENTER);
+            documento.add(pTotalHero);
             
-            BigDecimal granTotalTodo = BigDecimal.ZERO;
-            if (filtroEstado.equalsIgnoreCase("Todos")) {
-                granTotalTodo = totalHabilitadas.add(totalCanceladas);
-            } else if (filtroEstado.equalsIgnoreCase("ACTIVA")) {
-                granTotalTodo = totalHabilitadas;
-            } else if (filtroEstado.equalsIgnoreCase("CANCELADA")) {
-                granTotalTodo = totalCanceladas;
-            }
+            documento.add(new Paragraph("\n"));
 
             BaseColor colorGrisEncabezado = new BaseColor(110, 110, 110);
 

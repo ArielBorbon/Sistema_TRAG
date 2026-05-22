@@ -90,8 +90,8 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
 
         btnGenerarReporte = new JButton("Generar Reporte");
         btnGenerarReporte.setPreferredSize(new Dimension(160, 40));
-        btnGenerarReporte.setBackground(new Color(54, 54, 54)); // Gris oscuro industrial
-        btnGenerarReporte.setForeground(Color.WHITE);
+        btnGenerarReporte.setBackground(new Color(197,197,197));
+        btnGenerarReporte.setForeground(Color.BLACK);
         btnGenerarReporte.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnGenerarReporte.setFocusPainted(false);
         btnGenerarReporte.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -394,6 +394,36 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
         cmbEstado.addActionListener(evt -> buscar());
         
         btnGenerarReporte.addActionListener(evt -> {
+
+            boolean tieneCotizaciones = true;
+
+            if (contenedorTarjetas.getComponentCount() == 0) {
+                tieneCotizaciones = false;
+            } else if (contenedorTarjetas.getComponentCount() == 1) {
+                java.awt.Component primerComp = contenedorTarjetas.getComponent(0);
+
+                if (primerComp instanceof JPanel) {
+                    JPanel panelInterno = (JPanel) primerComp;
+                    for (java.awt.Component subComp : panelInterno.getComponents()) {
+                        if (subComp instanceof JLabel) {
+                            JLabel labelTexto = (JLabel) subComp;
+                            if (labelTexto.getText().contains("No se encontraron")) {
+                                tieneCotizaciones = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!tieneCotizaciones) {
+                JOptionPane.showMessageDialog(this, 
+                        "No se puede generar el reporte debido a que no existen cotizaciones con los filtros actuales.", 
+                        "Reporte Cancelado", 
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             if (control != null) {
                 LocalDateTime inicio = null;
                 LocalDateTime fin = null;
@@ -405,13 +435,6 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
                     fin = dateFin.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
                 }
 
-                String clienteFiltro = txtNombreCliente.getText().trim().isEmpty() ? "Todos" : txtNombreCliente.getText();
-                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-                String fechaInicioStr = (dateInicio.getDate() != null) ? sdf.format(dateInicio.getDate()) : "Siempre";
-                String fechaFinStr = (dateFin.getDate() != null) ? sdf.format(dateFin.getDate()) : "Siempre";
-                String periodoStr = fechaInicioStr + " a: " + fechaFinStr;
-                
-                String estadoFiltro = cmbEstado.getSelectedItem().toString();
                 String estadoStr = "Todos";
                 int seleccion = cmbEstado.getSelectedIndex();
                 if (seleccion == 1) {
@@ -420,12 +443,6 @@ public class VistaHistorialCotizaciones extends JFrame implements IVistaHistoria
                     estadoStr = "CANCELADA";
                 }
 
-                int numNoCanceladas = 0;
-                int numCanceladas = 0;
-                double montoTotalAcumulado = 0.0;
-
-                java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
- 
                 control.imprimirReporteGeneralPDF(txtNombreCliente.getText(), inicio, fin, estadoStr, 0, 0, 0.0);
             }
         });

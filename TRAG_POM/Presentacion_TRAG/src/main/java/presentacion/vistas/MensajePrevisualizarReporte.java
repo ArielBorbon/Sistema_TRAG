@@ -13,9 +13,9 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 /**
- * @author Yuri German Garcia
+ * @author Yuri German Garcia López - 252583
  */
-public class MensajePrevisualizarReporte extends JDialog{
+public class MensajePrevisualizarReporte extends JDialog {
     
     private boolean confirmado = false;
 
@@ -56,24 +56,47 @@ public class MensajePrevisualizarReporte extends JDialog{
 
         JPanel filaPeriodo = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         filaPeriodo.setBackground(Color.WHITE);
-        
-        JLabel lblDe = new JLabel("De: ");
-        lblDe.setFont(fuenteEtiqueta);
-        
-        JLabel lblFechaInicio = new JLabel(fechaInicio + " ");
-        lblFechaInicio.setFont(fuenteNegrita);
-        
-        JLabel lblA = new JLabel("a: ");
-        lblA.setFont(fuenteEtiqueta);
-        
-        JLabel lblFechaFin = new JLabel(fechaFin);
-        lblFechaFin.setFont(fuenteNegrita);
-        
-        filaPeriodo.add(lblDe);
-        filaPeriodo.add(lblFechaInicio);
-        filaPeriodo.add(lblA);
-        filaPeriodo.add(lblFechaFin);
-        
+
+        boolean tieneInicio = !fechaInicio.equalsIgnoreCase("Siempre");
+        boolean tieneFin = !fechaFin.equalsIgnoreCase("Siempre");
+
+        if (!tieneInicio && !tieneFin) {
+            JLabel lblFija = new JLabel("Fecha: ");
+            lblFija.setFont(fuenteEtiqueta);
+            JLabel lblSiempre = new JLabel("Siempre");
+            lblSiempre.setFont(fuenteNegrita);
+            filaPeriodo.add(lblFija);
+            filaPeriodo.add(lblSiempre);
+        } else if (tieneInicio && !tieneFin) {
+            JLabel lblDesde = new JLabel("Desde: ");
+            lblDesde.setFont(fuenteEtiqueta);
+            JLabel lblValorInicio = new JLabel(fechaInicio);
+            lblValorInicio.setFont(fuenteNegrita);
+            filaPeriodo.add(lblDesde);
+            filaPeriodo.add(lblValorInicio);
+        } else if (!tieneInicio && tieneFin) {
+            JLabel lblHasta = new JLabel("Hasta: ");
+            lblHasta.setFont(fuenteEtiqueta);
+            JLabel lblValorFin = new JLabel(fechaFin);
+            lblValorFin.setFont(fuenteNegrita);
+            filaPeriodo.add(lblHasta);
+            filaPeriodo.add(lblValorFin);
+        } else {
+            JLabel lblDe = new JLabel("De: ");
+            lblDe.setFont(fuenteEtiqueta);
+            JLabel lblValorInicio = new JLabel(fechaInicio + " ");
+            lblValorInicio.setFont(fuenteNegrita);
+            JLabel lblA = new JLabel("a: ");
+            lblA.setFont(fuenteEtiqueta);
+            JLabel lblValorFin = new JLabel(fechaFin);
+            lblValorFin.setFont(fuenteNegrita);
+
+            filaPeriodo.add(lblDe);
+            filaPeriodo.add(lblValorInicio);
+            filaPeriodo.add(lblA);
+            filaPeriodo.add(lblValorFin);
+        }
+
         panelContenido.add(filaPeriodo);
         panelContenido.add(javax.swing.Box.createRigidArea(new Dimension(0, 4)));
 
@@ -113,7 +136,7 @@ public class MensajePrevisualizarReporte extends JDialog{
 
         JButton btnCancelar = new JButton("Cancelar");
         btnCancelar.setPreferredSize(new Dimension(120, 35));
-        btnCancelar.setBackground(new Color(254, 237, 178));
+        btnCancelar.setBackground(new Color(255, 243, 177));
         btnCancelar.setForeground(Color.BLACK);
         btnCancelar.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnCancelar.setFocusPainted(false);
@@ -124,9 +147,9 @@ public class MensajePrevisualizarReporte extends JDialog{
             dispose();
         });
 
-        JButton btnImprimir = new JButton("Imprimir");
+        JButton btnImprimir = new JButton("Descargar");
         btnImprimir.setPreferredSize(new Dimension(120, 35));
-        btnImprimir.setBackground(new Color(174, 219, 253));
+        btnImprimir.setBackground(new Color(186, 226, 255));
         btnImprimir.setForeground(Color.BLACK);
         btnImprimir.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnImprimir.setFocusPainted(false);
@@ -161,5 +184,4 @@ public class MensajePrevisualizarReporte extends JDialog{
     public boolean isConfirmado() {
         return confirmado;
     }
-    
 }
