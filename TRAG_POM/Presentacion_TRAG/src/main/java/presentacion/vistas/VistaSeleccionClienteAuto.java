@@ -251,7 +251,7 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
     }// </editor-fold>//GEN-END:initComponents
 
     private void AñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AñadirActionPerformed
-        // TODO add your handling code here:
+        control.abrirAgregarCliente(); 
     }//GEN-LAST:event_AñadirActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -313,10 +313,9 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
             ClienteResumenDTO c = cmbBoxClientes.getItemAt(i);
             if (c.getId().equals(clienteCreador.getId())) {
                 cmbBoxClientes.setSelectedIndex(i);
-                break; 
+                break;
             }
         }
-
 
         cargarAutosDelCliente(clienteCreador.getId());
 
@@ -324,7 +323,7 @@ public class VistaSeleccionClienteAuto extends JFrame implements IVistaSeleccion
             AutomovilResumenDTO auto = (AutomovilResumenDTO) cmbBoxAutomoviles.getItemAt(i);
             if (auto.getMatricula().equalsIgnoreCase(matriculaAutoNuevo)) {
                 cmbBoxAutomoviles.setSelectedIndex(i);
-                break; 
+                break;
             }
         }
     }

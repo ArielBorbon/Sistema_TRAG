@@ -38,8 +38,10 @@ public class AdministradorAutomoviles {
     }
 
     public AutomovilDetalleDTO crearAutomovil(AutomovilAgregarDTO dto) throws NegocioException {
+        validarNivUnico(dto.getVin(), null);
 
         Automovil automovil = DTOMapeadores.toEntity(dto);
+        automovil.setActivo(true);
 
         try {
             return Mapeadores.toDTODetalle(automovilesDAO.crearAutomovil(automovil));
@@ -86,6 +88,9 @@ public class AdministradorAutomoviles {
     }
 
     public AutomovilDetalleDTO actualizarAutomovil(AutomovilActualizarDTO dto) throws NegocioException {
+
+        validarNivUnico(dto.getVin(), dto.getId());
+
         if (dto == null || dto.getId() == null) {
             throw new NegocioException("El ID del automóvil es necesario para actualizar.");
         }
@@ -141,6 +146,17 @@ public class AdministradorAutomoviles {
             return Mapeadores.toDTOAutomoviles(automovilesDAO.buscarAutomovilesPorNombreCliente(nombre));
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al buscar los automóviles filtrados por cliente.", e);
+        }
+    }
+
+    private void validarNivUnico(String niv, Long idAutomovilActual) throws NegocioException {
+        try {
+            Automovil autoExistente = automovilesDAO.obtenerAutomovilPorNiv(niv);
+            if (autoExistente != null && (idAutomovilActual == null || !autoExistente.getId().equals(idAutomovilActual))) {
+                throw new NegocioException("El NIV ingresado ya se encuentra registrado en otro vehículo.");
+            }
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al validar el NIV en la base de datos.", e);
         }
     }
 

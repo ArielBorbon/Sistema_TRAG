@@ -3,6 +3,7 @@ package presentacion.vistas;
 import dtos.automovil.AutomovilResumenDTO;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import presentacion.controles.ControlAdministrarAutomoviles;
@@ -147,8 +148,18 @@ public class VistaAutomoviles extends javax.swing.JFrame {
     }
 
     private void buscar() {
-        String textoBusqueda = cmptxtBuscarVehiculos.getText().trim();
-        control.buscarAutomoviles(textoBusqueda); 
+        limpiarMensajeErrores(); 
+        String textoBusqueda = cmptxtBuscarVehiculos.getText();
+        control.buscarAutomoviles(textoBusqueda);
+    }
+
+    public void mostrarMensajeSinResultados(String mensaje) {
+        lblErrores.setForeground(java.awt.Color.RED);
+        lblErrores.setText(mensaje);
+    }
+
+    public void limpiarMensajeErrores() {
+        lblErrores.setText(" ");
     }
 
     /**
@@ -170,6 +181,7 @@ public class VistaAutomoviles extends javax.swing.JFrame {
         tblAutomoviles = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
         btnEditarVehiculo = new javax.swing.JButton();
+        lblErrores = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         cmptxtBuscarVehiculos = new javax.swing.JTextField();
         lblBuscarClientes = new javax.swing.JLabel();
@@ -259,8 +271,11 @@ public class VistaAutomoviles extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 31, 0);
+        gridBagConstraints.insets = new java.awt.Insets(44, 0, 31, 0);
         jPanel7.add(btnEditarVehiculo, gridBagConstraints);
+
+        lblErrores.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jPanel7.add(lblErrores, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -472,6 +487,14 @@ public class VistaAutomoviles extends javax.swing.JFrame {
         }
     }
 
+    public JLabel getLblErrores() {
+        return lblErrores;
+    }
+
+    public void setLblErrores(JLabel lblErrores) {
+        this.lblErrores = lblErrores;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditarVehiculo;
@@ -491,6 +514,7 @@ public class VistaAutomoviles extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBuscarClientes;
+    private javax.swing.JLabel lblErrores;
     private javax.swing.JLabel lblNombreServicio;
     private javax.swing.JTable tblAutomoviles;
     // End of variables declaration//GEN-END:variables

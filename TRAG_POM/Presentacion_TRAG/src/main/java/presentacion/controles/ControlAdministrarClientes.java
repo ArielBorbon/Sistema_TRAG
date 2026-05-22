@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 import presentacion.borradores.BorradorCliente;
 import presentacion.fabrica.FabricaVistas;
 import presentacion.interfaces.IControlAdministrarClientes;
+import presentacion.interfaces.IControlAgregarCotizacion;
 import presentacion.interfaces.IControlClientes;
 import presentacion.interfaces.vistas.IVistaAdministrarClientes;
 import presentacion.interfaces.vistas.IVistaAgregarEditarCliente;
+import presentacion.interfaces.vistas.IVistaSeleccionClienteAuto;
 
 /**
  *
@@ -35,6 +37,10 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
     private IControlClientes controlClientes;
 
     private Long idClienteEdicion;
+
+    private IVistaSeleccionClienteAuto vistaCotizacionAnterior;
+    private IControlAgregarCotizacion controlCotizacionPadre;
+    private boolean desdeCotizacion = false;
 
     public ControlAdministrarClientes() {
         this.administradorClientes = FabricaNegocios.obtenerAdministradorClientes();
@@ -80,6 +86,10 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
 
             vistaAdministrar.cargarClientes(listaFiltrada);
 
+            if (listaFiltrada.isEmpty() && busqueda != null && !busqueda.trim().isEmpty()) {
+                vistaAdministrar.mostrarMensajeSinResultados("No existe ningún cliente con el nombre \"" + busqueda + "\"");
+            }
+
         } catch (NegocioException ex) {
             vistaAdministrar.mostrarMensaje("Error al buscar clientes: " + ex.getMessage());
         }
@@ -89,7 +99,7 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
     public void atrasPrincipal() {
         this.vistaAdministrar.ocultar();
         if (this.controlClientes != null) {
-            this.controlClientes.volver();
+            this.controlClientes.iniciarModulo();
         }
     }
 
@@ -147,13 +157,29 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
     @Override
     public void cancelarAgregarEditar() {
         this.vistaAgregarEditar.ocultar();
-        buscarClientes(null);
-        this.vistaAdministrar.mostrar();
+
+        if (desdeCotizacion) {
+            vistaCotizacionAnterior.mostrar();
+            desdeCotizacion = false;
+            return;
+        }
+
+        if (this.idClienteEdicion == null) {
+            if (this.controlClientes != null) {
+                this.controlClientes.iniciarModulo();
+            }
+        } else {
+            buscarClientes(null);
+            this.vistaAdministrar.mostrar();
+        }
     }
 
     @Override
     public void guardarNuevoCliente(BorradorCliente borrador) {
         try {
+
+            validarClienteDuplicado(borrador.getNombres(), borrador.getTelefono(), null);
+
             ClienteAgregarDTO dtoNuevo = new ClienteAgregarDTO(
                     borrador.getNombres(),
                     borrador.getApellidoPaterno(),
@@ -167,6 +193,13 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
 
             vistaAgregarEditar.mostrarMensajeExito("Cliente registrado con éxito.");
             vistaAgregarEditar.ocultar();
+
+            if (desdeCotizacion) {
+                controlCotizacionPadre.iniciar();
+                desdeCotizacion = false;
+                return;
+            }
+
             buscarClientes(null);
             vistaAdministrar.mostrar();
         } catch (NegocioException | IllegalArgumentException ex) {
@@ -177,6 +210,9 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
     @Override
     public void actualizarCliente(BorradorCliente borrador) {
         try {
+
+            validarClienteDuplicado(borrador.getNombres(), borrador.getTelefono(), this.idClienteEdicion);
+
             ClienteActualizarDTO dtoEditado = new ClienteActualizarDTO(
                     this.idClienteEdicion,
                     borrador.getNombres(),
@@ -197,5 +233,31 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
         } catch (NegocioException | IllegalArgumentException ex) {
             vistaAgregarEditar.mostrarMensaje(ex.getMessage());
         }
+    }
+
+    private void validarClienteDuplicado(String nombre, String telefono, Long idExcluir) throws NegocioException {
+        List<ClienteResumenDTO> todos = administradorClientes.obtenerTodosClientes();
+
+        for (ClienteResumenDTO c : todos) {
+            if (c.getNombre().trim().equalsIgnoreCase(nombre.trim())
+                    && c.getTelefono().trim().equals(telefono.trim())) {
+
+                if (idExcluir == null || !c.getId().equals(idExcluir)) {
+                    throw new NegocioException("Ya existe un cliente registrado con el mismo nombre y teléfono.");
+                }
+            }
+        }
+    }
+
+    public void abrirDesdeCotizacion(IVistaSeleccionClienteAuto vistaCotizacion, IControlAgregarCotizacion controlCotizacionPadre) {
+        this.vistaCotizacionAnterior = vistaCotizacion;
+        this.controlCotizacionPadre = controlCotizacionPadre;
+        this.desdeCotizacion = true;
+        this.idClienteEdicion = null;
+
+        this.vistaCotizacionAnterior.ocultar();
+        this.vistaAgregarEditar = FabricaVistas.obtenerVistaAgregarEditarCliente(this);
+        this.vistaAgregarEditar.limpiarFormulario();
+        this.vistaAgregarEditar.mostrar();
     }
 }

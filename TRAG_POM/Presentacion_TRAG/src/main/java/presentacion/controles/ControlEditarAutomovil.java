@@ -35,6 +35,9 @@ public class ControlEditarAutomovil {
     }
 
     public void iniciarVista() {
+
+        controlPadre.ocultarVista();
+
         this.vistaEdicion = new VistaEditarVehiculo(this);
 
         try {
@@ -54,19 +57,20 @@ public class ControlEditarAutomovil {
 
     public void actualizarAutomovil(AutomovilActualizarDTO dto) {
         try {
-            dto.setId(idAutomovilEditar); 
-            adminAutomoviles.actualizarAutomovil(dto); 
+            dto.setId(idAutomovilEditar);
+            adminAutomoviles.actualizarAutomovil(dto);
             JOptionPane.showMessageDialog(vistaEdicion, "Automóvil actualizado exitosamente.");
 
             cerrarVista();
             controlPadre.cargarTabla();
 
         } catch (NegocioException e) {
-            JOptionPane.showMessageDialog(vistaEdicion, "Error al actualizar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            vistaEdicion.mostrarErrorBaseDatos(e.getMessage());
         }
     }
 
     public void cerrarVista() {
         vistaEdicion.dispose();
+        controlPadre.mostrarVista();
     }
 }

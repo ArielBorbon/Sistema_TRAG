@@ -48,6 +48,7 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
         tblClientes = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
         btnEditarCliente = new javax.swing.JButton();
+        lblErrores = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         cmpTxtBuscarClientes = new javax.swing.JTextField();
         lblBuscarClientes = new javax.swing.JLabel();
@@ -116,7 +117,17 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
                 btnEditarClienteActionPerformed(evt);
             }
         });
-        jPanel7.add(btnEditarCliente, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        jPanel7.add(btnEditarCliente, gridBagConstraints);
+
+        lblErrores.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 29, 0);
+        jPanel7.add(lblErrores, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -266,6 +277,7 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBuscarClientes;
+    private javax.swing.JLabel lblErrores;
     private javax.swing.JLabel lblNombreServicio;
     private presentacion.vistas.PanelEncabezado panelEncabezado1;
     private presentacion.vistas.PanelEncabezado panelEncabezado3;
@@ -273,6 +285,7 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
     // End of variables declaration//GEN-END:variables
 
     class ButtonRenderer extends javax.swing.JButton implements javax.swing.table.TableCellRenderer {
+
         public ButtonRenderer() {
             setOpaque(true);
             setBackground(new java.awt.Color(255, 102, 102));
@@ -301,7 +314,7 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
             button.setBackground(new java.awt.Color(255, 102, 102));
             button.setForeground(java.awt.Color.WHITE);
             button.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
-            
+
             button.addActionListener(e -> fireEditingStopped());
         }
 
@@ -338,7 +351,7 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
         }
     }
 
-private void configurarTablaClientes() {
+    private void configurarTablaClientes() {
         String[] columnas = {"ID", "Nombre", "Teléfono", "Correo", "No. Vehículos", "Acción"};
 
         javax.swing.table.DefaultTableModel modeloTabla = new javax.swing.table.DefaultTableModel(columnas, 0) {
@@ -349,8 +362,12 @@ private void configurarTablaClientes() {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 0) return Long.class;
-                if (columnIndex == 4) return Integer.class;
+                if (columnIndex == 0) {
+                    return Long.class;
+                }
+                if (columnIndex == 4) {
+                    return Integer.class;
+                }
                 return String.class;
             }
         };
@@ -370,12 +387,12 @@ private void configurarTablaClientes() {
                     celda.setBackground((row % 2 == 0) ? colorAzulClaro : java.awt.Color.WHITE);
                 }
                 setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                
+
                 ((javax.swing.JComponent) celda).setBorder(javax.swing.BorderFactory.createCompoundBorder(
                         javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 1, java.awt.Color.BLACK),
                         javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5)
                 ));
-                
+
                 return celda;
             }
         };
@@ -388,12 +405,12 @@ private void configurarTablaClientes() {
                     celda.setBackground((row % 2 == 0) ? colorAzulClaro : java.awt.Color.WHITE);
                 }
                 setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-                
+
                 ((javax.swing.JComponent) celda).setBorder(javax.swing.BorderFactory.createCompoundBorder(
                         javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 1, java.awt.Color.BLACK),
                         javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 0)
                 ));
-                
+
                 return celda;
             }
         };
@@ -422,9 +439,9 @@ private void configurarTablaClientes() {
         tblClientes.getColumnModel().getColumn(2).setPreferredWidth(120);
         tblClientes.getColumnModel().getColumn(3).setPreferredWidth(200);
         tblClientes.getColumnModel().getColumn(4).setPreferredWidth(100);
-        tblClientes.getColumnModel().getColumn(5).setPreferredWidth(100); 
+        tblClientes.getColumnModel().getColumn(5).setPreferredWidth(100);
     }
-    
+
     private void configurarBuscador() {
 
         cmpTxtBuscarClientes.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
@@ -433,7 +450,7 @@ private void configurarTablaClientes() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
             }
-            
+
             @Override
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
@@ -449,6 +466,7 @@ private void configurarTablaClientes() {
     }
 
     private void buscar() {
+        limpiarMensajeErrores(); 
         String textoBusqueda = cmpTxtBuscarClientes.getText();
         control.buscarClientes(textoBusqueda);
     }
@@ -466,7 +484,7 @@ private void configurarTablaClientes() {
                     c.getId(),
                     nombreCompleto.trim(),
                     c.getTelefono(),
-                    c.getCorreo(), 
+                    c.getCorreo(),
                     c.getCantidadAutomoviles(),
                     "Eliminar"
                 });
@@ -514,4 +532,16 @@ private void configurarTablaClientes() {
     public void ocultar() {
         dispose();
     }
+
+    @Override
+    public void mostrarMensajeSinResultados(String mensaje) {
+        lblErrores.setForeground(java.awt.Color.RED);
+        lblErrores.setText(mensaje);
+    }
+
+    
+    public void limpiarMensajeErrores() {
+        lblErrores.setText(" ");
+    }
+
 }

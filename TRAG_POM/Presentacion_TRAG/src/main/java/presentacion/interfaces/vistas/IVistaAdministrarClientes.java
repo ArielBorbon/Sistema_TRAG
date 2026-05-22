@@ -18,4 +18,5 @@ public interface IVistaAdministrarClientes extends IVista {
     public abstract void mostrarMensajeExito(String mensaje);
     public abstract Long obtenerIdClienteSeleccionado();
     public abstract boolean confirmarEliminacion();
+    public void mostrarMensajeSinResultados(String mensaje);
 }

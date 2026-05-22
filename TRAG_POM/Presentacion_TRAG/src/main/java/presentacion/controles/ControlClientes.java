@@ -52,7 +52,6 @@ public class ControlClientes implements IControlClientes {
         if (this.vistaPrincipal != null) {
             this.vistaPrincipal.ocultar();
         }
-
         MenuPrincipal menu = new MenuPrincipal();
         menu.setVisible(true);
     }

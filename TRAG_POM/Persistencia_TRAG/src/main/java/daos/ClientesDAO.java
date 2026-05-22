@@ -76,6 +76,7 @@ public class ClientesDAO implements IClientesDAO {
     @Override
     public List<Cliente> obtenerTodosClientes() throws PersistenciaException {
         EntityManager em = Conexion.crearConexion();
+        em.getEntityManagerFactory().getCache().evictAll();
         try {
 
             String jpql = "SELECT DISTINCT c FROM Cliente c "

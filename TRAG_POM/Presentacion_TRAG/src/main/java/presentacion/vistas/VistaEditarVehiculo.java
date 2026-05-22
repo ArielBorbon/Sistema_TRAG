@@ -107,11 +107,11 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         String modelo = txtModelo.getText().trim();
         String anioStr = txtAnio.getText().trim();
         String matricula = txtMatricula.getText().trim().toUpperCase();
-        String niv = txtNiv.getText().trim().toUpperCase(); 
+        String niv = txtNiv.getText().trim().toUpperCase();
         ClienteResumenDTO cliente = (ClienteResumenDTO) cmbDueno.getSelectedItem();
 
         Border bordeError = BorderFactory.createLineBorder(java.awt.Color.RED, 2);
-        Border bordeNormal = UIManager.getBorder("TextField.border"); 
+        Border bordeNormal = UIManager.getBorder("TextField.border");
 
         txtMarca.setBorder(bordeNormal);
         txtModelo.setBorder(bordeNormal);
@@ -119,10 +119,10 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         txtMatricula.setBorder(bordeNormal);
         txtNiv.setBorder(bordeNormal);
 
-        String regexTextoBase = "^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑ-]+$"; 
-        String regexMatricula = "^[A-Z0-9-]{4,10}$"; 
-        String regexAnio = "^(19|20)\\d{2}$"; 
-        String regexNiv = "^[A-HJ-NPR-Z0-9]{17}$"; 
+        String regexTextoBase = "^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑ-]+$";
+        String regexMatricula = "^[A-Z0-9-]{4,10}$";
+        String regexAnio = "^(19|20)\\d{2}$";
+        String regexNiv = "^[A-HJ-NPR-Z0-9]{17}$";
 
         if (marca.isEmpty() || !marca.matches(regexTextoBase)) {
             mostrarError(txtMarca, bordeError, "La marca es requerida y no debe contener caracteres especiales raros.");
@@ -170,6 +170,12 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         campo.setBorder(borde);
         lblErrores.setText(mensaje);
         btnGuardar.setEnabled(false);
+    }
+
+    public void mostrarErrorBaseDatos(String mensajeError) {
+        lblErrores.setText(mensajeError);
+        btnGuardar.setEnabled(false);
+        txtNiv.setBorder(BorderFactory.createLineBorder(java.awt.Color.RED, 2));
     }
 
     /**
@@ -423,8 +429,6 @@ public class VistaEditarVehiculo extends javax.swing.JFrame {
         String vin = txtNiv.getText();
 
         ClienteResumenDTO clienteSeleccionado = (ClienteResumenDTO) cmbDueno.getSelectedItem();
-
-
 
         int anioInt = Integer.parseInt(anio.trim());
 

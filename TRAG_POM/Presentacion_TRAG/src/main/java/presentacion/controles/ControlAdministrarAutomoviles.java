@@ -45,10 +45,16 @@ public class ControlAdministrarAutomoviles {
     public void buscarAutomoviles(String textoBusqueda) {
         try {
             if (textoBusqueda.isEmpty()) {
-                cargarTabla(); 
+                cargarTabla();
             } else {
                 List<AutomovilResumenDTO> listaFiltrada = adminAutomoviles.obtenerAutomovilesPorNombreCliente(textoBusqueda);
-               vista.llenarTabla(listaFiltrada);
+
+                if (listaFiltrada.isEmpty() && textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+                    vista.mostrarMensajeSinResultados("No existe ningún cliente con el nombre \"" + textoBusqueda + "\"");
+                }
+
+                vista.llenarTabla(listaFiltrada);
+
             }
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(vista, "Error al buscar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -77,6 +83,18 @@ public class ControlAdministrarAutomoviles {
     public void abrirEditarVehiculo(Long idAutomovil) {
         ControlEditarAutomovil controlEditar = new ControlEditarAutomovil(this, idAutomovil);
         controlEditar.iniciarVista();
+    }
+
+    public void ocultarVista() {
+        if (this.vista != null) {
+            this.vista.setVisible(false);
+        }
+    }
+
+    public void mostrarVista() {
+        if (this.vista != null) {
+            this.vista.setVisible(true);
+        }
     }
 
 }

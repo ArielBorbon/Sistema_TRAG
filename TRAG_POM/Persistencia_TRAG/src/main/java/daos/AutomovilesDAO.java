@@ -105,6 +105,7 @@ public class AutomovilesDAO implements IAutomovilesDAO {
     @Override
     public List<Automovil> obtenerAutomovilesPorCliente(Long idCliente) throws PersistenciaException {
         EntityManager em = Conexion.crearConexion();
+        em.getEntityManagerFactory().getCache().evictAll();
         try {
             String jpql = "SELECT a FROM Automovil a "
                     + "JOIN FETCH a.cliente "
@@ -162,6 +163,23 @@ public class AutomovilesDAO implements IAutomovilesDAO {
 
         } catch (Exception e) {
             throw new PersistenciaException("Error al buscar automóviles por nombre de cliente.", e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public Automovil obtenerAutomovilPorNiv(String niv) throws PersistenciaException {
+        EntityManager em = Conexion.crearConexion();
+        try {
+            String jpql = "SELECT a FROM Automovil a WHERE a.vin = :niv AND a.activo = true";
+            return em.createQuery(jpql, Automovil.class)
+                    .setParameter("niv", niv)
+                    .getSingleResult();
+        } catch (javax.persistence.NoResultException e) {
+            return null; 
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al consultar el NIV.", e);
         } finally {
             em.close();
         }

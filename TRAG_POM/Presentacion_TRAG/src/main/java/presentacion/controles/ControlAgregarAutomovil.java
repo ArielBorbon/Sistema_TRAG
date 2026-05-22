@@ -32,7 +32,7 @@ public class ControlAgregarAutomovil {
     public ControlAgregarAutomovil(VistaSeleccionClienteAuto vistaAnterior) {
         this.vistaCotizacionAnterior = vistaAnterior;
         this.origen = 1;
-        controlOrquestador.iniciarModulo();
+        
         inicializarDependencias();
     }
 
@@ -96,7 +96,7 @@ public class ControlAgregarAutomovil {
             cerrarVista();
 
         } catch (NegocioException e) {
-            JOptionPane.showMessageDialog(vistaNueva, "Error al guardar el vehículo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            vistaNueva.mostrarErrorBaseDatos(e.getMessage());
         }
     }
 

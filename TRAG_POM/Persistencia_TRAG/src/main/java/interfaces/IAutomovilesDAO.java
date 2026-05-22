@@ -23,4 +23,5 @@ public interface IAutomovilesDAO {
     public List<Automovil> obtenerAutomovilesPorCliente(Long idCliente) throws PersistenciaException;
     public Automovil actualizarAutomovil(Automovil automovil) throws PersistenciaException;
     public List<Automovil> buscarAutomovilesPorNombreCliente(String nombre) throws PersistenciaException;
+    public Automovil obtenerAutomovilPorNiv(String niv) throws PersistenciaException;
 }

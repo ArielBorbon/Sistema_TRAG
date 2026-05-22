@@ -83,8 +83,13 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion {
     public void iniciar() {
         try {
             vistaSeleccionClienteAuto = FabricaVistas.obtenerVistaSeleccionClienteAuto(this);
-            List<ClienteResumenDTO> clientes = administradorClientes.obtenerTodosClientes();
-            vistaSeleccionClienteAuto.cargarClientes(clientes);
+
+            List<ClienteResumenDTO> clientesActivos = administradorClientes.obtenerTodosClientes()
+                    .stream()
+                    .filter(c -> c.getEstado() == null || !c.getEstado().name().equalsIgnoreCase("DESHABILITADO"))
+                    .collect(java.util.stream.Collectors.toList());
+
+            vistaSeleccionClienteAuto.cargarClientes(clientesActivos);
             vistaSeleccionClienteAuto.mostrar();
         } catch (NegocioException e) {
             vistaSeleccionClienteAuto.mostrarMensaje(e.getMessage());
@@ -176,11 +181,14 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion {
     public void atrasDiagnosticoEstado() {
 
         try {
-            List<ClienteResumenDTO> clientes = administradorClientes.obtenerTodosClientes();
+            List<ClienteResumenDTO> clientesActivos = administradorClientes.obtenerTodosClientes()
+                    .stream()
+                    .filter(c -> c.getEstado() == null || !c.getEstado().name().equalsIgnoreCase("DESHABILITADO"))
+                    .collect(java.util.stream.Collectors.toList());
 
             if (borradorCliente != null) {
 
-                vistaSeleccionClienteAuto.cargarClientes(clientes, borradorCliente.getId());
+                vistaSeleccionClienteAuto.cargarClientes(clientesActivos, borradorCliente.getId());
                 ClienteDetalleDTO clienteSeleccionado = administradorClientes.obtenerCliente(borradorCliente.getId());
                 List<AutomovilResumenDTO> automovilesCliente = clienteSeleccionado.getAutomoviles();
 
@@ -193,7 +201,7 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion {
                 }
 
             } else {
-                vistaSeleccionClienteAuto.cargarClientes(clientes);
+                vistaSeleccionClienteAuto.cargarClientes(clientesActivos);
             }
 
             vistaSeleccionClienteAuto.mostrar();
@@ -363,6 +371,12 @@ public class ControlAgregarCotizacion implements IControlAgregarCotizacion {
         } catch (NegocioException ex) {
             vistaSeleccionClienteAuto.mostrarMensaje("Error al actualizar los automóviles: " + ex.getMessage());
         }
+    }
+
+    @Override
+    public void abrirAgregarCliente() {
+        ControlAdministrarClientes ctrlAdminCli = new ControlAdministrarClientes();
+        ctrlAdminCli.abrirDesdeCotizacion(vistaSeleccionClienteAuto, this);
     }
 
 }

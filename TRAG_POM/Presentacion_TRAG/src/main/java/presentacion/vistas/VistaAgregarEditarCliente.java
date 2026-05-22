@@ -535,6 +535,9 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         } else if (!nombre.matches(regexLetras)) {
             lblNombre.setText("Solo letras permitidas.");
             formularioValido = false;
+        } else if (nombre.length() > 20) {
+            lblNombre.setText("Máximo 20 caracteres.");
+            formularioValido = false;
         }
 
         if (apPaterno.isEmpty()) {
@@ -543,11 +546,19 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         } else if (!apPaterno.matches(regexLetras)) {
             lblPaterno.setText("Solo letras permitidas.");
             formularioValido = false;
+        } else if (apPaterno.length() > 20) {
+            lblPaterno.setText("Máximo 20 caracteres.");
+            formularioValido = false;
         }
 
-        if (!apMaterno.isEmpty() && !apMaterno.matches(regexLetras)) {
-            lblMaterno.setText("Solo letras permitidas.");
-            formularioValido = false;
+        if (!apMaterno.isEmpty()) {
+            if (!apMaterno.matches(regexLetras)) {
+                lblMaterno.setText("Solo letras permitidas.");
+                formularioValido = false;
+            } else if (apMaterno.length() > 20) {
+                lblMaterno.setText("Máximo 20 caracteres.");
+                formularioValido = false;
+            }
         }
 
         if (telefono.isEmpty()) {
@@ -568,9 +579,9 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
 
     private void configurarRestriccionesCampos() {
 
-        limitarCampoTexto(jTextField1, 40, true);
-        limitarCampoTexto(jTextField2, 40, true);
-        limitarCampoTexto(jTextField5, 40, true);
+        limitarCampoTexto(jTextField1, 20, true);
+        limitarCampoTexto(jTextField2, 20, true);
+        limitarCampoTexto(jTextField5, 20, true);
         limitarCampoTexto(jTextField4, 40, false);
 
         limitarCampoTelefono(jTextField3);
@@ -666,16 +677,16 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
                     }
                 });
     }
-    
+
     private void configurarTamanoCampos() {
 
-    java.awt.Dimension tamanoCampo = new java.awt.Dimension(260, 40);
+        java.awt.Dimension tamanoCampo = new java.awt.Dimension(260, 40);
 
-    jTextField1.setPreferredSize(tamanoCampo);
-    jTextField2.setPreferredSize(tamanoCampo);
-    jTextField3.setPreferredSize(tamanoCampo);
-    jTextField4.setPreferredSize(tamanoCampo);
-    jTextField5.setPreferredSize(tamanoCampo);
-}
+        jTextField1.setPreferredSize(tamanoCampo);
+        jTextField2.setPreferredSize(tamanoCampo);
+        jTextField3.setPreferredSize(tamanoCampo);
+        jTextField4.setPreferredSize(tamanoCampo);
+        jTextField5.setPreferredSize(tamanoCampo);
+    }
 
 }

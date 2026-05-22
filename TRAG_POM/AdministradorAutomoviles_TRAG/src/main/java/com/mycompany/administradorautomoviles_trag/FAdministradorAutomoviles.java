@@ -59,5 +59,5 @@ public class FAdministradorAutomoviles implements IAdministradorAutomoviles {
     public List<AutomovilResumenDTO> obtenerAutomovilesPorNombreCliente(String nombre) throws NegocioException {
         return administradorAutomoviles.obtenerAutomovilesPorNombreCliente(nombre);
     }
-
+    
 }
