@@ -8,6 +8,7 @@ import dtos.automovil.AutomovilAgregarDTO;
 import dtos.cliente.ClienteResumenDTO;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -35,6 +36,24 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
         lblErrores.setForeground(java.awt.Color.RED);
         lblErrores.setText(" ");
         agregarListenersValidacion();
+
+        ImageIcon iconoOriginalAutomovil = new ImageIcon(getClass().getResource("/automovil.png"));
+
+        int ancho = imgAutomovil.getWidth();
+        int alto = imgAutomovil.getHeight();
+
+        if (ancho <= 0) {
+            ancho = 264;
+        }
+        if (alto <= 0) {
+            alto = 262;
+        }
+
+        Image imgEscaladaAutomovil = iconoOriginalAutomovil.getImage()
+                .getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+
+        imgAutomovil.setIcon(new javax.swing.ImageIcon(imgEscaladaAutomovil));
+
     }
 
     public void cargarComboClientes(List<ClienteResumenDTO> clientes) {
@@ -57,6 +76,23 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
                 return this;
             }
         });
+    }
+
+    private void resetearErrores() {
+        Border bordeNormal = UIManager.getBorder("TextField.border");
+
+        txtMarca.setBorder(bordeNormal);
+        txtModelo.setBorder(bordeNormal);
+        txtAnio.setBorder(bordeNormal);
+        txtMatricula.setBorder(bordeNormal);
+        txtNiv.setBorder(bordeNormal);
+
+        lblErrorMarca.setText(" ");
+        lblErrorModelo.setText(" ");
+        lblErrorAnio.setText(" ");
+        lblErrorMatricula.setText("");
+        lblErrorNIV.setText(" ");
+        lblErrorDueno.setText(" ");
     }
 
     private void agregarListenersValidacion() {
@@ -87,6 +123,8 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
     }
 
     private void validarFormulario() {
+        resetearErrores();
+
         String marca = txtMarca.getText().trim();
         String modelo = txtModelo.getText().trim();
         String anioStr = txtAnio.getText().trim();
@@ -95,13 +133,7 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
         ClienteResumenDTO cliente = (ClienteResumenDTO) cmbDueno.getSelectedItem();
 
         Border bordeError = BorderFactory.createLineBorder(java.awt.Color.RED, 2);
-        Border bordeNormal = UIManager.getBorder("TextField.border");
-
-        txtMarca.setBorder(bordeNormal);
-        txtModelo.setBorder(bordeNormal);
-        txtAnio.setBorder(bordeNormal);
-        txtMatricula.setBorder(bordeNormal);
-        txtNiv.setBorder(bordeNormal);
+        boolean formularioValido = true;
 
         String regexTextoBase = "^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑ-]+$";
         String regexMatricula = "^[A-Z0-9-]{4,10}$";
@@ -109,45 +141,49 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
         String regexNiv = "^[A-HJ-NPR-Z0-9]{17}$";
 
         if (marca.isEmpty() || !marca.matches(regexTextoBase)) {
-            mostrarError(txtMarca, bordeError, "La marca es requerida y no debe contener caracteres especiales raros.");
-            return;
+            txtMarca.setBorder(bordeError);
+            lblErrorMarca.setText("Marca inválida.");
+            formularioValido = false;
         }
 
         if (modelo.isEmpty() || !modelo.matches(regexTextoBase)) {
-            mostrarError(txtModelo, bordeError, "El modelo es requerido y no debe contener caracteres especiales raros.");
-            return;
+            txtModelo.setBorder(bordeError);
+            lblErrorModelo.setText("Modelo inválido.");
+            formularioValido = false;
         }
 
         if (anioStr.isEmpty() || !anioStr.matches(regexAnio)) {
-            mostrarError(txtAnio, bordeError, "El año debe ser un número de 4 dígitos válido (ej. 2018).");
-            return;
+            txtAnio.setBorder(bordeError);
+            lblErrorAnio.setText("Año inválido.");
+            formularioValido = false;
         } else {
             int anio = Integer.parseInt(anioStr);
             int anioActual = java.time.Year.now().getValue();
             if (anio < 1950 || anio > (anioActual + 1)) {
-                mostrarError(txtAnio, bordeError, "El año debe estar entre 1950 y " + (anioActual + 1) + ".");
-                return;
+                txtAnio.setBorder(bordeError);
+                lblErrorAnio.setText("Año fuera de rango.");
+                formularioValido = false;
             }
         }
 
         if (matricula.isEmpty() || !matricula.matches(regexMatricula)) {
-            mostrarError(txtMatricula, bordeError, "Matrícula inválida. Usa letras mayúsculas, números y guiones (4-10 caracteres).");
-            return;
+            txtMatricula.setBorder(bordeError);
+            lblErrorMatricula.setText("Matricula Invalida");
+            formularioValido = false;
         }
 
         if (niv.isEmpty() || !niv.matches(regexNiv)) {
-            mostrarError(txtNiv, bordeError, "El NIV (VIN) debe tener exactamente 17 caracteres (no usar I, O, Q).");
-            return;
+            txtNiv.setBorder(bordeError);
+            lblErrorNIV.setText("NIV inválido (17 caracteres).");
+            formularioValido = false;
         }
 
         if (cliente == null) {
-            lblErrores.setText("Seleccione un dueño para el vehículo.");
-            btnGuardar.setEnabled(false);
-            return;
+            lblErrorDueno.setText("Seleccione un dueño.");
+            formularioValido = false;
         }
 
-        lblErrores.setText(" ");
-        btnGuardar.setEnabled(true);
+        btnGuardar.setEnabled(formularioValido);
     }
 
     private void mostrarError(JTextField campo, Border borde, String mensaje) {
@@ -160,6 +196,16 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
         lblErrores.setText(mensajeError);
         btnGuardar.setEnabled(false);
         txtNiv.setBorder(BorderFactory.createLineBorder(java.awt.Color.RED, 2));
+    }
+
+    private void mostrarErrorCampo(javax.swing.JLabel labelError, javax.swing.JTextField campo, String mensaje) {
+        if (mensaje != null) {
+            campo.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED, 2));
+            labelError.setText(mensaje);
+        } else {
+            campo.setBorder(UIManager.getBorder("TextField.border"));
+            labelError.setText(" "); 
+        }
     }
 
     /**
@@ -191,6 +237,12 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         cmbDueno = new javax.swing.JComboBox<ClienteResumenDTO>();
         lblErrores = new javax.swing.JLabel();
+        lblErrorModelo = new javax.swing.JLabel();
+        lblErrorMatricula = new javax.swing.JLabel();
+        lblErrorMarca = new javax.swing.JLabel();
+        lblErrorNIV = new javax.swing.JLabel();
+        lblErrorDueno = new javax.swing.JLabel();
+        lblErrorAnio = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         btnCancelar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
@@ -289,24 +341,39 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
         lblErrores.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblErrores.setText("jLabel2");
 
+        lblErrorModelo.setForeground(new java.awt.Color(255, 51, 51));
+
+        lblErrorMatricula.setForeground(new java.awt.Color(255, 51, 51));
+
+        lblErrorMarca.setForeground(new java.awt.Color(255, 51, 51));
+
+        lblErrorNIV.setForeground(new java.awt.Color(255, 51, 51));
+
+        lblErrorDueno.setForeground(new java.awt.Color(255, 51, 51));
+
+        lblErrorAnio.setForeground(new java.awt.Color(255, 51, 51));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(54, 54, 54)
-                .addComponent(imgAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
+                .addGap(117, 117, 117)
+                .addComponent(imgAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 178, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblErrores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtMatricula)
-                                .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtMatricula)
+                            .addComponent(txtModelo, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                            .addComponent(txtMarca, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                            .addComponent(lblErrorModelo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblErrorMarca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblErrorMatricula, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(47, 47, 47)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -314,8 +381,10 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
                             .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtNiv)
                             .addComponent(txtAnio)
-                            .addComponent(cmbDueno, 0, 253, Short.MAX_VALUE)))
-                    .addComponent(lblErrores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(cmbDueno, 0, 253, Short.MAX_VALUE)
+                            .addComponent(lblErrorAnio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblErrorNIV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblErrorDueno, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(79, 79, 79))
         );
         jPanel3Layout.setVerticalGroup(
@@ -323,38 +392,54 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(lblErrores)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(26, 26, 26)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtNiv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel8)
-                        .addGap(26, 26, 26)
-                        .addComponent(txtAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7)
-                        .addGap(26, 26, 26)
-                        .addComponent(cmbDueno, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(82, 82, 82)
-                                .addComponent(jLabel5)
-                                .addGap(28, 28, 28)
-                                .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel6)
-                                .addGap(26, 26, 26)
-                                .addComponent(txtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(imgAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(86, 86, 86))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNiv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblErrorMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblErrorNIV, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel8))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblErrorModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblErrorAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel7))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel6)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cmbDueno, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(6, 6, 6))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addGap(278, 278, 278)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblErrorMatricula, javax.swing.GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
+                            .addComponent(lblErrorDueno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(imgAutomovil, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -465,6 +550,12 @@ public class VistaAgregarVehiculo extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JLabel lblErrorAnio;
+    private javax.swing.JLabel lblErrorDueno;
+    private javax.swing.JLabel lblErrorMarca;
+    private javax.swing.JLabel lblErrorMatricula;
+    private javax.swing.JLabel lblErrorModelo;
+    private javax.swing.JLabel lblErrorNIV;
     private javax.swing.JLabel lblErrores;
     private presentacion.vistas.PanelEncabezado panelEncabezado1;
     private javax.swing.JTextField txtAnio;
