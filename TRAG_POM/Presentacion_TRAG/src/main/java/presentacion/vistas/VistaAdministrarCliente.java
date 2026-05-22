@@ -48,7 +48,6 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
         tblClientes = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
         btnEditarCliente = new javax.swing.JButton();
-        btnEliminarCliente = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
         cmpTxtBuscarClientes = new javax.swing.JTextField();
         lblBuscarClientes = new javax.swing.JLabel();
@@ -62,9 +61,7 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
         panelEncabezado3 = new presentacion.vistas.PanelEncabezado();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(1000, 686));
         setMinimumSize(new java.awt.Dimension(1000, 686));
-        setPreferredSize(new java.awt.Dimension(1000, 686));
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
@@ -119,23 +116,7 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
                 btnEditarClienteActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 31, 0);
-        jPanel7.add(btnEditarCliente, gridBagConstraints);
-
-        btnEliminarCliente.setBackground(new java.awt.Color(255, 102, 102));
-        btnEliminarCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnEliminarCliente.setText("Eliminar Cliente");
-        btnEliminarCliente.setPreferredSize(new java.awt.Dimension(200, 40));
-        btnEliminarCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarClienteActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        jPanel7.add(btnEliminarCliente, gridBagConstraints);
+        jPanel7.add(btnEditarCliente, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -269,19 +250,9 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
         }
     }//GEN-LAST:event_btnEditarClienteActionPerformed
 
-    private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
-        Long idSeleccionado = obtenerIdClienteSeleccionado();
-        if (idSeleccionado != null) {
-            control.eliminarCliente(idSeleccionado);
-        } else {
-            mostrarMensaje("Por favor, seleccione un cliente de la tabla para eliminar.");
-        }
-    }//GEN-LAST:event_btnEliminarClienteActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditarCliente;
-    private javax.swing.JButton btnEliminarCliente;
     private javax.swing.JButton btnVolver;
     private javax.swing.JTextField cmpTxtBuscarClientes;
     private javax.swing.JLabel jLabel1;
@@ -301,62 +272,168 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
     private javax.swing.JTable tblClientes;
     // End of variables declaration//GEN-END:variables
 
-    private void configurarTablaClientes() {
-        String[] columnas = {"ID", "Nombre", "Teléfono", "Correo", "No. Vehículos"};
+    class ButtonRenderer extends javax.swing.JButton implements javax.swing.table.TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+            setBackground(new java.awt.Color(255, 102, 102));
+            setForeground(java.awt.Color.WHITE);
+            setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
+        }
 
-        DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
+        @Override
+        public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setText((value == null) ? "Eliminar" : value.toString());
+            return this;
+        }
+    }
+
+    class ButtonEditor extends javax.swing.DefaultCellEditor {
+
+        protected javax.swing.JButton button;
+        private boolean isPushed;
+        private javax.swing.JTable table;
+        private int currentRow;
+
+        public ButtonEditor(javax.swing.JCheckBox checkBox) {
+            super(checkBox);
+            button = new javax.swing.JButton();
+            button.setOpaque(true);
+            button.setBackground(new java.awt.Color(255, 102, 102));
+            button.setForeground(java.awt.Color.WHITE);
+            button.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
+            
+            button.addActionListener(e -> fireEditingStopped());
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(javax.swing.JTable table, Object value, boolean isSelected, int row, int column) {
+            this.table = table;
+            this.currentRow = row;
+            button.setText("Eliminar");
+            isPushed = true;
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                isPushed = false;
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (table.isEditing()) {
+                        table.getCellEditor().cancelCellEditing();
+                    }
+
+                    Long idCliente = (Long) table.getModel().getValueAt(currentRow, 0);
+
+                    control.eliminarCliente(idCliente);
+                });
+            }
+            return "Eliminar";
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
+        }
+    }
+
+private void configurarTablaClientes() {
+        String[] columnas = {"ID", "Nombre", "Teléfono", "Correo", "No. Vehículos", "Acción"};
+
+        javax.swing.table.DefaultTableModel modeloTabla = new javax.swing.table.DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return column == 5;
             }
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 0) {
-                    return Long.class;
-                }
-                if (columnIndex == 4) {
-                    return Integer.class;
-                }
+                if (columnIndex == 0) return Long.class;
+                if (columnIndex == 4) return Integer.class;
                 return String.class;
             }
         };
 
         tblClientes.setModel(modeloTabla);
-        tblClientes.setRowHeight(30);
+        tblClientes.setRowHeight(35);
+        tblClientes.getTableHeader().setReorderingAllowed(false);
+        tblClientes.getTableHeader().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
 
-        javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        java.awt.Color colorAzulClaro = new java.awt.Color(218, 235, 255);
 
-        javax.swing.table.DefaultTableCellRenderer leftRenderer = new javax.swing.table.DefaultTableCellRenderer();
-        leftRenderer.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                java.awt.Component celda = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!isSelected) {
+                    celda.setBackground((row % 2 == 0) ? colorAzulClaro : java.awt.Color.WHITE);
+                }
+                setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                
+                ((javax.swing.JComponent) celda).setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 1, java.awt.Color.BLACK),
+                        javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5)
+                ));
+                
+                return celda;
+            }
+        };
+
+        javax.swing.table.DefaultTableCellRenderer leftRenderer = new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                java.awt.Component celda = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!isSelected) {
+                    celda.setBackground((row % 2 == 0) ? colorAzulClaro : java.awt.Color.WHITE);
+                }
+                setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                
+                ((javax.swing.JComponent) celda).setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 1, java.awt.Color.BLACK),
+                        javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 0)
+                ));
+                
+                return celda;
+            }
+        };
 
         for (int i = 0; i < tblClientes.getColumnCount(); i++) {
             if (i == 3) {
                 tblClientes.getColumnModel().getColumn(i).setCellRenderer(leftRenderer);
-            } else {
+            } else if (i != 5) {
                 tblClientes.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
             }
         }
 
-        tblClientes.setShowGrid(true);
-        tblClientes.setGridColor(new java.awt.Color(200, 200, 200));
-        jScrollPane1.getViewport().setBackground(java.awt.Color.WHITE);
+        tblClientes.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+        tblClientes.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new javax.swing.JCheckBox()));
 
-        tblClientes.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tblClientes.setShowGrid(false);
+        tblClientes.setIntercellSpacing(new java.awt.Dimension(0, 0));
+        jScrollPane1.getViewport().setBackground(java.awt.Color.WHITE);
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+
+        tblClientes.getColumnModel().getColumn(0).setMinWidth(0);
+        tblClientes.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblClientes.getColumnModel().getColumn(0).setWidth(0);
+
         tblClientes.getColumnModel().getColumn(1).setPreferredWidth(250);
         tblClientes.getColumnModel().getColumn(2).setPreferredWidth(120);
         tblClientes.getColumnModel().getColumn(3).setPreferredWidth(200);
         tblClientes.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tblClientes.getColumnModel().getColumn(5).setPreferredWidth(100); 
     }
-
+    
     private void configurarBuscador() {
+
         cmpTxtBuscarClientes.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
             }
-
+            
             @Override
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
@@ -366,7 +443,9 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
             }
+
         });
+
     }
 
     private void buscar() {
@@ -375,8 +454,8 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
     }
 
     @Override
-    public void cargarClientes(List<ClienteResumenDTO> clientes) {
-        DefaultTableModel modelo = (DefaultTableModel) tblClientes.getModel();
+    public void cargarClientes(java.util.List<ClienteResumenDTO> clientes) {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblClientes.getModel();
         modelo.setRowCount(0);
 
         if (clientes != null) {
@@ -387,8 +466,9 @@ public class VistaAdministrarCliente extends javax.swing.JFrame implements IVist
                     c.getId(),
                     nombreCompleto.trim(),
                     c.getTelefono(),
-                    c.getCorreo(),
-                    c.getCantidadAutomoviles()
+                    c.getCorreo(), 
+                    c.getCantidadAutomoviles(),
+                    "Eliminar"
                 });
             }
         }

@@ -54,7 +54,6 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
 
@@ -190,16 +189,27 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanel1.add(jTextField5, gridBagConstraints);
 
-        jButton3.setText("Cancelar");
-
+        jButton5.setBackground(new java.awt.Color(204, 255, 204));
+        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setText("Guardar");
+        jButton5.setMaximumSize(new java.awt.Dimension(85, 27));
+        jButton5.setMinimumSize(new java.awt.Dimension(85, 27));
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
 
+        jButton6.setBackground(new java.awt.Color(255, 255, 204));
+        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton6.setText("Volver");
+        jButton6.setMaximumSize(new java.awt.Dimension(85, 27));
+        jButton6.setMinimumSize(new java.awt.Dimension(85, 27));
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -217,18 +227,13 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
                     .addGroup(layout.createSequentialGroup()
                         .addGap(59, 59, 59)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 628, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(52, 52, 52))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 628, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,9 +247,8 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(22, 22, 22))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(103, 103, 103)
@@ -271,9 +275,12 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -314,12 +321,45 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
             return;
         }
 
+        String regexLetras = "^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$";
+        
+        if (!nombre.matches(regexLetras)) {
+            mostrarMensaje("El nombre solo puede contener letras.");
+            return;
+        }
+        if (!apPaterno.matches(regexLetras)) {
+            mostrarMensaje("El apellido paterno solo puede contener letras.");
+            return;
+        }
+        if (!apMaterno.isEmpty() && !apMaterno.matches(regexLetras)) {
+            mostrarMensaje("El apellido materno solo puede contener letras.");
+            return;
+        }
+
+        if (telefono.isEmpty()) {
+            mostrarMensaje("El teléfono es obligatorio.");
+            return;
+        }
+        
+        if (!telefono.matches("^\\d{10}$")) {
+            mostrarMensaje("El teléfono debe contener exactamente 10 dígitos numéricos.");
+            return;
+        }
+
+        if (!correo.isEmpty()) {
+            String regexCorreo = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+            if (!correo.matches(regexCorreo)) {
+                mostrarMensaje("El formato del correo electrónico no es válido.");
+                return;
+            }
+        }
+
         BorradorCliente borrador = new BorradorCliente(
                 null,
                 nombre,
                 apPaterno,
                 apMaterno.isEmpty() ? null : apMaterno,
-                telefono.isEmpty() ? null : telefono,
+                telefono,
                 correo.isEmpty() ? null : correo
         );
 
@@ -403,34 +443,9 @@ public class VistaAgregarEditarCliente extends javax.swing.JFrame implements IVi
     }
 
     private void configurarBotones() {
-        jButton6.setBackground(new java.awt.Color(52, 73, 94));
-        jButton6.setForeground(java.awt.Color.WHITE);
-        jButton6.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
-        jButton6.setFocusPainted(false);
-        jButton6.setBorderPainted(false);
-        jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
         jButton6.addActionListener(e -> {
             cancelar();
         });
-
-        jButton3.setBackground(new java.awt.Color(231, 76, 60));
-        jButton3.setForeground(java.awt.Color.WHITE);
-        jButton3.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
-        jButton3.setFocusPainted(false);
-        jButton3.setBorderPainted(false);
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-        jButton3.addActionListener(e -> {
-            limpiarFormulario();
-        });
-
-        jButton5.setBackground(new java.awt.Color(46, 204, 113));
-        jButton5.setForeground(java.awt.Color.WHITE);
-        jButton5.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
-        jButton5.setFocusPainted(false);
-        jButton5.setBorderPainted(false);
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         jButton5.addActionListener(e -> {
             guardarCliente();

@@ -32,17 +32,14 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
     private IVistaAdministrarClientes vistaAdministrar;
     private IVistaAgregarEditarCliente vistaAgregarEditar;
 
-    // Cambiamos ControlPrincipal por tu coordinador del módulo: IControlClientes
     private IControlClientes controlClientes;
 
-    private Long idClienteEdicion; // Guarda el ID si estamos editando
+    private Long idClienteEdicion;
 
     public ControlAdministrarClientes() {
-        // Obtenemos la instancia desde la fábrica de negocios
         this.administradorClientes = FabricaNegocios.obtenerAdministradorClientes();
     }
 
-    // Inyectamos el coordinador del módulo
     public void setControlClientes(IControlClientes controlClientes) {
         this.controlClientes = controlClientes;
     }
@@ -91,7 +88,6 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
     @Override
     public void atrasPrincipal() {
         this.vistaAdministrar.ocultar();
-        // Le avisamos al coordinador que queremos salir del módulo
         if (this.controlClientes != null) {
             this.controlClientes.volver();
         }
@@ -110,7 +106,6 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
 
                 vistaAdministrar.mostrarMensajeExito("Cliente eliminado (deshabilitado) correctamente.");
 
-                // Refrescamos la tabla
                 buscarClientes(null);
             } catch (NegocioException ex) {
                 vistaAdministrar.mostrarMensaje("Error al eliminar: " + ex.getMessage());
@@ -128,7 +123,6 @@ public class ControlAdministrarClientes implements IControlAdministrarClientes {
 
         this.vistaAdministrar.ocultar();
 
-        // 3. Continuar con la creación de la vista de agregar
         this.vistaAgregarEditar = FabricaVistas.obtenerVistaAgregarEditarCliente(this);
         this.vistaAgregarEditar.limpiarFormulario();
         this.vistaAgregarEditar.mostrar();
